@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:shorten_url/screens/home_body.dart';
+import 'screens/history.dart';
+import 'screens/feedback.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -19,105 +18,53 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-  final controller = TextEditingController();
+  int myIndex = 0;
+  List<Widget> widgetList = [
+    const HomeBody(),
+    const History(),
+    const Improvement(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Shorten URL'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            TextFormField(
-              controller: controller,
-              decoration: const InputDecoration(
-                labelText: 'Enter your url here',
-                hintText: 'https://www.example.com',
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 8,
-                    color: Colors.black
-                  )
-                )
-              ),
-            ),
-            const SizedBox(height: 30,),
-            ElevatedButton(
-              onPressed: () async{
-                final shortenedUrl = await shortenUrl(url: controller.text);
-                if(shortenedUrl != null){
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return  AlertDialog(
-                          title: const Text('Url Shortened Successfully'),
-                          content: SizedBox(
-                            height: 100,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        if(await canLaunch(shortenedUrl)){
-                                          await launch(shortenedUrl);
-                                        }
-                                      },
-                                      child: Container(
-                                        color: Colors.grey.withOpacity(.2),
-                                        child: Text(shortenedUrl),
-                                      ),
-                                    ),
-                                    IconButton(onPressed: (){
-                                      Clipboard.setData(ClipboardData(text: shortenedUrl)).then((_) =>
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Urls is copied to the clipboard'))
-                                      ));
-                                    }, icon: const Icon(Icons.copy))
-                                  ],
-                                ),
-                                ElevatedButton.icon(onPressed: (){
-                                  controller.clear();
-                                  Navigator.pop(context);
-                                }, icon: const Icon(Icons.close), label: const Text('Close'))
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                  );
-                }
+      body: widgetList[myIndex],
+      bottomNavigationBar: Container(
+        color: Colors.black,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+          child: GNav(
+              backgroundColor: Colors.black,
+              color: Colors.white,
+              activeColor: Colors.white,
+              tabBackgroundColor: Colors.grey.shade800,
+              gap: 8,
+              onTabChange: (index) {
+                setState(() {
+                  myIndex = index;
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: ((context) => widgetList[myIndex])));
+                });
               },
-              child: const Text('Shorten url'),
-            )
-          ],
+              padding: const EdgeInsets.all(16),
+              tabs: const [
+                GButton(
+                  icon: Icons.home,
+                  text: 'Home',
+                ),
+                GButton(
+                  icon: Icons.history,
+                  text: 'History',
+                ),
+                GButton(
+                  icon: Icons.feedback,
+                  text: 'Feedback',
+                ),
+              ]),
         ),
       ),
     );
   }
-
-  Future<String?> shortenUrl({required String url}) async {
-    try{
-      final result = await http.post(
-        Uri.parse('https://cleanuri.com/api/v1/shorten'),
-        body: {
-          'url': url
-        }
-      );
-
-      if(result.statusCode == 200){
-        final jsonResult = jsonDecode(result.body);
-        return jsonResult['result_url'];
-      }
-    }catch (e){
-      print('Error ${e.toString()}');
-    }
-    return null;
-  }
 }
-
