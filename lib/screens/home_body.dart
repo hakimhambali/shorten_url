@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:document_scanner_flutter/configs/configs.dart';
+import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/screens/scan_qr.dart';
 import 'package:shorten_url/screens/view_qr.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
@@ -63,7 +68,7 @@ class _HomeBodyState extends State<HomeBody> {
                               return AlertDialog(
                                 title: const Text('Url Shortened Successfully'),
                                 content: SizedBox(
-                                  height: 100,
+                                  height: 160,
                                   child: Column(
                                     children: [
                                       Row(
@@ -81,6 +86,12 @@ class _HomeBodyState extends State<HomeBody> {
                                               child: Text(shortenedUrl),
                                             ),
                                           ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
                                           IconButton(
                                               onPressed: () {
                                                 Clipboard.setData(ClipboardData(
@@ -92,16 +103,47 @@ class _HomeBodyState extends State<HomeBody> {
                                                                 content: Text(
                                                                     'Urls is copied to the clipboard'))));
                                               },
-                                              icon: const Icon(Icons.copy))
+                                              icon: const Icon(Icons.copy)),
+                                          IconButton(
+                                              icon: const Icon(Icons.search),
+                                              onPressed: () {
+                                                var url =
+                                                    Uri.parse(shortenedUrl);
+                                                launchURL(url);
+                                              }),
+                                          IconButton(
+                                              icon: const Icon(Icons.share),
+                                              onPressed: () {
+                                                Share.share(shortenedUrl);
+                                              }),
                                         ],
                                       ),
-                                      ElevatedButton.icon(
-                                          onPressed: () {
-                                            controller.clear();
-                                            Navigator.pop(context);
-                                          },
-                                          icon: const Icon(Icons.close),
-                                          label: const Text('Close'))
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: const [
+                                          Text('Copy'),
+                                          Text('Visit'),
+                                          Text('Share'),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 25.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            ElevatedButton.icon(
+                                                onPressed: () {
+                                                  controller.clear();
+                                                  Navigator.pop(context);
+                                                },
+                                                icon: const Icon(Icons.close),
+                                                label: const Text('Close'))
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -146,16 +188,36 @@ class _HomeBodyState extends State<HomeBody> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ScanQR()));
-                  },
-                  child: const Text('Scan QR'),
-                ),
-              ],
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 80.0, horizontal: 0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ScanQR()));
+                    },
+                    child: const Text('Scan QR'),
+                  ),
+                  const Text("or"),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        File? scannedDoc = await DocumentScannerFlutter.launch(
+                            context,
+                            source: ScannerFileSource
+                                .CAMERA); // Or ScannerFileSource.GALLERY
+                        // `scannedDoc` will be the image file scanned from scanner
+                      } on PlatformException {
+                        // 'Failed to get document path or operation cancelled!';
+                      }
+                    },
+                    child: const Text('Scan Document'),
+                  ),
+                ],
+              ),
             ),
             // Row(
             //   children: [
@@ -198,6 +260,17 @@ class _HomeBodyState extends State<HomeBody> {
         .hasMatch(val)) {
       return true;
     } else {
+      return false;
+    }
+  }
+
+  Future<bool> launchURL(url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+      print("launched URL: $url");
+      return true;
+    } else {
+      print('Could not launch $url');
       return false;
     }
   }

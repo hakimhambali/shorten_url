@@ -44,15 +44,17 @@ class _ScanQRState extends State<ScanQR> {
                     child: QRView(key: _globalKey, onQRViewCreated: qr))
                 : const SizedBox(),
             Center(
-              child: (result != null)
-                  ? Text(
-                      '${result!.code}',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    )
-                  : const Text('Tap to start scanning QR code'),
-            ),
+                child: (result != null)
+                    ? Text(
+                        '${result!.code}',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(top: 30.0),
+                        child: const Text('Tap to start scanning QR code'),
+                      )),
             result != null
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -69,16 +71,24 @@ class _ScanQRState extends State<ScanQR> {
                       IconButton(
                           icon: const Icon(Icons.search),
                           onPressed: () {
-                                      print("JOHN1");
-                                      var url = Uri.parse('${result!.code}'); 
+                            var url = Uri.parse('${result!.code}');
                             launchURL(url);
-                                      print("JOHN2");
                           }),
                       IconButton(
                           icon: const Icon(Icons.share),
                           onPressed: () {
                             Share.share('${result!.code}');
                           }),
+                    ],
+                  )
+                : Row(),
+            result != null
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      Text('Copy'),
+                      Text('Visit'),
+                      Text('Share'),
                     ],
                   )
                 : Row(),
@@ -93,7 +103,6 @@ class _ScanQRState extends State<ScanQR> {
   }
 
   Future<bool> launchURL(url) async {
-          print("JOHN3");
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
       print("launched URL: $url");
