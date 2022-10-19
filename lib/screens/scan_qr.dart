@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:clipboard/clipboard.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ScanQR extends StatefulWidget {
   @override
@@ -16,51 +18,6 @@ class _ScanQRState extends State<ScanQR> {
     controller.scannedDataStream.listen((event) {
       setState(() {
         result = event;
-        showDialog(
-            context: context,
-            builder: (context) {
-              // result = null;
-              return AlertDialog(
-                title: const Text('QR Scanned Successfully'),
-                content: SizedBox(
-                  height: 100,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {},
-                            child: Container(
-                              color: Colors.grey.withOpacity(.2),
-                              child: Text(result.toString()),
-                            ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                Clipboard.setData(
-                                        ClipboardData(text: result.toString()))
-                                    .then((_) => ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                            content: Text(
-                                                'Urls is copied to the clipboard'))));
-                              },
-                              icon: const Icon(Icons.copy))
-                        ],
-                      ),
-                      ElevatedButton.icon(
-                          onPressed: () {
-                            // result = null;
-                            // controller.clear();
-                            Navigator.pop(context);
-                            result = null;
-                          },
-                          icon: const Icon(Icons.close),
-                          label: const Text('Close'))
-                    ],
-                  ),
-                ),
-              );
-            });
       });
     });
   }
@@ -85,8 +42,7 @@ class _ScanQRState extends State<ScanQR> {
                     height: 400,
                     width: 300,
                     child: QRView(key: _globalKey, onQRViewCreated: qr))
-                : Container(),
-            SizedBox(height: 16),
+                : const SizedBox(),
             Center(
               child: (result != null)
                   ? Text(
@@ -97,31 +53,54 @@ class _ScanQRState extends State<ScanQR> {
                     )
                   : const Text('Tap to start scanning QR code'),
             ),
+            result != null
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                          icon: const Icon(Icons.content_copy),
+                          onPressed: () async {
+                            await FlutterClipboard.copy('${result!.code}');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('✓   Copied to Clipboard')),
+                            );
+                          }),
+                      IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                                      print("JOHN1");
+                                      var url = Uri.parse('${result!.code}'); 
+                            launchURL(url);
+                                      print("JOHN2");
+                          }),
+                      IconButton(
+                          icon: const Icon(Icons.share),
+                          onPressed: () {
+                            Share.share('${result!.code}');
+                          }),
+                    ],
+                  )
+                : Row(),
           ],
         ),
         // child: QRView(
-        //   key: _globalKey
+        //   key: _globalKey,
         //   onQRViewCreated: qr,
         // ),
       ),
     );
   }
 
-  Future openDialog() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Your Name'),
-          content: const TextField(
-            decoration: InputDecoration(hintText: 'Enter Your Name'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                result = null;
-              },
-              child: const Text('SUBMIT'),
-            ),
-          ],
-        ),
-      );
+  Future<bool> launchURL(url) async {
+          print("JOHN3");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+      print("launched URL: $url");
+      return true;
+    } else {
+      print('Could not launch $url');
+      return false;
+    }
+  }
 }
