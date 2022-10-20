@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:document_scanner_flutter/screens/pdf_generator_gallery.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../configs/configs.dart';
-
 /// Dcoument Scanner Class
-class DocumentScannerFlutter {
+class CustomDocumentScannerFlutter {
   static MethodChannel get _channel =>
       const MethodChannel('document_scanner_flutter');
 
@@ -28,6 +27,8 @@ class DocumentScannerFlutter {
       if (Platform.isIOS) {
         path = path.split('file://')[1];
       }
+      debugPrint("PATH: " + path);
+      //TODO: letak local notification kat sini
       return File(path);
     }
   }
@@ -62,7 +63,6 @@ class DocumentScannerFlutter {
     }
     return showModalBottomSheet<File>(
         context: context,
-        isDismissible: false,
         builder: (BuildContext bc) {
           return Container(
             child: new Wrap(
