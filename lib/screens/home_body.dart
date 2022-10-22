@@ -6,12 +6,14 @@ import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorten_url/screens/scan_document.dart';
 import 'package:shorten_url/screens/scan_qr.dart';
 import 'package:shorten_url/screens/view_qr.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
@@ -21,6 +23,27 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
+// START SHAREDPREFERNCES
+  // String date = '';
+  // late SharedPreferences preferences;
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   init();
+  // }
+
+  // Future init() async {
+  //   preferences = await SharedPreferences.getInstance();
+
+  // String? date = preferences.getString("date");
+  // if (date == null) return;
+
+  // setState(() => this.date = date);
+  // }
+// END SHAREDPREFERNCES
+
+  // final now = DateTime.now();
   final controller = TextEditingController();
   bool validate = true;
   @override
@@ -32,11 +55,17 @@ class _HomeBodyState extends State<HomeBody> {
         // backgroundColor: Colors.black,
       ),
       body: Container(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
             Container(
               // color: Colors.blue,
+              padding: const EdgeInsets.all(30.0),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
               child: Column(
                 children: [
                   TextFormField(
@@ -70,6 +99,21 @@ class _HomeBodyState extends State<HomeBody> {
                               final shortenedUrl =
                                   await shortenUrl(url: controller.text);
                               if (shortenedUrl != null) {
+// START SHAREDPREFERNCES
+                                // print(now.toString());
+                                // String formatter =
+                                //     DateFormat('yMd').format(now);
+
+                                // final surl = Surl(
+                                //   link: shortenedUrl,
+                                //   date: now.toString(),
+                                // );
+                                // final surlJson = json.encode(surl.toJson());
+                                // preferences.setString("surl", surlJson);
+                                // print(shortenedUrl);
+                                // print(surlJson);
+// END SHAREDPREFERNCES
+
                                 showDialog(
                                     context: context,
                                     builder: (context) {
@@ -174,7 +218,8 @@ class _HomeBodyState extends State<HomeBody> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       backgroundColor: Colors.red,
-                                      content: Text('URL does not exists')),
+                                      content: Text(
+                                          'URL does not exists or poor internet connection')),
                                 );
                               }
                             }
@@ -205,7 +250,8 @@ class _HomeBodyState extends State<HomeBody> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       backgroundColor: Colors.red,
-                                      content: Text('URL does not exists')),
+                                      content: Text(
+                                          'URL does not exists or poor internet connection')),
                                 );
                               }
                             }
@@ -232,13 +278,19 @@ class _HomeBodyState extends State<HomeBody> {
               ),
             ),
             const SizedBox(
-              height: 100,
+              height: 70,
             ),
             Container(
               // color: Colors.red,
               // child: Padding(
               //   padding:
               //       const EdgeInsets.symmetric(vertical: 80.0, horizontal: 0.0),
+              padding: const EdgeInsets.all(30.0),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -319,3 +371,25 @@ class _HomeBodyState extends State<HomeBody> {
     }
   }
 }
+
+// START SHAREDPREFERNCES
+// class Surl {
+//   final String link;
+//   final String date;
+
+//   const Surl({
+//     required this.link,
+//     required this.date,
+//   });
+
+//   static Surl fromJson(Map<String, dynamic> json) => Surl(
+//         link: json["link"],
+//         date: json["date"],
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         'link': link,
+//         'date': date,
+//       };
+// }
+// END SHAREDPREFERNCES
