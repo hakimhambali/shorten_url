@@ -14,4 +14,13 @@ class History extends StatelessWidget {
       ),
     );
   }
+
+  // Future init() async {
+  //   userhistory = await SharedPreferences.getInstance();
+
+  //   String? date = preferences.getString("date");
+  //   if (date == null) return;
+
+  //   setState(() => this.date = date);
+  // }
 }

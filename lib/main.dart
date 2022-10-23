@@ -1,10 +1,26 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shorten_url/screens/home_body.dart';
 import 'screens/history.dart';
 import 'screens/feedback.dart';
 
-void main() {
+// START SIGN IN
+// import 'screens/signinanonymous.dart';
+// import 'screens/signinemail.dart';
+// import 'screens/signingoogle.dart';
+import 'screens/signinphonenumber.dart';
+// END SIGN IN
+
+// void main() {
+//   runApp(const MaterialApp(
+//     home: Home(),
+//   ));
+// }
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MaterialApp(
     home: Home(),
   ));
@@ -23,6 +39,10 @@ class _HomeState extends State<Home> {
     const HomeBody(),
     const History(),
     const Improvement(),
+    // const SignInAnonymous(),
+    // const SignInEmail(),
+    // const SignInGoogle(),
+    const SignInPhoneNumber(),
   ];
 
   @override
@@ -61,6 +81,22 @@ class _HomeState extends State<Home> {
                 GButton(
                   icon: Icons.feedback,
                   text: 'Feedback',
+                ),
+                // GButton(
+                //   icon: Icons.feedback,
+                //   text: 'Anon',
+                // ),
+                // GButton(
+                //   icon: Icons.feedback,
+                //   text: 'Email',
+                // ),
+                // GButton(
+                //   icon: Icons.feedback,
+                //   text: 'Google',
+                // ),
+                GButton(
+                  icon: Icons.feedback,
+                  text: 'Phone',
                 ),
               ]),
         ),

@@ -1,19 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shorten_url/screens/scan_document.dart';
 import 'package:shorten_url/screens/scan_qr.dart';
 import 'package:shorten_url/screens/view_qr.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:intl/intl.dart';
+
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:intl/intl.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
