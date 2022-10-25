@@ -393,7 +393,7 @@ class _HomeBodyState extends State<HomeBody> {
     final json = {
       'link': link,
       'date': date,
-      'type': "shorten",
+      'type': "Shorten link URL",
       'userID': FirebaseAuth.instance.currentUser!.uid.toString()
     };
     await historyUser.set(json);
@@ -405,7 +405,7 @@ class _HomeBodyState extends State<HomeBody> {
     final json = {
       'link': link,
       'date': date,
-      'type': "qr",
+      'type': "Generate QR",
       'userID': FirebaseAuth.instance.currentUser!.uid.toString()
     };
     await historyUser.set(json);
