@@ -50,7 +50,7 @@ class SignInPhoneNumber extends StatelessWidget {
                 cursorColor: Colors.green,
                 decoration: const InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Enter phone number with country code'),
+                    hintText: 'Enter with country code (eg:60123456789)'),
               ),
             ),
 

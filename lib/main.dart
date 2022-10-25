@@ -1,15 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shorten_url/screens/home_body.dart';
-import 'screens/history.dart';
+import 'screens/history_screen.dart';
 import 'screens/feedback.dart';
 
 // START SIGN IN
-// import 'screens/signinanonymous.dart';
+import 'screens/signinanonymous.dart';
 // import 'screens/signinemail.dart';
 // import 'screens/signingoogle.dart';
-import 'screens/signinphonenumber.dart';
+// import 'screens/signinphonenumber.dart';
 // END SIGN IN
 
 // void main() {
@@ -21,6 +22,7 @@ import 'screens/signinphonenumber.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseAuth.instance.signInAnonymously();
   runApp(const MaterialApp(
     home: Home(),
   ));
@@ -37,12 +39,12 @@ class _HomeState extends State<Home> {
   int myIndex = 0;
   List<Widget> widgetList = [
     const HomeBody(),
-    const History(),
+    const HistoryScreen(),
     const Improvement(),
-    // const SignInAnonymous(),
+    const SignInAnonymous(),
     // const SignInEmail(),
     // const SignInGoogle(),
-    const SignInPhoneNumber(),
+    // const SignInPhoneNumber(),
   ];
 
   @override
@@ -82,10 +84,10 @@ class _HomeState extends State<Home> {
                   icon: Icons.feedback,
                   text: 'Feedback',
                 ),
-                // GButton(
-                //   icon: Icons.feedback,
-                //   text: 'Anon',
-                // ),
+                GButton(
+                  icon: Icons.feedback,
+                  text: 'Anon',
+                ),
                 // GButton(
                 //   icon: Icons.feedback,
                 //   text: 'Email',
@@ -94,10 +96,10 @@ class _HomeState extends State<Home> {
                 //   icon: Icons.feedback,
                 //   text: 'Google',
                 // ),
-                GButton(
-                  icon: Icons.feedback,
-                  text: 'Phone',
-                ),
+                // GButton(
+                //   icon: Icons.feedback,
+                //   text: 'Phone',
+                // ),
               ]),
         ),
       ),

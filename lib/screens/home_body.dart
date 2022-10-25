@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:document_scanner_flutter/document_scanner_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -45,6 +47,7 @@ class _HomeBodyState extends State<HomeBody> {
   // final now = DateTime.now();
   final controller = TextEditingController();
   bool validate = true;
+  DateTime now = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +115,13 @@ class _HomeBodyState extends State<HomeBody> {
                                 // print(shortenedUrl);
                                 // print(surlJson);
 // END SHAREDPREFERNCES
+
+                                // print(now);
+                                // print(now.toString());
+                                // print(shortenedUrl);
+                                createShortUrlHistory(
+                                    link: shortenedUrl, date: now.toString());
+                                // print(createShortUrlHistory);
 
                                 showDialog(
                                     context: context,
@@ -241,6 +251,13 @@ class _HomeBodyState extends State<HomeBody> {
                                 final generateQR =
                                     await shortenUrl(url: controller.text);
                                 if (generateQR != null) {
+                                  // print(shortenedUrl);
+                                  // print(shortenUrl);
+                                  // print(generateQR);
+                                  // print(controller.text);
+                                  createGenerateQRHistory(
+                                      link: controller.text,
+                                      date: now.toString());
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
                                           ViewQR(controller.text)));
@@ -368,6 +385,30 @@ class _HomeBodyState extends State<HomeBody> {
       print('Could not launch $url');
       return false;
     }
+  }
+
+  Future createShortUrlHistory(
+      {required String link, required String date}) async {
+    final historyUser = FirebaseFirestore.instance.collection('history').doc();
+    final json = {
+      'link': link,
+      'date': date,
+      'type': "shorten",
+      'userID': FirebaseAuth.instance.currentUser!.uid.toString()
+    };
+    await historyUser.set(json);
+  }
+
+  Future createGenerateQRHistory(
+      {required String link, required String date}) async {
+    final historyUser = FirebaseFirestore.instance.collection('history').doc();
+    final json = {
+      'link': link,
+      'date': date,
+      'type': "qr",
+      'userID': FirebaseAuth.instance.currentUser!.uid.toString()
+    };
+    await historyUser.set(json);
   }
 }
 
