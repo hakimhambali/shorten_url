@@ -1,5 +1,6 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Congrats extends StatefulWidget {
   const Congrats({super.key});
@@ -22,12 +23,18 @@ class _CongratsState extends State<Congrats> {
   @override
   Widget build(BuildContext context) =>
       Stack(alignment: Alignment.center, children: [
-        Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            // title: const Text('Congratulations'),
+        // Scaffold(
+        //   backgroundColor: Colors.black,
+        //   appBar: AppBar(
+        //     // title: const Text('Congratulations'),
+        //   ),
+        // ),
+        AnimatedTextKit(animatedTexts: [
+          ScaleAnimatedText(
+            'Thank you',
+            textStyle: TextStyle(fontSize: 70.0, fontFamily: 'Canterbury'),
           ),
-        ),
+        ]),
         ConfettiWidget(
           confettiController: controller,
           shouldLoop: true,

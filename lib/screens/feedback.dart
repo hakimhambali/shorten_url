@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shorten_url/screens/congrats.dart';
+import 'package:shorten_url/screens/thanks.dart';
 
 class Improvement extends StatefulWidget {
   const Improvement({Key? key}) : super(key: key);
@@ -52,12 +52,60 @@ class _ImprovementState extends State<Improvement> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    submitFeedback(
-                        feedback: controller.text, date: now.toString());
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Congrats()));
+                    if (controller.text.isNotEmpty) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text(
+                                  'Are you sure want to submit your feedback ?',
+                                  textAlign: TextAlign.center),
+                              content: SizedBox(
+                                height: 80,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 25.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ElevatedButton.icon(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              icon: const Icon(Icons.close),
+                                              label: const Text('No')),
+                                          ElevatedButton.icon(
+                                              onPressed: () {
+                                                submitFeedback(
+                                                    feedback: controller.text,
+                                                    date: now.toString());
+                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const Thanks()));
+                                              },
+                                              icon: const Icon(Icons.check),
+                                              label: const Text('Yes'))
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text(
+                                'Please enter your feedback before clicking submit')),
+                      );
+                    }
                   },
                   child: const Text('Submit'),
                 ),

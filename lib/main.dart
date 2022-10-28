@@ -7,7 +7,7 @@ import 'screens/history_screen.dart';
 import 'screens/feedback.dart';
 
 // START SIGN IN
-import 'screens/signinanonymous.dart';
+// import 'screens/signinanonymous.dart';
 // import 'screens/signinemail.dart';
 // import 'screens/signingoogle.dart';
 // import 'screens/signinphonenumber.dart';
@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
     const HomeBody(),
     const HistoryScreen(),
     const Improvement(),
-    const SignInAnonymous(),
+    // const SignInAnonymous(),
     // const SignInEmail(),
     // const SignInGoogle(),
     // const SignInPhoneNumber(),
@@ -84,10 +84,10 @@ class _HomeState extends State<Home> {
                   icon: Icons.feedback,
                   text: 'Feedback',
                 ),
-                GButton(
-                  icon: Icons.feedback,
-                  text: 'Anon',
-                ),
+                // GButton(
+                //   icon: Icons.feedback,
+                //   text: 'Anon',
+                // ),
                 // GButton(
                 //   icon: Icons.feedback,
                 //   text: 'Email',
