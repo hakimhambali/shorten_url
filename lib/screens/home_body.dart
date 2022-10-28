@@ -120,7 +120,9 @@ class _HomeBodyState extends State<HomeBody> {
                                 // print(now.toString());
                                 // print(shortenedUrl);
                                 createShortUrlHistory(
-                                    link: shortenedUrl, date: now.toString());
+                                    originalLink: controller.text,
+                                    newLink: shortenedUrl,
+                                    date: now.toString());
                                 // print(createShortUrlHistory);
 
                                 showDialog(
@@ -256,11 +258,12 @@ class _HomeBodyState extends State<HomeBody> {
                                   // print(generateQR);
                                   // print(controller.text);
                                   createGenerateQRHistory(
-                                      link: controller.text,
+                                      originalLink: controller.text,
+                                      newLink: controller.text,
                                       date: now.toString());
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          ViewQR(controller.text)));
+                                          ViewQR(controller.text, '')));
                                 }
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -388,10 +391,11 @@ class _HomeBodyState extends State<HomeBody> {
   }
 
   Future createShortUrlHistory(
-      {required String link, required String date}) async {
+      {required String originalLink, newLink, required String date}) async {
     final historyUser = FirebaseFirestore.instance.collection('history').doc();
     final json = {
-      'link': link,
+      'originalLink': originalLink,
+      'newLink': newLink,
       'date': date,
       'type': "Shorten link URL",
       'userID': FirebaseAuth.instance.currentUser!.uid.toString()
@@ -400,10 +404,11 @@ class _HomeBodyState extends State<HomeBody> {
   }
 
   Future createGenerateQRHistory(
-      {required String link, required String date}) async {
+      {required String originalLink, newLink, required String date}) async {
     final historyUser = FirebaseFirestore.instance.collection('history').doc();
     final json = {
-      'link': link,
+      'originalLink': originalLink,
+      'newLink': newLink,
       'date': date,
       'type': "Generate QR",
       'userID': FirebaseAuth.instance.currentUser!.uid.toString()

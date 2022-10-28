@@ -1,27 +1,57 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class History {
-  String link;
+  String originalLink;
+  String newLink;
   final String date;
   final String type;
   final String userID;
 
   History({
-    this.link = '',
+    this.originalLink = '',
+    this.newLink = '',
     required this.date,
     required this.type,
     required this.userID,
   });
 
   Map<String, dynamic> toJson() => {
-        'link': link,
+        'originalLink': originalLink,
+        'newLink': newLink,
         'date': date,
         'type': type,
         'userID': userID,
       };
 
   static History fromJson(Map<String, dynamic> json) => History(
-        link: json['link'],
+        originalLink: json['originalLink'],
+        newLink: json['newLink'],
+        date: json['date'],
+        type: json['type'],
+        userID: json['userID'],
+      );
+}
+
+class Feedback {
+  String feedback;
+  final String date;
+  final String type;
+  final String userID;
+
+  Feedback({
+    this.feedback = '',
+    required this.date,
+    required this.type,
+    required this.userID,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'feedback': feedback,
+        'date': date,
+        'type': type,
+        'userID': userID,
+      };
+
+  static Feedback fromJson(Map<String, dynamic> json) => Feedback(
+        feedback: json['feedback'],
         date: json['date'],
         type: json['type'],
         userID: json['userID'],

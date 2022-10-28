@@ -6,6 +6,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'view_qr.dart';
+
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
@@ -56,18 +58,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Url Shortened Successfully'),
+              // title: const Text('Url Shortened Successfully'),
               content: SizedBox(
-                height: 160,
+                height: 600,
                 child: Column(
                   children: [
-                    Row(
+                    Column(
                       children: [
+                        const Text('Before shorten: '),
                         GestureDetector(
                           onTap: () async {},
                           child: Container(
                             color: Colors.grey.withOpacity(.2),
-                            child: Text(item.link),
+                            child: Text(item.originalLink),
                           ),
                         ),
                       ],
@@ -77,7 +80,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              Clipboard.setData(ClipboardData(text: item.link))
+                              Clipboard.setData(
+                                      ClipboardData(text: item.originalLink))
                                   .then((_) => ScaffoldMessenger.of(context)
                                       .showSnackBar(const SnackBar(
                                           content: Text(
@@ -87,13 +91,62 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         IconButton(
                             icon: const Icon(Icons.search),
                             onPressed: () {
-                              var url = Uri.parse(item.link);
+                              var url = Uri.parse(item.originalLink);
                               launchURL(url);
                             }),
                         IconButton(
                             icon: const Icon(Icons.share),
                             onPressed: () {
-                              Share.share(item.link);
+                              Share.share(item.originalLink);
+                            }),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: const [
+                        Text('Copy'),
+                        Text('Visit'),
+                        Text('Share'),
+                      ],
+                    ),
+                    const Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 20)),
+                    Column(
+                      children: [
+                        const Text('After shorten: '),
+                        GestureDetector(
+                          onTap: () async {},
+                          child: Container(
+                            color: Colors.grey.withOpacity(.2),
+                            child: Text(item.newLink),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Clipboard.setData(
+                                      ClipboardData(text: item.newLink))
+                                  .then((_) => ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                          content: Text(
+                                              'Urls is copied to the clipboard'))));
+                            },
+                            icon: const Icon(Icons.copy)),
+                        IconButton(
+                            icon: const Icon(Icons.search),
+                            onPressed: () {
+                              var url = Uri.parse(item.newLink);
+                              launchURL(url);
+                            }),
+                        IconButton(
+                            icon: const Icon(Icons.share),
+                            onPressed: () {
+                              Share.share(item.newLink);
                             }),
                       ],
                     ),
@@ -131,6 +184,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         // title: Text(item.link),
         subtitle: Text(item.date),
         tileColor: Colors.deepOrange[200],
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ViewQR(item.originalLink, item.newLink))),
       );
 
   Stream<List<History>> readUsers() => FirebaseFirestore.instance
