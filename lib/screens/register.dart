@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shorten_url/screens/forgot_password.dart';
 import 'package:shorten_url/screens/signingoogle.dart';
 import 'package:shorten_url/screens/signinphonenumber.dart';
 
@@ -24,6 +25,15 @@ class Register extends StatelessWidget {
                   GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
+            StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.userChanges(),
+                builder: (context, snapshot) {
+                  if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                    return const Text("You haven't signed in yet");
+                  } else {
+                    return Text('SIGNED IN ${snapshot.data?.email}');
+                  }
+                }),
             Container(
               margin: const EdgeInsets.fromLTRB(30, 25, 30, 10),
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
@@ -57,12 +67,16 @@ class Register extends StatelessWidget {
                   style: TextStyle(color: Colors.orange.shade900),
                 ),
                 onTap: () async {
-                  try {
-                    await FirebaseAuth.instance
-                        .sendPasswordResetEmail(email: emailController.text);
-                  } on FirebaseAuthException catch (e) {
-                    showNotification(context, e.message.toString());
-                  }
+                  // try {
+                  //   await FirebaseAuth.instance
+                  //       .sendPasswordResetEmail(email: emailController.text);
+                  // } on FirebaseAuthException catch (e) {
+                  //   showNotification(context, e.message.toString());
+                  // }
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ForgotPassword()));
                 },
               ),
             ),
@@ -72,12 +86,34 @@ class Register extends StatelessWidget {
                 SizedBox(
                   width: 330,
                   child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.orange.shade900)),
-                    onPressed: () async {},
-                    child: const Text('Register'),
-                  ),
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Colors.orange.shade900)),
+                      onPressed: () async {
+                        if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                          try {
+                            await FirebaseAuth.instance
+                                .createUserWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text);
+                          } on FirebaseAuthException catch (e) {
+                            showNotification(context, e.message.toString());
+                          }
+                        } else {
+                          await FirebaseAuth.instance.signOut();
+                        }
+                      },
+                      // CODE HERE: Change button text based on current user
+                      child: StreamBuilder<User?>(
+                          stream: FirebaseAuth.instance.userChanges(),
+                          builder: (context, snapshot) {
+                            if (FirebaseAuth
+                                .instance.currentUser!.isAnonymous) {
+                              return const Text("Register");
+                            } else {
+                              return const Text("Logout");
+                            }
+                          })),
                 ),
                 const Text("OR"),
                 SizedBox(

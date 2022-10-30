@@ -10,6 +10,7 @@ import 'package:shorten_url/screens/signingoogle.dart';
 import 'package:shorten_url/screens/signinphonenumber.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'forgot_password.dart';
 import 'register.dart';
 import 'view_qr.dart';
 
@@ -27,6 +28,54 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         title: const Text('History'),
         actions: <Widget>[
+          // FirebaseAuth.instance.currentUser!.isAnonymous
+          //     ? IconButton(
+          //         icon: const Icon(Icons.info),
+          //         onPressed: () {
+          //           showDialog(
+          //               context: context,
+          //               builder: (context) {
+          //                 return AlertDialog(
+          //                   title: const Text(
+          //                       'You have not register yet. Register now to prevent any loss of your history data if you wish to uninstall this app or change devices. You can also login to your old account if you have created before',
+          //                       textAlign: TextAlign.center),
+          //                   content: SizedBox(
+          //                     height: 80,
+          //                     child: Column(
+          //                       children: [
+          //                         Padding(
+          //                           padding: const EdgeInsets.only(top: 25.0),
+          //                           child: Row(
+          //                             mainAxisAlignment:
+          //                                 MainAxisAlignment.spaceEvenly,
+          //                             children: [
+          //                               ElevatedButton(
+          //                                   onPressed: () {
+          //                                     Navigator.pop(context);
+          //                                   },
+          //                                   // icon: const Icon(Icons.close),
+          //                                   child: const Text('Later')),
+          //                               ElevatedButton(
+          //                                   onPressed: () {
+          //                                     Navigator.pop(context);
+          //                                     Navigator.push(
+          //                                         context,
+          //                                         MaterialPageRoute(
+          //                                             builder: (context) =>
+          //                                                 const Register()));
+          //                                   },
+          //                                   // icon: const Icon(Icons.check),
+          //                                   child: const Text('Register Now'))
+          //                             ],
+          //                           ),
+          //                         ),
+          //                       ],
+          //                     ),
+          //                   ),
+          //                 );
+          //               });
+          //         })
+          //     : IconButton(
           IconButton(
               icon: const Icon(Icons.info),
               onPressed: () {
@@ -34,9 +83,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: const Text(
-                            'Register now to prevent any loss of your history data if you wish to uninstall this apps or change devices.',
-                            textAlign: TextAlign.center),
+                        title: FirebaseAuth.instance.currentUser!.isAnonymous
+                            ? const Text(
+                                'You have not register yet. Register now to prevent any loss of your history data if you wish to uninstall this app or change devices. You can also login to your account if you have registered before.',
+                                textAlign: TextAlign.center)
+                            : const Text(
+                                'Your history data are bind with your account. Do wish to login to a different account or register a new account ?',
+                                textAlign: TextAlign.center),
                         content: SizedBox(
                           height: 80,
                           child: Column(
@@ -47,13 +100,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    ElevatedButton.icon(
+                                    ElevatedButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        icon: const Icon(Icons.close),
-                                        label: const Text('Later')),
-                                    ElevatedButton.icon(
+                                        // icon: const Icon(Icons.close),
+                                        child: const Text('Later')),
+                                    ElevatedButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                           Navigator.push(
@@ -62,8 +115,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                   builder: (context) =>
                                                       const Register()));
                                         },
-                                        icon: const Icon(Icons.check),
-                                        label: const Text('Login Now'))
+                                        // icon: const Icon(Icons.check),
+                                        child: const Text('Register Now'))
                                   ],
                                 ),
                               ),
@@ -72,7 +125,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ),
                       );
                     });
-              }),
+              })
         ],
       ),
       body: StreamBuilder<List<History>>(
