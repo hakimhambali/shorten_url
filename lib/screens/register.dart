@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shorten_url/screens/signingoogle.dart';
+import 'package:shorten_url/screens/signinphonenumber.dart';
 
 class Register extends StatelessWidget {
   const Register({Key? key}) : super(key: key);
@@ -16,27 +18,12 @@ class Register extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //* TITLE
             Text(
               'QR & URL Master',
               style:
                   GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-
-            //* SIGN IN STATUS
-            // CODE HERE: Change status based on current user
-            StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.userChanges(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text('SIGNED IN ${snapshot.data?.email}');
-                  } else {
-                    return const Text("You haven't signed in yet");
-                  }
-                }),
-
-            //* EMAIL TEXTFIELD
             Container(
               margin: const EdgeInsets.fromLTRB(30, 25, 30, 10),
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
@@ -49,8 +36,6 @@ class Register extends StatelessWidget {
                     border: InputBorder.none, hintText: 'Email'),
               ),
             ),
-
-            //* PASSWORD TEXTFIELD
             Container(
               margin: const EdgeInsets.fromLTRB(30, 10, 30, 15),
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
@@ -63,7 +48,6 @@ class Register extends StatelessWidget {
                     border: InputBorder.none, hintText: 'Password'),
               ),
             ),
-            //* RESET PASSWORD BUTTON
             Container(
               margin: const EdgeInsets.only(top: 10, right: 20),
               alignment: Alignment.centerRight,
@@ -73,7 +57,6 @@ class Register extends StatelessWidget {
                   style: TextStyle(color: Colors.orange.shade900),
                 ),
                 onTap: () async {
-                  // CODE HERE: Send reset code to the given email
                   try {
                     await FirebaseAuth.instance
                         .sendPasswordResetEmail(email: emailController.text);
@@ -83,78 +66,49 @@ class Register extends StatelessWidget {
                 },
               ),
             ),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //* SIGN UP BUTTON
                 SizedBox(
-                  width: 150,
+                  width: 330,
                   child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Colors.orange.shade900)),
-                      onPressed: () async {
-                        // CODE HERE: Sign up with email & password / Sign out from firebase
-                        if (FirebaseAuth.instance.currentUser == null) {
-                          try {
-                            await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text);
-                          } on FirebaseAuthException catch (e) {
-                            showNotification(context, e.message.toString());
-                          }
-                        } else {
-                          await FirebaseAuth.instance.signOut();
-                        }
-                      },
-                      // CODE HERE: Change button text based on current user
-                      child: StreamBuilder<User?>(
-                          stream: FirebaseAuth.instance.userChanges(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return const Text("Sign Out");
-                            } else {
-                              return const Text("Sign Up");
-                            }
-                          })),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.orange.shade900)),
+                    onPressed: () async {},
+                    child: const Text('Register'),
+                  ),
                 ),
-                const SizedBox(
-                  width: 15,
-                ),
-
-                //* SIGN IN BUTTON
+                const Text("OR"),
                 SizedBox(
-                  width: 150,
+                  width: 330,
                   child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Colors.orange.shade900)),
-                      onPressed: () async {
-                        // CODE HERE: Sign in with email & password / Sign out form firebase
-                        if (FirebaseAuth.instance.currentUser == null) {
-                          try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text);
-                          } on FirebaseAuthException catch (e) {
-                            showNotification(context, e.message.toString());
-                          }
-                        } else {
-                          await FirebaseAuth.instance.signOut();
-                        }
-                      },
-                      // CODE HERE: Change button text based on current user
-                      child: StreamBuilder<User?>(
-                          stream: FirebaseAuth.instance.userChanges(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return const Text("Sign Out");
-                            } else {
-                              return const Text("Sign In");
-                            }
-                          })),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black)),
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignInGoogle()));
+                    },
+                    child: const Text('Sign In With Google Account'),
+                  ),
+                ),
+                SizedBox(
+                  width: 330,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black)),
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignInPhoneNumber()));
+                    },
+                    child: const Text('Sign In With Phone Number'),
+                  ),
                 ),
               ],
             ),
