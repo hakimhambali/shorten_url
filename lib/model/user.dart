@@ -1,4 +1,5 @@
 class History {
+  final String docID;
   String originalLink;
   String newLink;
   final String date;
@@ -6,6 +7,7 @@ class History {
   final String userID;
 
   History({
+    required this.docID,
     this.originalLink = '',
     this.newLink = '',
     required this.date,
@@ -14,6 +16,7 @@ class History {
   });
 
   Map<String, dynamic> toJson() => {
+        'docID': docID,
         'originalLink': originalLink,
         'newLink': newLink,
         'date': date,
@@ -22,6 +25,7 @@ class History {
       };
 
   static History fromJson(Map<String, dynamic> json) => History(
+        docID: json['docID'],
         originalLink: json['originalLink'],
         newLink: json['newLink'],
         date: json['date'],

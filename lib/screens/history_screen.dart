@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
+import 'package:shorten_url/screens/signinanonymous.dart';
+import 'package:shorten_url/screens/signinemail.dart';
+import 'package:shorten_url/screens/signingoogle.dart';
+import 'package:shorten_url/screens/signinphonenumber.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'register.dart';
 import 'view_qr.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -21,6 +26,54 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('History'),
+        actions: <Widget>[
+          IconButton(
+              icon: const Icon(Icons.info),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text(
+                            'Register now to prevent any loss of your history data if you wish to uninstall this apps or change devices.',
+                            textAlign: TextAlign.center),
+                        content: SizedBox(
+                          height: 80,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 25.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    ElevatedButton.icon(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(Icons.close),
+                                        label: const Text('Later')),
+                                    ElevatedButton.icon(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Register()));
+                                        },
+                                        icon: const Icon(Icons.check),
+                                        label: const Text('Login Now'))
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+              }),
+        ],
       ),
       body: StreamBuilder<List<History>>(
           stream: readUsers(),
@@ -44,21 +97,57 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget buildShortURL(History item) => ListTile(
-      // leading: CircleAvatar(
-      //   child: Text(item.type),
-      // ),
-      title: Text(item.type), //url string
-      // title: Text(item.link),
+      title: Text(item.type),
       subtitle: Text(item.date),
       tileColor: Colors.red[200],
-      // onTap: showDialog(context: context, builder: (context){
-      //   return AlertDialog( content: SizedBox( height: 160, child: Column( children: [Row(children: [GestureDetector(onTap: () async {},child: Container(color: Colors.grey.withOpacity(.2),child: Text(shortenedUrl),),),],),Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [IconButton(onPressed: () { Clipboard.setData(ClipboardData(text: item.link)).then((_) => ScaffoldMessenger.of(context).showSnackBar(const snackBar(content: Text('Urls is copied to the clipboard'))));}, icon: const Icon(Icons.copy)), IconButton(icon: const Icon( Icons.search), onPressed: (){ var url = Uri.parse(item.link);launchUrl(url);}), IconButton(icon: const Icon( Icons.share), onPressed: (){ Share.share(item.link);}), icon: icon): icon)],)],),),)
-      // }),
+      onLongPress: () => showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Are you sure want to delete this ?',
+                  textAlign: TextAlign.center),
+              content: SizedBox(
+                height: 80,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.close),
+                              label: const Text('No')),
+                          ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                final deleteUser = FirebaseFirestore.instance
+                                    .collection('history')
+                                    .doc(item.docID);
+                                deleteUser.delete().then((_) => ScaffoldMessenger
+                                        .of(context)
+                                    .showSnackBar(const SnackBar(
+                                        backgroundColor: Colors.green,
+                                        content: Text(
+                                            'Successfully delete history'))));
+                              },
+                              icon: const Icon(Icons.check),
+                              label: const Text('Yes'))
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
       onTap: () => showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              // title: const Text('Url Shortened Successfully'),
               content: SizedBox(
                 height: 600,
                 child: Column(
@@ -179,11 +268,53 @@ class _HistoryScreenState extends State<HistoryScreen> {
           }));
 
   Widget buildGeneratedQR(History item) => ListTile(
-        // leading: CircleAvatar(child: Text(item.type),),
-        title: Text(item.type), //url string
-        // title: Text(item.link),
+        title: Text(item.type),
         subtitle: Text(item.date),
         tileColor: Colors.deepOrange[200],
+        onLongPress: () => showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Are you sure want to delete this ?',
+                    textAlign: TextAlign.center),
+                content: SizedBox(
+                  height: 80,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.close),
+                                label: const Text('No')),
+                            ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  final deleteUser = FirebaseFirestore.instance
+                                      .collection('history')
+                                      .doc(item.docID);
+                                  deleteUser.delete().then((_) => ScaffoldMessenger
+                                          .of(context)
+                                      .showSnackBar(const SnackBar(
+                                          backgroundColor: Colors.green,
+                                          content: Text(
+                                              'Successfully delete history'))));
+                                },
+                                icon: const Icon(Icons.check),
+                                label: const Text('Yes'))
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ViewQR(item.originalLink, item.newLink))),
       );

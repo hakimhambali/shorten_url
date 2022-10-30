@@ -257,6 +257,7 @@ class _HomeBodyState extends State<HomeBody> {
                                   // print(shortenUrl);
                                   // print(generateQR);
                                   // print(controller.text);
+                                  controller.clear();
                                   createGenerateQRHistory(
                                       originalLink: controller.text,
                                       newLink: controller.text,
@@ -394,6 +395,7 @@ class _HomeBodyState extends State<HomeBody> {
       {required String originalLink, newLink, required String date}) async {
     final historyUser = FirebaseFirestore.instance.collection('history').doc();
     final json = {
+      'docID': historyUser.id,
       'originalLink': originalLink,
       'newLink': newLink,
       'date': date,
@@ -407,6 +409,7 @@ class _HomeBodyState extends State<HomeBody> {
       {required String originalLink, newLink, required String date}) async {
     final historyUser = FirebaseFirestore.instance.collection('history').doc();
     final json = {
+      'docID': historyUser.id,
       'originalLink': originalLink,
       'newLink': newLink,
       'date': date,
