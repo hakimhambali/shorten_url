@@ -4,13 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
-import 'package:shorten_url/screens/signinanonymous.dart';
-import 'package:shorten_url/screens/signinemail.dart';
-import 'package:shorten_url/screens/signingoogle.dart';
-import 'package:shorten_url/screens/signinphonenumber.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'forgot_password.dart';
 import 'register.dart';
 import 'view_qr.dart';
 
@@ -28,54 +22,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         title: const Text('History'),
         actions: <Widget>[
-          // FirebaseAuth.instance.currentUser!.isAnonymous
-          //     ? IconButton(
-          //         icon: const Icon(Icons.info),
-          //         onPressed: () {
-          //           showDialog(
-          //               context: context,
-          //               builder: (context) {
-          //                 return AlertDialog(
-          //                   title: const Text(
-          //                       'You have not register yet. Register now to prevent any loss of your history data if you wish to uninstall this app or change devices. You can also login to your old account if you have created before',
-          //                       textAlign: TextAlign.center),
-          //                   content: SizedBox(
-          //                     height: 80,
-          //                     child: Column(
-          //                       children: [
-          //                         Padding(
-          //                           padding: const EdgeInsets.only(top: 25.0),
-          //                           child: Row(
-          //                             mainAxisAlignment:
-          //                                 MainAxisAlignment.spaceEvenly,
-          //                             children: [
-          //                               ElevatedButton(
-          //                                   onPressed: () {
-          //                                     Navigator.pop(context);
-          //                                   },
-          //                                   // icon: const Icon(Icons.close),
-          //                                   child: const Text('Later')),
-          //                               ElevatedButton(
-          //                                   onPressed: () {
-          //                                     Navigator.pop(context);
-          //                                     Navigator.push(
-          //                                         context,
-          //                                         MaterialPageRoute(
-          //                                             builder: (context) =>
-          //                                                 const Register()));
-          //                                   },
-          //                                   // icon: const Icon(Icons.check),
-          //                                   child: const Text('Register Now'))
-          //                             ],
-          //                           ),
-          //                         ),
-          //                       ],
-          //                     ),
-          //                   ),
-          //                 );
-          //               });
-          //         })
-          //     : IconButton(
           IconButton(
               icon: const Icon(Icons.info),
               onPressed: () {

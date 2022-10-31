@@ -67,12 +67,6 @@ class Register extends StatelessWidget {
                   style: TextStyle(color: Colors.orange.shade900),
                 ),
                 onTap: () async {
-                  // try {
-                  //   await FirebaseAuth.instance
-                  //       .sendPasswordResetEmail(email: emailController.text);
-                  // } on FirebaseAuthException catch (e) {
-                  //   showNotification(context, e.message.toString());
-                  // }
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -101,6 +95,7 @@ class Register extends StatelessWidget {
                           }
                         } else {
                           await FirebaseAuth.instance.signOut();
+                          await FirebaseAuth.instance.signInAnonymously();
                         }
                       },
                       // CODE HERE: Change button text based on current user
