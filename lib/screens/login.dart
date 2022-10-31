@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shorten_url/screens/forgot_password.dart';
-import 'package:shorten_url/screens/login.dart';
+import 'package:shorten_url/screens/register.dart';
 import 'package:shorten_url/screens/signingoogle.dart';
 import 'package:shorten_url/screens/signinphonenumber.dart';
 
-class Register extends StatelessWidget {
-  const Register({Key? key}) : super(key: key);
+class Login extends StatelessWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -90,15 +90,11 @@ class Register extends StatelessWidget {
                         if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                           try {
                             await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
+                                .signInWithEmailAndPassword(
                                     email: emailController.text,
                                     password: passwordController.text);
-                            // AuthCredential authCredential =
-                            //     EmailAuthProvider.credential(
-                            //         email: emailController.text,
-                            //         password: passwordController.text);
-                            //         FirebaseAuth.instance.signInAnonymously().currentUser.linkWithCredential(authCredential);
-                            // print(authCredential);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
                           } on FirebaseAuthException catch (e) {
                             showNotification(context, e.message.toString());
                           }
@@ -113,7 +109,7 @@ class Register extends StatelessWidget {
                           builder: (context, snapshot) {
                             if (FirebaseAuth
                                 .instance.currentUser!.isAnonymous) {
-                              return const Text("Register");
+                              return const Text("Login");
                             } else {
                               return const Text("Logout");
                             }
@@ -126,14 +122,14 @@ class Register extends StatelessWidget {
                         // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
                         margin: const EdgeInsets.only(top: 10, bottom: 40),
                         // alignment: Alignment.center,
-                        child: const Text("Already have an account ?  ")),
+                        child: const Text("Don't have an account ?  ")),
                     Container(
                       // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
                       margin: const EdgeInsets.only(top: 10, bottom: 40),
                       // alignment: Alignment.center,
                       child: GestureDetector(
                         child: Text(
-                          'Login',
+                          'Register',
                           style: TextStyle(
                               color: Colors.orange.shade900,
                               fontWeight: FontWeight.bold),
@@ -142,7 +138,7 @@ class Register extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const Login()));
+                                  builder: (context) => const Register()));
                         },
                       ),
                     ),

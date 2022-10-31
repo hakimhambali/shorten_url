@@ -25,17 +25,19 @@ class SignInPhoneNumber extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            //* SIGN IN STATUS
-            // CODE HERE: Change status based on current user
-            StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.userChanges(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return const Text("Sign Out");
-                  } else {
-                    return const Text("You haven't signed in yet");
-                  }
-                }),
+            const Text("Enter with country code (eg:60123456789)"),
+
+            // //* SIGN IN STATUS
+            // // CODE HERE: Change status based on current user
+            // StreamBuilder<User?>(
+            //     stream: FirebaseAuth.instance.userChanges(),
+            //     builder: (context, snapshot) {
+            //       if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+            //         return const Text("Sign Out");
+            //       } else {
+            //         return const Text("You haven't signed in yet");
+            //       }
+            //     }),
             const SizedBox(height: 15),
 
             //* PHONE TEXTFIELD
@@ -63,7 +65,7 @@ class SignInPhoneNumber extends StatelessWidget {
                         MaterialStateProperty.all(Colors.green.shade900)),
                 onPressed: () async {
                   // CODE HERE: Sign in with phone credential / Sign out from firebase
-                  if (FirebaseAuth.instance.currentUser == null) {
+                  if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                     await FirebaseAuth.instance.verifyPhoneNumber(
                         phoneNumber: '+${phoneController.text}',
                         verificationCompleted: (credential) async {
@@ -84,6 +86,8 @@ class SignInPhoneNumber extends StatelessWidget {
                             try {
                               FirebaseAuth.instance
                                   .signInWithCredential(credential);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
                             } on FirebaseAuthException catch (e) {
                               log(e.message.toString());
                             }
@@ -92,16 +96,17 @@ class SignInPhoneNumber extends StatelessWidget {
                         codeAutoRetrievalTimeout: (verificationId) {});
                   } else {
                     FirebaseAuth.instance.signOut();
+                    await FirebaseAuth.instance.signInAnonymously();
                   }
                 },
                 // CODE HERE: Change button text based on current user
                 child: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.userChanges(),
                     builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return const Text("Sign Out");
+                      if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                        return const Text("Login");
                       } else {
-                        return const Text("Sign In");
+                        return const Text("Logout");
                       }
                     }),
               ),
