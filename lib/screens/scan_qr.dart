@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:clipboard/clipboard.dart';
@@ -10,6 +12,7 @@ class ScanQR extends StatefulWidget {
 }
 
 class _ScanQRState extends State<ScanQR> {
+  DateTime now = DateTime.now();
   final GlobalKey _globalKey = GlobalKey();
   QRViewController? controller;
   Barcode? result;
@@ -18,6 +21,10 @@ class _ScanQRState extends State<ScanQR> {
     controller.scannedDataStream.listen((event) {
       setState(() {
         result = event;
+        createScanQRHistory(
+            originalLink: result!.code!,
+            newLink: result!.code!,
+            date: now.toString());
       });
     });
   }
@@ -111,5 +118,19 @@ class _ScanQRState extends State<ScanQR> {
       print('Could not launch $url');
       return false;
     }
+  }
+
+  Future createScanQRHistory(
+      {required String originalLink, newLink, required String date}) async {
+    final historyUser = FirebaseFirestore.instance.collection('history').doc();
+    final json = {
+      'docID': historyUser.id,
+      'originalLink': originalLink,
+      'newLink': newLink,
+      'date': date,
+      'type': "Scan QR",
+      'userID': FirebaseAuth.instance.currentUser!.uid.toString()
+    };
+    await historyUser.set(json);
   }
 }

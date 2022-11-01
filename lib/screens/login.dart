@@ -135,10 +135,7 @@ class Login extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                         onTap: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Register()));
+                          Navigator.pop(context);
                         },
                       ),
                     ),

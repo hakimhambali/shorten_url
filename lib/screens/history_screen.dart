@@ -85,7 +85,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   for (int x = 0; x < users.length; x++)
                     users[x].type == "Shorten link URL"
                         ? buildShortURL(users[x])
-                        : buildGeneratedQR(users[x])
+                        : users[x].type == "Generate QR"
+                            ? buildGeneratedQR(users[x])
+                            : buildScanQR(users[x])
                 ],
               );
             } else {
@@ -316,6 +318,60 @@ class _HistoryScreenState extends State<HistoryScreen> {
             }),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ViewQR(item.originalLink, item.newLink))),
+        // builder: (context) => ViewQR(item.originalLink, item.newLink))),
+      );
+
+  Widget buildScanQR(History item) => ListTile(
+        title: Text(item.type),
+        subtitle: Text(item.date),
+        tileColor: Colors.deepOrange[200],
+        onLongPress: () => showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Are you sure want to delete this ?',
+                    textAlign: TextAlign.center),
+                content: SizedBox(
+                  height: 80,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.close),
+                                label: const Text('No')),
+                            ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  final deleteUser = FirebaseFirestore.instance
+                                      .collection('history')
+                                      .doc(item.docID);
+                                  deleteUser.delete().then((_) => ScaffoldMessenger
+                                          .of(context)
+                                      .showSnackBar(const SnackBar(
+                                          backgroundColor: Colors.green,
+                                          content: Text(
+                                              'Successfully delete history'))));
+                                },
+                                icon: const Icon(Icons.check),
+                                label: const Text('Yes'))
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+        // onTap: () => Navigator.of(context).push(MaterialPageRoute(
+        //     builder: (context) =>
+        //         ScanQR(item.originalLink, item.originalLink))),
       );
 
   Stream<List<History>> readUsers() => FirebaseFirestore.instance

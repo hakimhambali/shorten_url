@@ -62,6 +62,9 @@ class SignInGoogle extends StatelessWidget {
                         await FirebaseAuth.instance
                             .signInWithCredential(credential);
                       }
+                      // Navigator.of(context).popUntil((route) {
+                      //   return route.settings.name == 'History';
+                      // });
                       Navigator.pop(context);
                       Navigator.pop(context);
                     } else {
