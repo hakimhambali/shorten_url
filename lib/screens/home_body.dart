@@ -320,7 +320,7 @@ class _HomeBodyState extends State<HomeBody> {
                     child: ElevatedButton(
                       onPressed: () async {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => ScanQR()));
+                            MaterialPageRoute(builder: (context) => const ScanQR(link: '')));
                       },
                       child: const Text('Scan QR'),
                     ),

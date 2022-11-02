@@ -7,6 +7,12 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ScanQR extends StatefulWidget {
+  final String link;
+  const ScanQR({
+    Key? key,
+    required this.link,
+  }) : super(key: key);
+
   @override
   State<ScanQR> createState() => _ScanQRState();
 }
@@ -39,66 +45,108 @@ class _ScanQRState extends State<ScanQR> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            result == null
+            result == null && widget.link == ''
                 ? SizedBox(
-                    // height: (result == null) ? 400 : 0,
-                    // width: (result == null) ? 300 : 0,
-                    // child: (result == null)
-                    //     ? QRView(key: _globalKey, onQRViewCreated: qr)
-                    //     : null,
                     height: 400,
                     width: 300,
                     child: QRView(key: _globalKey, onQRViewCreated: qr))
+                // : result == null && widget.link != ''
+                //     ? SizedBox(
+                //         height: 400,
+                //         width: 300,
+                //         child: QRView(key: _globalKey, onQRViewCreated: qr))
                 : const SizedBox(),
             Center(
-                child: (result != null)
-                    ? Text(
-                        '${result!.code}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      )
-                    : Container(
+                child: (result == null && widget.link == '')
+                    ? Container(
                         margin: const EdgeInsets.only(top: 30.0),
                         child: const Text('Tap to start scanning QR code'),
-                      )),
-            result != null
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                          icon: const Icon(Icons.content_copy),
-                          onPressed: () async {
-                            await FlutterClipboard.copy('${result!.code}');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('✓   Copied to Clipboard')),
-                            );
-                          }),
-                      IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {
-                            var url = Uri.parse('${result!.code}');
-                            launchURL(url);
-                          }),
-                      IconButton(
-                          icon: const Icon(Icons.share),
-                          onPressed: () {
-                            Share.share('${result!.code}');
-                          }),
-                    ],
-                  )
-                : Row(),
-            result != null
-                ? Row(
+                      )
+                    : (result == null && widget.link != '')
+                        ? Text(
+                            widget.link,
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          )
+                        : Text(
+                            '${result!.code}',
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          )),
+            result == null && widget.link == ''
+                ? Row()
+                : result == null && widget.link != ''
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                              icon: const Icon(Icons.content_copy),
+                              onPressed: () async {
+                                await FlutterClipboard.copy(widget.link);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('✓   Copied to Clipboard')),
+                                );
+                              }),
+                          IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () {
+                                var url = Uri.parse(widget.link);
+                                launchURL(url);
+                              }),
+                          IconButton(
+                              icon: const Icon(Icons.share),
+                              onPressed: () {
+                                Share.share(widget.link);
+                              }),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                              icon: const Icon(Icons.content_copy),
+                              onPressed: () async {
+                                await FlutterClipboard.copy('${result!.code}');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('✓   Copied to Clipboard')),
+                                );
+                              }),
+                          IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () {
+                                var url = Uri.parse('${result!.code}');
+                                launchURL(url);
+                              }),
+                          IconButton(
+                              icon: const Icon(Icons.share),
+                              onPressed: () {
+                                Share.share('${result!.code}');
+                              }),
+                        ],
+                      ),
+            result == null && widget.link == ''
+                ? Row()
+                // : result == null && widget.link != ''
+                //     ? Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //         children: const [
+                //           Text('Copy'),
+                //           Text('Visit'),
+                //           Text('Share'),
+                //         ],
+                //       )
+                : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: const [
                       Text('Copy'),
                       Text('Visit'),
                       Text('Share'),
                     ],
-                  )
-                : Row(),
+                  ),
           ],
         ),
         // child: QRView(
