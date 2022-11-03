@@ -88,17 +88,31 @@ class Register extends StatelessWidget {
                               Colors.orange.shade900)),
                       onPressed: () async {
                         if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                          // try {
+                          //   await FirebaseAuth.instance
+                          //       .createUserWithEmailAndPassword(
+                          //           email: emailController.text,
+                          //           password: passwordController.text);
+                          //   // AuthCredential authCredential =
+                          //   //     EmailAuthProvider.credential(
+                          //   //         email: emailController.text,
+                          //   //         password: passwordController.text);
+                          //   //         FirebaseAuth.instance.signInAnonymously().currentUser.linkWithCredential(authCredential);
+                          //   // print(authCredential);
+                          // } on FirebaseAuthException catch (e) {
+                          //   showNotification(context, e.message.toString());
+                          // }
                           try {
-                            await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text);
-                            // AuthCredential authCredential =
-                            //     EmailAuthProvider.credential(
-                            //         email: emailController.text,
-                            //         password: passwordController.text);
-                            //         FirebaseAuth.instance.signInAnonymously().currentUser.linkWithCredential(authCredential);
-                            // print(authCredential);
+                            var credential = EmailAuthProvider.credential(
+                                email: emailController.text,
+                                password: passwordController.text);
+
+                            FirebaseAuth.instance.currentUser!
+                                .linkWithCredential(credential)
+                                .then((user) {
+                              // debugPrint("BERJAYA LINK ACCOUNT");
+                              return user;
+                            });
                           } on FirebaseAuthException catch (e) {
                             showNotification(context, e.message.toString());
                           }
