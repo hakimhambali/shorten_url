@@ -2,13 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ForgotPassword extends StatelessWidget {
+class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
+}
 
+class _ForgotPasswordState extends State<ForgotPassword> {
+  TextEditingController emailController = TextEditingController();
+  bool validate = true;
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.orange.shade50,
       body: Center(
@@ -28,25 +33,40 @@ class ForgotPassword extends StatelessWidget {
             Container(
               margin: const EdgeInsets.fromLTRB(30, 25, 30, 10),
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(15)),
-              child: TextField(
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
+              // color: Colors.white, borderRadius: BorderRadius.circular(15)),
+              child: TextFormField(
                 controller: emailController,
                 cursorColor: Colors.orange,
-                decoration: const InputDecoration(
-                    border: InputBorder.none, hintText: 'Email'),
+                onChanged: (value) {
+                  setState(() {
+                    validate = validateEmail(value);
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Enter your email here',
+                  hintText: 'ahmadalbab99@gmail.com',
+                  errorText: validate ? null : "Please insert valid email",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
               ),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 330,
+                  width: 300,
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.orange.shade900)),
                     onPressed: () async {
+                      validate = validateEmail(emailController.text);
+                      setState(() {});
                       try {
                         await FirebaseAuth.instance.sendPasswordResetEmail(
                             email: emailController.text);
@@ -64,6 +84,16 @@ class ForgotPassword extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool validateEmail(String email) {
+    if (RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void showNotification(BuildContext context, String message) {

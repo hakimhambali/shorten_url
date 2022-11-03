@@ -6,14 +6,19 @@ import 'package:shorten_url/screens/login.dart';
 import 'package:shorten_url/screens/signingoogle.dart';
 import 'package:shorten_url/screens/signinphonenumber.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
+  State<Register> createState() => _RegisterState();
+}
 
+class _RegisterState extends State<Register> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool validate = true;
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.orange.shade50,
       body: Center(
@@ -38,25 +43,50 @@ class Register extends StatelessWidget {
             Container(
               margin: const EdgeInsets.fromLTRB(30, 25, 30, 10),
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(15)),
-              child: TextField(
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
+              child: TextFormField(
                 controller: emailController,
                 cursorColor: Colors.orange,
-                decoration: const InputDecoration(
-                    border: InputBorder.none, hintText: 'Email'),
+                onChanged: (value) {
+                  setState(() {
+                    validate = validateEmail(value);
+                    validate = validatePassword(value);
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Enter your email here',
+                  hintText: 'ahmadalbab99@gmail.com',
+                  errorText: validate ? null : "Please insert valid email",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
               ),
             ),
             Container(
               margin: const EdgeInsets.fromLTRB(30, 10, 30, 15),
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(15)),
+              // decoration: BoxDecoration(
+              //     color: Colors.white, borderRadius: BorderRadius.circular(15)),
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
               child: TextField(
                 controller: passwordController,
                 cursorColor: Colors.orange,
-                decoration: const InputDecoration(
-                    border: InputBorder.none, hintText: 'Password'),
+                decoration: InputDecoration(
+                  labelText: 'Enter your password here',
+                  hintText: '*********',
+                  errorText: validate
+                      ? null
+                      // : "Password should contain at least one upper case, one lower case, one digit, one Special character and at least 8 characters in length",
+                      : "Please insert valid password",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
               ),
             ),
             Container(
@@ -77,32 +107,25 @@ class Register extends StatelessWidget {
                 },
               ),
             ),
+            const SizedBox(
+              height: 30,
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 330,
+                  width: 300,
                   child: ElevatedButton(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               Colors.orange.shade900)),
                       onPressed: () async {
+                        validate = validateEmail(emailController.text);
+                        validate = validatePassword(passwordController.text);
+                        setState(() {});
                         if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                          // try {
-                          //   await FirebaseAuth.instance
-                          //       .createUserWithEmailAndPassword(
-                          //           email: emailController.text,
-                          //           password: passwordController.text);
-                          //   // AuthCredential authCredential =
-                          //   //     EmailAuthProvider.credential(
-                          //   //         email: emailController.text,
-                          //   //         password: passwordController.text);
-                          //   //         FirebaseAuth.instance.signInAnonymously().currentUser.linkWithCredential(authCredential);
-                          //   // print(authCredential);
-                          // } on FirebaseAuthException catch (e) {
-                          //   showNotification(context, e.message.toString());
-                          // }
                           try {
+                            debugPrint("BERJAYA LINK ACCOUNT");
                             var credential = EmailAuthProvider.credential(
                                 email: emailController.text,
                                 password: passwordController.text);
@@ -110,11 +133,20 @@ class Register extends StatelessWidget {
                             FirebaseAuth.instance.currentUser!
                                 .linkWithCredential(credential)
                                 .then((user) {
-                              // debugPrint("BERJAYA LINK ACCOUNT");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.green,
+                                    content: Text(
+                                        'Successfully register using email')),
+                              );
+                              Navigator.pop(context);
                               return user;
                             });
                           } on FirebaseAuthException catch (e) {
+                            debugPrint("X BERJAYA LINK ACCOUNT");
                             showNotification(context, e.message.toString());
+                          } catch (e) {
+                            debugPrint("2X BERJAYA LINK ACCOUNT");
                           }
                         } else {
                           await FirebaseAuth.instance.signOut();
@@ -138,12 +170,12 @@ class Register extends StatelessWidget {
                   children: [
                     Container(
                         // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
-                        margin: const EdgeInsets.only(top: 10, bottom: 40),
+                        margin: const EdgeInsets.only(top: 10, bottom: 20),
                         // alignment: Alignment.center,
                         child: const Text("Already have an account ?  ")),
                     Container(
                       // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
-                      margin: const EdgeInsets.only(top: 10, bottom: 40),
+                      margin: const EdgeInsets.only(top: 10, bottom: 20),
                       // alignment: Alignment.center,
                       child: GestureDetector(
                         child: Text(
@@ -164,7 +196,7 @@ class Register extends StatelessWidget {
                 ),
                 const Text("OR"),
                 SizedBox(
-                  width: 330,
+                  width: 300,
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
@@ -179,7 +211,7 @@ class Register extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 330,
+                  width: 300,
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
@@ -205,5 +237,24 @@ class Register extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.orange.shade900,
         content: Text(message.toString())));
+  }
+
+  bool validateEmail(String email) {
+    if (RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool validatePassword(String email) {
+    if (RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+        .hasMatch(email)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

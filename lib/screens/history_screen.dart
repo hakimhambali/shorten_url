@@ -52,7 +52,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           Navigator.pop(context);
                                         },
                                         // icon: const Icon(Icons.close),
-                                        child: const Text('Later')),
+                                        child: FirebaseAuth.instance
+                                                .currentUser!.isAnonymous
+                                            ? const Text('Later')
+                                            : const Text('No')),
                                     ElevatedButton(
                                         onPressed: () {
                                           Navigator.pop(context);
@@ -63,7 +66,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                       const Register()));
                                         },
                                         // icon: const Icon(Icons.check),
-                                        child: const Text('Register Now'))
+                                        child: FirebaseAuth.instance
+                                                .currentUser!.isAnonymous
+                                            ? const Text('Register Now')
+                                            : const Text('Yes')),
                                   ],
                                 ),
                               ),
@@ -371,8 +377,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               );
             }),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                ScanQR(link: item.originalLink))),
+            builder: (context) => ScanQR(link: item.originalLink))),
       );
 
   Stream<List<History>> readUsers() => FirebaseFirestore.instance

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -50,23 +52,50 @@ class SignInGoogle extends StatelessWidget {
                   onPressed: () async {
                     // CODE HERE: Sign in with Google Credential / Sign out from firebase & Google
                     if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                      GoogleSignInAccount? account =
-                          await GoogleSignIn().signIn();
-                      if (account != null) {
-                        GoogleSignInAuthentication auth =
-                            await account.authentication;
-                        OAuthCredential credential =
-                            GoogleAuthProvider.credential(
-                                accessToken: auth.accessToken,
-                                idToken: auth.idToken);
-                        await FirebaseAuth.instance
-                            .signInWithCredential(credential);
+                      // GoogleSignInAccount? account =
+                      //     await GoogleSignIn().signIn();
+                      // if (account != null) {
+                      //   GoogleSignInAuthentication auth =
+                      //       await account.authentication;
+                      //   OAuthCredential credential =
+                      //       GoogleAuthProvider.credential(
+                      //           accessToken: auth.accessToken,
+                      //           idToken: auth.idToken);
+                      //   await FirebaseAuth.instance
+                      //       .signInWithCredential(credential);
+                      // }
+                      try {
+                        GoogleSignInAccount? account =
+                            await GoogleSignIn().signIn();
+                        if (account != null) {
+                          GoogleSignInAuthentication auth =
+                              await account.authentication;
+                          var credential = GoogleAuthProvider.credential(
+                              accessToken: auth.accessToken,
+                              idToken: auth.idToken);
+                          await FirebaseAuth.instance.currentUser!
+                              .linkWithCredential(credential)
+                              .then((user) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Text(
+                                      'Successfully login using google account')),
+                            );
+                            return user;
+                          });
+                        }
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      } on FirebaseAuthException catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                  'Cannot register, account already registered')),
+                        );
+                        log(e.message.toString());
                       }
-                      // Navigator.of(context).popUntil((route) {
-                      //   return route.settings.name == 'History';
-                      // });
-                      Navigator.pop(context);
-                      Navigator.pop(context);
                     } else {
                       showDialog(
                           context: context,
@@ -121,7 +150,7 @@ class SignInGoogle extends StatelessWidget {
                       stream: FirebaseAuth.instance.userChanges(),
                       builder: (context, snapshot) {
                         if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                          return const Text("Login");
+                          return const Text("Register");
                         } else {
                           return const Text('Logout');
                         }

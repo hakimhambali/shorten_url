@@ -84,8 +84,13 @@ class SignInPhoneNumber extends StatelessWidget {
                                     verificationId: verificationId,
                                     smsCode: smsCode);
                             try {
-                              FirebaseAuth.instance
-                                  .signInWithCredential(credential);
+                              FirebaseAuth.instance.currentUser!
+                                  .linkWithCredential(credential)
+                                  .then((user) {
+                                return user;
+                              });
+                              // FirebaseAuth.instance
+                              //     .signInWithCredential(credential);
                               Navigator.pop(context);
                               Navigator.pop(context);
                             } on FirebaseAuthException catch (e) {
