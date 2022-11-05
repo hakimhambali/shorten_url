@@ -16,7 +16,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool validate = true;
+  bool checkEmail = true;
+  bool checkPassword = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,14 +51,13 @@ class _RegisterState extends State<Register> {
                 cursorColor: Colors.orange,
                 onChanged: (value) {
                   setState(() {
-                    validate = validateEmail(value);
-                    validate = validatePassword(value);
+                    checkEmail = validateEmail(value);
                   });
                 },
                 decoration: InputDecoration(
                   labelText: 'Enter your email here',
                   hintText: 'ahmadalbab99@gmail.com',
-                  errorText: validate ? null : "Please insert valid email",
+                  errorText: checkEmail ? null : "Please insert valid email",
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -72,13 +72,18 @@ class _RegisterState extends State<Register> {
               //     color: Colors.white, borderRadius: BorderRadius.circular(15)),
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(15)),
-              child: TextField(
+              child: TextFormField(
                 controller: passwordController,
                 cursorColor: Colors.orange,
+                onChanged: (value) {
+                  setState(() {
+                    checkPassword = validatePassword(value);
+                  });
+                },
                 decoration: InputDecoration(
                   labelText: 'Enter your password here',
                   hintText: '*********',
-                  errorText: validate
+                  errorText: checkPassword
                       ? null
                       // : "Password should contain at least one upper case, one lower case, one digit, one Special character and at least 8 characters in length",
                       : "Please insert valid password",
@@ -120,11 +125,12 @@ class _RegisterState extends State<Register> {
                           backgroundColor: MaterialStateProperty.all(
                               Colors.orange.shade900)),
                       onPressed: () async {
-                        validate = validateEmail(emailController.text);
-                        validate = validatePassword(passwordController.text);
+                        checkEmail = validateEmail(emailController.text);
+                        checkPassword =
+                            validatePassword(passwordController.text);
                         setState(() {});
-                        if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                          try {
+                        try {
+                          if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                             debugPrint("BERJAYA LINK ACCOUNT");
                             var credential = EmailAuthProvider.credential(
                                 email: emailController.text,
@@ -142,15 +148,15 @@ class _RegisterState extends State<Register> {
                               Navigator.pop(context);
                               return user;
                             });
-                          } on FirebaseAuthException catch (e) {
-                            debugPrint("X BERJAYA LINK ACCOUNT");
-                            showNotification(context, e.message.toString());
-                          } catch (e) {
-                            debugPrint("2X BERJAYA LINK ACCOUNT");
+                          } else {
+                            await FirebaseAuth.instance.signOut();
+                            await FirebaseAuth.instance.signInAnonymously();
                           }
-                        } else {
-                          await FirebaseAuth.instance.signOut();
-                          await FirebaseAuth.instance.signInAnonymously();
+                        } on FirebaseAuthException catch (e) {
+                          debugPrint("X BERJAYA LINK ACCOUNT");
+                          showNotification(context, e.message.toString());
+                        } catch (e) {
+                          debugPrint("2X BERJAYA LINK ACCOUNT");
                         }
                       },
                       // CODE HERE: Change button text based on current user
@@ -241,7 +247,7 @@ class _RegisterState extends State<Register> {
 
   bool validateEmail(String email) {
     if (RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(email)) {
       return true;
     } else {
@@ -249,9 +255,9 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  bool validatePassword(String email) {
+  bool validatePassword(String password) {
     if (RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-        .hasMatch(email)) {
+        .hasMatch(password)) {
       return true;
     } else {
       return false;

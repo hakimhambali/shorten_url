@@ -72,7 +72,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             email: emailController.text);
                         Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
-                        showNotification(context, e.message.toString());
+                        if (validate == true) {
+                          showNotification(context, e.message.toString());
+                        }
                       }
                     },
                     child: const Text("Reset Password"),
@@ -88,7 +90,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   bool validateEmail(String email) {
     if (RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(email)) {
       return true;
     } else {
