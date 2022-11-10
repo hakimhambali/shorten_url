@@ -35,10 +35,14 @@ class _RegisterState extends State<Register> {
             StreamBuilder<User?>(
                 stream: FirebaseAuth.instance.userChanges(),
                 builder: (context, snapshot) {
-                  if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                  if (FirebaseAuth.instance.currentUser == null) {
                     return const Text("You haven't signed in yet");
                   } else {
-                    return Text('SIGNED IN ${snapshot.data?.email}');
+                    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                      return const Text("You haven't signed in yet");
+                    } else {
+                      return Text('SIGNED IN ${snapshot.data?.email}');
+                    }
                   }
                 }),
             Container(
@@ -149,8 +153,11 @@ class _RegisterState extends State<Register> {
                               return user;
                             });
                           } else {
-                            await FirebaseAuth.instance.signOut();
-                            await FirebaseAuth.instance.signInAnonymously();
+                            await FirebaseAuth.instance
+                                .signOut()
+                                .then((value) async {
+                              await FirebaseAuth.instance.signInAnonymously();
+                            });
                           }
                         } on FirebaseAuthException catch (e) {
                           debugPrint("X BERJAYA LINK ACCOUNT");
@@ -163,11 +170,21 @@ class _RegisterState extends State<Register> {
                       child: StreamBuilder<User?>(
                           stream: FirebaseAuth.instance.userChanges(),
                           builder: (context, snapshot) {
-                            if (FirebaseAuth
-                                .instance.currentUser!.isAnonymous) {
-                              return const Text("Register");
+                            if (FirebaseAuth.instance.currentUser == null) {
+                              return const SizedBox(
+                                height: 16,
+                                width: 16,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
                             } else {
-                              return const Text("Logout");
+                              if (FirebaseAuth
+                                  .instance.currentUser!.isAnonymous) {
+                                return const Text("Register");
+                              } else {
+                                return const Text("Logout");
+                              }
                             }
                           })),
                 ),

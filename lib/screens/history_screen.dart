@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
+import 'package:shorten_url/screens/result_scan_qr.dart';
 import 'package:shorten_url/screens/scan_qr.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'register.dart';
@@ -324,7 +325,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               );
             }),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ViewQR(item.originalLink, item.newLink))),
+            builder: (context) => ViewQR(originalLink: item.originalLink, newLink: item.originalLink,))),
         // builder: (context) => ViewQR(item.originalLink, item.newLink))),
       );
 
@@ -377,7 +378,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
               );
             }),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ScanQR(link: item.originalLink))),
+            // builder: (context) => ScanQR(link: item.originalLink))),
+            builder: (context) => ResultScanQR(
+                  result: item.originalLink,
+                ))),
       );
 
   Stream<List<History>> readUsers() => FirebaseFirestore.instance

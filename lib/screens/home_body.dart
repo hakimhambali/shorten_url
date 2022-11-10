@@ -257,15 +257,18 @@ class _HomeBodyState extends State<HomeBody> {
                                   // print(shortenUrl);
                                   // print(generateQR);
                                   // print(controller.text);
-                                  controller.clear();
+
                                   createGenerateQRHistory(
                                       originalLink: controller.text,
                                       newLink: controller.text,
                                       date: now.toString());
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          ViewQR(controller.text, '')));
+                                      builder: (context) => ViewQR(
+                                            originalLink: controller.text,
+                                            newLink: '',
+                                          )));
                                 }
+                                // controller.clear(); //PUNCA
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -319,8 +322,11 @@ class _HomeBodyState extends State<HomeBody> {
                     height: 40.0,
                     child: ElevatedButton(
                       onPressed: () async {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const ScanQR(link: '')));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                // builder: (context) => const ScanQR(link: '')));
+                                builder: (context) => const ScanQR()));
                       },
                       child: const Text('Scan QR'),
                     ),

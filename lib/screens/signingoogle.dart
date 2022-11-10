@@ -52,18 +52,6 @@ class SignInGoogle extends StatelessWidget {
                   onPressed: () async {
                     // CODE HERE: Sign in with Google Credential / Sign out from firebase & Google
                     if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                      // GoogleSignInAccount? account =
-                      //     await GoogleSignIn().signIn();
-                      // if (account != null) {
-                      //   GoogleSignInAuthentication auth =
-                      //       await account.authentication;
-                      //   OAuthCredential credential =
-                      //       GoogleAuthProvider.credential(
-                      //           accessToken: auth.accessToken,
-                      //           idToken: auth.idToken);
-                      //   await FirebaseAuth.instance
-                      //       .signInWithCredential(credential);
-                      // }
                       try {
                         GoogleSignInAccount? account =
                             await GoogleSignIn().signIn();
@@ -88,13 +76,35 @@ class SignInGoogle extends StatelessWidget {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
+                        // if (e.code == "credential-already-in-use") {
+                        GoogleSignInAccount? account =
+                            await GoogleSignIn().signIn();
+                        if (account != null) {
+                          GoogleSignInAuthentication auth =
+                              await account.authentication;
+                          OAuthCredential credential =
+                              GoogleAuthProvider.credential(
+                                  accessToken: auth.accessToken,
+                                  idToken: auth.idToken);
+                          await FirebaseAuth.instance
+                              .signInWithCredential(credential);
+                        }
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        // } else {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //         backgroundColor: Colors.red,
+                        //         content: Text('Invalid Login')),
+                        //   );
+                        //   log(e.message.toString());
+                        // }
+                      } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               backgroundColor: Colors.red,
-                              content: Text(
-                                  'Cannot register, account already registered')),
+                              content: Text('Invalid Login')),
                         );
-                        log(e.message.toString());
                       }
                     } else {
                       showDialog(
@@ -150,7 +160,7 @@ class SignInGoogle extends StatelessWidget {
                       stream: FirebaseAuth.instance.userChanges(),
                       builder: (context, snapshot) {
                         if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                          return const Text("Register");
+                          return const Text("Login");
                         } else {
                           return const Text('Logout');
                         }

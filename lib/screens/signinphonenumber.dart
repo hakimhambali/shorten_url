@@ -4,13 +4,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignInPhoneNumber extends StatelessWidget {
+class SignInPhoneNumber extends StatefulWidget {
   const SignInPhoneNumber({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController phoneController = TextEditingController();
+  State<SignInPhoneNumber> createState() => _SignInPhoneNumberState();
+}
 
+class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
+  TextEditingController phoneController = TextEditingController();
+  bool validate = true;
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green.shade50,
       body: Center(
@@ -50,9 +55,25 @@ class SignInPhoneNumber extends StatelessWidget {
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
                 cursorColor: Colors.green,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Enter with country code (eg:60123456789)'),
+                onChanged: (value) {
+                  setState(() {
+                    validate = validateNumber(value);
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Enter your phone number here',
+                  // hintText: 'ahmadalbab99@gmail.com',
+                  hintText: 'Enter with country code',
+                  errorText:
+                      validate ? null : "Please insert valid phone number",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                // decoration: const InputDecoration(
+                //     border: InputBorder.none,
+                //     hintText: 'Enter with country code (eg:60123456789)'),
               ),
             ),
 
@@ -64,44 +85,63 @@ class SignInPhoneNumber extends StatelessWidget {
                     backgroundColor:
                         MaterialStateProperty.all(Colors.green.shade900)),
                 onPressed: () async {
-                  // CODE HERE: Sign in with phone credential / Sign out from firebase
-                  if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                    await FirebaseAuth.instance.verifyPhoneNumber(
-                        phoneNumber: '+${phoneController.text}',
-                        verificationCompleted: (credential) async {
-                          await FirebaseAuth.instance
-                              .signInWithCredential(credential);
-                        },
-                        verificationFailed: (exception) {
-                          showNotification(
-                              context, exception.message.toString());
-                        },
-                        codeSent: ((verificationId, resendCode) async {
-                          String? smsCode = await askingSMSCode(context);
-                          if (smsCode != null) {
-                            PhoneAuthCredential credential =
-                                PhoneAuthProvider.credential(
-                                    verificationId: verificationId,
-                                    smsCode: smsCode);
-                            try {
-                              FirebaseAuth.instance.currentUser!
-                                  .linkWithCredential(credential)
-                                  .then((user) {
-                                return user;
-                              });
-                              // FirebaseAuth.instance
-                              //     .signInWithCredential(credential);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            } on FirebaseAuthException catch (e) {
-                              log(e.message.toString());
-                            }
-                          }
-                        }),
-                        codeAutoRetrievalTimeout: (verificationId) {});
-                  } else {
-                    FirebaseAuth.instance.signOut();
-                    await FirebaseAuth.instance.signInAnonymously();
+                  try {
+                    validate = validateNumber(phoneController.text);
+                    setState(() {});
+                    // CODE HERE: Sign in with phone credential / Sign out from firebase
+
+                    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                      if (validate == true) {
+                        await FirebaseAuth.instance.verifyPhoneNumber(
+                            phoneNumber: '+${phoneController.text}',
+                            verificationCompleted: (credential) async {
+                              await FirebaseAuth.instance
+                                  .signInWithCredential(credential);
+                            },
+                            verificationFailed: (exception) {
+                              showNotification(
+                                  context, exception.message.toString());
+                            },
+                            codeSent: ((verificationId, resendCode) async {
+                              String? smsCode = await askingSMSCode(context);
+                              if (smsCode != null) {
+                                PhoneAuthCredential credential =
+                                    PhoneAuthProvider.credential(
+                                        verificationId: verificationId,
+                                        smsCode: smsCode);
+                                try {
+                                  FirebaseAuth.instance.currentUser!
+                                      .linkWithCredential(credential)
+                                      .then((user) {
+                                    return user;
+                                  });
+                                  // FirebaseAuth.instance
+                                  //     .signInWithCredential(credential);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                } on FirebaseAuthException catch (e) {
+                                  log(e.message.toString());
+                                }
+                              }
+                            }),
+                            codeAutoRetrievalTimeout: (verificationId) {});
+                      }
+                    } else {
+                      FirebaseAuth.instance.signOut();
+                      await FirebaseAuth.instance.signInAnonymously();
+                    }
+                  } on FirebaseAuthException catch (e) {
+                    debugPrint(
+                        "testtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
+                    print(e);
+                    print(e.code);
+                    log(e.message.toString());
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text('Invalid Login')),
+                    );
                   }
                 },
                 // CODE HERE: Change button text based on current user
@@ -124,8 +164,7 @@ class SignInPhoneNumber extends StatelessWidget {
 
   void showNotification(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.green.shade900,
-        content: Text(message.toString())));
+        backgroundColor: Colors.red, content: Text(message.toString())));
   }
 
   Future<String?> askingSMSCode(BuildContext context) async {
@@ -158,5 +197,13 @@ class SignInPhoneNumber extends StatelessWidget {
                         style: TextStyle(color: Colors.green.shade900)))
               ]);
         });
+  }
+
+  bool validateNumber(String number) {
+    if (RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)').hasMatch(number)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
