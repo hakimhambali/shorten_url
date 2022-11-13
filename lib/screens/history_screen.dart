@@ -344,7 +344,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget buildScanQR(History item) => ListTile(
         title: Text(item.type),
         subtitle: Text(item.date),
-        tileColor: Colors.deepOrange[200],
+        tileColor: Colors.yellow[100],
         onLongPress: () => showDialog(
             context: context,
             builder: (context) {
