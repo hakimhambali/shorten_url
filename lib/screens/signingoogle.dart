@@ -54,8 +54,13 @@ class SignInGoogle extends StatelessWidget {
                   onPressed: () async {
                     // CODE HERE: Sign in with Google Credential / Sign out from firebase & Google
                     if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                      GoogleSignIn _googleSignIn = GoogleSignIn();
-                      await _googleSignIn.disconnect();
+                      try {
+                        GoogleSignIn _googleSignIn = GoogleSignIn();
+                        await _googleSignIn.disconnect();
+                      } catch (e) {
+                        print(e);
+                      }
+
                       GoogleSignInAccount? account =
                           await GoogleSignIn().signIn();
                       try {
@@ -74,11 +79,11 @@ class SignInGoogle extends StatelessWidget {
                                   content: Text(
                                       'Successfully login using google account')),
                             );
+                            Navigator.pop(context);
+                            Navigator.pop(context);
                             return user;
                           });
                         }
-                        Navigator.pop(context);
-                        Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
                         // if (e.code == "credential-already-in-use") {
                         if (account != null) {
@@ -89,9 +94,18 @@ class SignInGoogle extends StatelessWidget {
                                   accessToken: auth.accessToken,
                                   idToken: auth.idToken);
                           await FirebaseAuth.instance
-                              .signInWithCredential(credential);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
+                              .signInWithCredential(credential)
+                              .then((user) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Text(
+                                      'Successfully login using google account')),
+                            );
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            return user;
+                          });
                         }
                         // }
                         else {

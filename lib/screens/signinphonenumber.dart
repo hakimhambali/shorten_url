@@ -114,6 +114,12 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                         verificationId: verificationId,
                                         smsCode: smsCode);
                                 try {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        backgroundColor: Colors.green,
+                                        content: Text(
+                                            'Successfully login using phone number')),
+                                  );
                                   FirebaseAuth.instance.currentUser!
                                       .linkWithCredential(credential)
                                       .then((user) {
