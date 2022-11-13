@@ -135,7 +135,6 @@ class _RegisterState extends State<Register> {
                         setState(() {});
                         try {
                           if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                            debugPrint("BERJAYA LINK ACCOUNT");
                             var credential = EmailAuthProvider.credential(
                                 email: emailController.text,
                                 password: passwordController.text);
@@ -153,14 +152,16 @@ class _RegisterState extends State<Register> {
                               return user;
                             });
                           } else {
-                            await FirebaseAuth.instance
-                                .signOut()
-                                .then((value) async {
-                              await FirebaseAuth.instance.signInAnonymously();
-                            });
+                            // FirebaseAuth.instance.signOut();
+                            // await FirebaseAuth.instance
+                            //     .signOut()
+                            //     .then((value) async {
+                            //   await FirebaseAuth.instance.signInAnonymously();
+                            // });
+                            await FirebaseAuth.instance.signOut();
+                            await FirebaseAuth.instance.signInAnonymously();
                           }
                         } on FirebaseAuthException catch (e) {
-                          debugPrint("X BERJAYA LINK ACCOUNT");
                           showNotification(context, e.message.toString());
                         } catch (e) {
                           debugPrint("2X BERJAYA LINK ACCOUNT");

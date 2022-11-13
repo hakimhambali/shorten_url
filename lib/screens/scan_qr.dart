@@ -31,7 +31,11 @@ class _ScanQRState extends State<ScanQR> {
     super.reassemble();
 
     if (Platform.isAndroid) {
-      await controller!.pauseCamera();
+      await controller!
+          .pauseCamera()
+          .whenComplete(() => controller!.resumeCamera().whenComplete(() {
+                setState(() {});
+              }));
     }
     controller!.resumeCamera();
   }
@@ -52,7 +56,7 @@ class _ScanQRState extends State<ScanQR> {
 
   Widget buildQRView(BuildContext context) => QRView(
         key: qrKey,
-        onQRViewCreated: qr,
+        onQRViewCreated: onQRGenerated,
         overlay: QrScannerOverlayShape(
           borderColor: Theme.of(context).accentColor,
           borderRadius: 10,
@@ -69,8 +73,9 @@ class _ScanQRState extends State<ScanQR> {
   //       .listen((barcode) => setState(() => this.barcode = barcode));
   // }
 
-  void qr(QRViewController controller) {
+  void onQRGenerated(QRViewController controller) {
     this.controller = controller;
+    controller.resumeCamera();
     controller.scannedDataStream.listen((event) {
       setState(() async {
         result = event;
@@ -108,6 +113,7 @@ class _ScanQRState extends State<ScanQR> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: Colors.white24,
+          // color: Colors.blue.withOpacity(0.25),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -115,46 +121,21 @@ class _ScanQRState extends State<ScanQR> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             IconButton(
-              icon: FutureBuilder<bool?>(
-                  future: controller?.getFlashStatus(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data != null) {
-                      return Icon(
-                          snapshot.data! ? Icons.flash_on : Icons.flash_off);
-                    } else {
-                      return Container();
-                    }
-                  }),
+              icon: const Icon(Icons.flash_on),
               onPressed: () async {
                 await controller?.toggleFlash();
                 setState(() {});
               },
             ),
             IconButton(
-              icon: FutureBuilder(
-                  future: controller?.getCameraInfo(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data != null) {
-                      return const Icon(Icons.switch_camera);
-                    } else {
-                      return Container();
-                    }
-                  }),
+              icon: const Icon(Icons.switch_camera),
               onPressed: () async {
                 await controller?.flipCamera();
                 setState(() {});
               },
             ),
             IconButton(
-              icon: FutureBuilder(
-                  future: controller?.getCameraInfo(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data != null) {
-                      return const Icon(Icons.image);
-                    } else {
-                      return Container();
-                    }
-                  }),
+              icon: const Icon(Icons.image),
               onPressed: () async {
                 String? test = await Scan.parse('gallery');
                 // await controller?.flipCamera();

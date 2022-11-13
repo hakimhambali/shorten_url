@@ -52,9 +52,11 @@ class SignInGoogle extends StatelessWidget {
                   onPressed: () async {
                     // CODE HERE: Sign in with Google Credential / Sign out from firebase & Google
                     if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                      GoogleSignIn _googleSignIn = GoogleSignIn();
+                      await _googleSignIn.disconnect();
+                      GoogleSignInAccount? account =
+                          await GoogleSignIn().signIn();
                       try {
-                        GoogleSignInAccount? account =
-                            await GoogleSignIn().signIn();
                         if (account != null) {
                           GoogleSignInAuthentication auth =
                               await account.authentication;
@@ -77,8 +79,6 @@ class SignInGoogle extends StatelessWidget {
                         Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
                         // if (e.code == "credential-already-in-use") {
-                        GoogleSignInAccount? account =
-                            await GoogleSignIn().signIn();
                         if (account != null) {
                           GoogleSignInAuthentication auth =
                               await account.authentication;
@@ -88,17 +88,18 @@ class SignInGoogle extends StatelessWidget {
                                   idToken: auth.idToken);
                           await FirebaseAuth.instance
                               .signInWithCredential(credential);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         }
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        // } else {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     const SnackBar(
-                        //         backgroundColor: Colors.red,
-                        //         content: Text('Invalid Login')),
-                        //   );
-                        //   log(e.message.toString());
                         // }
+                        else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('Invalid Login')),
+                          );
+                          log(e.message.toString());
+                        }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

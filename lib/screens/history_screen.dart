@@ -36,7 +36,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 'You have not register yet. Register now to prevent any loss of your history data if you wish to uninstall this app or change devices. You can also login to your account if you have registered before.',
                                 textAlign: TextAlign.center)
                             : const Text(
-                                'Your history data are bind with your account. Do wish to login to a different account or register a new account ?',
+                                'Your history data are bind with your account. You have to logout in order to login to a different account or register a new account. Logout now ?',
                                 textAlign: TextAlign.center),
                         content: SizedBox(
                           height: 80,
@@ -59,12 +59,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                             : const Text('No')),
                                     ElevatedButton(
                                         onPressed: () {
+                                          if (!FirebaseAuth.instance
+                                              .currentUser!.isAnonymous) {
+                                            FirebaseAuth.instance.signOut();
+                                            FirebaseAuth.instance
+                                                .signInAnonymously();
+                                          }
                                           Navigator.pop(context);
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const Register()));
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const Register()))
+                                              .then((value) {
+                                            setState(() {});
+                                          });
                                         },
                                         // icon: const Icon(Icons.check),
                                         child: FirebaseAuth.instance
@@ -158,8 +167,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
           builder: (context) {
             return AlertDialog(
               content: SizedBox(
-                height: 600,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Column(
                       children: [
@@ -325,7 +334,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
               );
             }),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ViewQR(originalLink: item.originalLink, newLink: item.originalLink,))),
+            builder: (context) => ViewQR(
+                  originalLink: item.originalLink,
+                  newLink: item.originalLink,
+                ))),
         // builder: (context) => ViewQR(item.originalLink, item.newLink))),
       );
 

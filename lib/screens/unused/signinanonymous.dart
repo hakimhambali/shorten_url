@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInAnonymous extends StatelessWidget {
   const SignInAnonymous({Key? key}) : super(key: key);
@@ -41,7 +42,7 @@ class SignInAnonymous extends StatelessWidget {
                 style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all(Colors.lightBlue.shade900)),
-                onPressed: () {
+                onPressed: () async {
                   // CODE HERE: Sign in anonymously / Sign out from firebase
                   if (FirebaseAuth.instance.currentUser != null) {
                     FirebaseAuth.instance.signOut();
