@@ -34,15 +34,19 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
 
             // //* SIGN IN STATUS
             // // CODE HERE: Change status based on current user
-            // StreamBuilder<User?>(
-            //     stream: FirebaseAuth.instance.userChanges(),
-            //     builder: (context, snapshot) {
-            //       if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-            //         return const Text("Sign Out");
-            //       } else {
-            //         return const Text("You haven't signed in yet");
-            //       }
-            //     }),
+            StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.userChanges(),
+                builder: (context, snapshot) {
+                  if (FirebaseAuth.instance.currentUser == null) {
+                    return const Text("You haven't signed in yet");
+                  } else {
+                    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                      return const Text("You haven't signed in yet");
+                    } else {
+                      return const Text('SIGNED IN');
+                    }
+                  }
+                }),
             const SizedBox(height: 15),
 
             //* PHONE TEXTFIELD
@@ -148,10 +152,20 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                 child: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.userChanges(),
                     builder: (context, snapshot) {
-                      if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                        return const Text("Login");
+                      if (FirebaseAuth.instance.currentUser == null) {
+                        return const SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        );
                       } else {
-                        return const Text("Logout");
+                        if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                          return const Text("Login");
+                        } else {
+                          return const Text("Logout");
+                        }
                       }
                     }),
               ),

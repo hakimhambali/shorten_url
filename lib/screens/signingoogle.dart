@@ -1,11 +1,9 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shorten_url/screens/register.dart';
 
 class SignInGoogle extends StatelessWidget {
   const SignInGoogle({Key? key}) : super(key: key);
@@ -31,13 +29,17 @@ class SignInGoogle extends StatelessWidget {
             StreamBuilder<User?>(
                 stream: FirebaseAuth.instance.userChanges(),
                 builder: (context, snapshot) {
-                  if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                  if (FirebaseAuth.instance.currentUser == null) {
                     return const Text("You haven't signed in yet");
                   } else {
-                    return Text(
-                      'Signed in as ${FirebaseAuth.instance.currentUser!.displayName} (${FirebaseAuth.instance.currentUser!.email})',
-                      textAlign: TextAlign.center,
-                    );
+                    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                      return const Text("You haven't signed in yet");
+                    } else {
+                      return Text(
+                        'Signed in as ${FirebaseAuth.instance.currentUser!.displayName} (${FirebaseAuth.instance.currentUser!.email})',
+                        textAlign: TextAlign.center,
+                      );
+                    }
                   }
                 }),
             const SizedBox(height: 15),
@@ -160,10 +162,20 @@ class SignInGoogle extends StatelessWidget {
                   child: StreamBuilder<User?>(
                       stream: FirebaseAuth.instance.userChanges(),
                       builder: (context, snapshot) {
-                        if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                          return const Text("Login");
+                        if (FirebaseAuth.instance.currentUser == null) {
+                          return const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          );
                         } else {
-                          return const Text('Logout');
+                          if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                            return const Text("Login");
+                          } else {
+                            return const Text("Logout");
+                          }
                         }
                       })),
             )
