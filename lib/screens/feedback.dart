@@ -24,7 +24,7 @@ class _ImprovementState extends State<Improvement> {
         child: Column(
           children: [
             const Text(
-              'In order to serve the best for you, We would love to hear your feedback !',
+              'Got any problems ? or is there any features that you want to see in the future ? In order to serve the best for you, We would love to hear your feedback !',
               textAlign: TextAlign.center,
             ),
             const Padding(

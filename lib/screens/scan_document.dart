@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:document_scanner_flutter/screens/pdf_generator_gallery.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,35 +66,47 @@ class CustomDocumentScannerFlutter {
     return showModalBottomSheet<File>(
         context: context,
         builder: (BuildContext bc) {
-          return Container(
-            child: new Wrap(
-              children: <Widget>[
-                new ListTile(
-                    leading: new Icon(Icons.camera_alt),
-                    title: new Text(
-                        labelsConfig[ScannerLabelsConfig.PICKER_CAMERA_LABEL] ??
-                            'Camera'),
-                    onTap: () async {
-                      Navigator.pop(
-                          context,
-                          await _scanDocument(
-                              ScannerFileSource.CAMERA, labelsConfig));
-                    }),
-                new ListTile(
-                  leading: new Icon(Icons.image_search),
-                  title: new Text(
-                      labelsConfig[ScannerLabelsConfig.PICKER_GALLERY_LABEL] ??
-                          'Photo Library'),
+          return Wrap(
+            children: <Widget>[
+              ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: Text(
+                      labelsConfig[ScannerLabelsConfig.PICKER_CAMERA_LABEL] ??
+                          'Camera'),
                   onTap: () async {
                     Navigator.pop(
                         context,
                         await _scanDocument(
-                            ScannerFileSource.GALLERY, labelsConfig));
-                  },
-                ),
-              ],
-            ),
+                            ScannerFileSource.CAMERA, labelsConfig));
+                  }),
+              ListTile(
+                leading: const Icon(Icons.image_search),
+                title: Text(
+                    labelsConfig[ScannerLabelsConfig.PICKER_GALLERY_LABEL] ??
+                        'Photo Library'),
+                onTap: () async {
+                  Navigator.pop(
+                      context,
+                      await _scanDocument(
+                          ScannerFileSource.GALLERY, labelsConfig));
+                },
+              ),
+            ],
           );
         });
+  }
+
+  Future createScanDocumentHistory(
+      {required String originalLink, newLink, required String date}) async {
+    final historyUser = FirebaseFirestore.instance.collection('history').doc();
+    final json = {
+      'docID': historyUser.id,
+      'originalLink': originalLink,
+      'newLink': newLink,
+      'date': date,
+      'type': "Scan Document",
+      'userID': FirebaseAuth.instance.currentUser!.uid.toString()
+    };
+    await historyUser.set(json);
   }
 }

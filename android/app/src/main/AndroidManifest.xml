@@ -10,7 +10,7 @@
     </queries>
 
    <application
-        android:label="shorten_url"
+        android:label="MasterZ"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
