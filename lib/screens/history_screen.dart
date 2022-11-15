@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
 import 'package:shorten_url/screens/result_scan_qr.dart';
-import 'package:shorten_url/screens/scan_qr.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'register.dart';
 import 'view_qr.dart';
@@ -104,7 +104,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ? buildShortURL(users[x])
                         : users[x].type == "Generate QR"
                             ? buildGeneratedQR(users[x])
-                            : buildScanQR(users[x])
+                            : users[x].type == "Scan QR"
+                                ? buildScanQR(users[x])
+                                : buildScanDocument(users[x])
                 ],
               );
             } else {
@@ -117,7 +119,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget buildShortURL(History item) => ListTile(
       title: Text(item.type),
       subtitle: Text(item.date),
-      tileColor: Colors.red[200],
+      tileColor: Colors.red[100],
       onLongPress: () => showDialog(
           context: context,
           builder: (context) {
@@ -288,7 +290,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget buildGeneratedQR(History item) => ListTile(
         title: Text(item.type),
         subtitle: Text(item.date),
-        tileColor: Colors.deepOrange[200],
+        tileColor: Colors.blue[100],
         onLongPress: () => showDialog(
             context: context,
             builder: (context) {
@@ -342,6 +344,61 @@ class _HistoryScreenState extends State<HistoryScreen> {
       );
 
   Widget buildScanQR(History item) => ListTile(
+        title: Text(item.type),
+        subtitle: Text(item.date),
+        tileColor: Colors.green[100],
+        onLongPress: () => showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Are you sure want to delete this ?',
+                    textAlign: TextAlign.center),
+                content: SizedBox(
+                  height: 80,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.close),
+                                label: const Text('No')),
+                            ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  final deleteUser = FirebaseFirestore.instance
+                                      .collection('history')
+                                      .doc(item.docID);
+                                  deleteUser.delete().then((_) => ScaffoldMessenger
+                                          .of(context)
+                                      .showSnackBar(const SnackBar(
+                                          backgroundColor: Colors.green,
+                                          content: Text(
+                                              'Successfully delete history'))));
+                                },
+                                icon: const Icon(Icons.check),
+                                label: const Text('Yes'))
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            // builder: (context) => ScanQR(link: item.originalLink))),
+            builder: (context) => ResultScanQR(
+                  result: item.originalLink,
+                ))),
+      );
+
+  Widget buildScanDocument(History item) => ListTile(
         title: Text(item.type),
         subtitle: Text(item.date),
         tileColor: Colors.yellow[100],

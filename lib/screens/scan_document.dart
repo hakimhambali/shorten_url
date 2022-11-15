@@ -29,8 +29,9 @@ class CustomDocumentScannerFlutter {
       if (Platform.isIOS) {
         path = path.split('file://')[1];
       }
-      debugPrint("PATH: " + path);
-      //TODO: letak local notification kat sini
+      createScanDocumentHistory(
+          date: DateTime.now().toString(), newLink: path, originalLink: path);
+      // debugPrint("PATH: " + path);
       return File(path);
     }
   }
@@ -96,7 +97,7 @@ class CustomDocumentScannerFlutter {
         });
   }
 
-  Future createScanDocumentHistory(
+  static Future createScanDocumentHistory(
       {required String originalLink, newLink, required String date}) async {
     final historyUser = FirebaseFirestore.instance.collection('history').doc();
     final json = {
