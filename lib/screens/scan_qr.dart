@@ -16,7 +16,6 @@ class ScanQR extends StatefulWidget {
 }
 
 class _ScanQRState extends State<ScanQR> {
-  DateTime now = DateTime.now();
   final qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   Barcode? result;
@@ -82,7 +81,7 @@ class _ScanQRState extends State<ScanQR> {
         createScanQRHistory(
             originalLink: result!.code!,
             newLink: result!.code!,
-            date: now.toString());
+            date: DateTime.now().toString());
         if (result != null) {
           await controller.pauseCamera();
           Navigator.push(

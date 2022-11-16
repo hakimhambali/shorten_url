@@ -47,7 +47,6 @@ class _HomeBodyState extends State<HomeBody> {
   // final now = DateTime.now();
   final controller = TextEditingController();
   bool validate = true;
-  DateTime now = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +121,7 @@ class _HomeBodyState extends State<HomeBody> {
                                 createShortUrlHistory(
                                     originalLink: controller.text,
                                     newLink: shortenedUrl,
-                                    date: now.toString());
+                                    date: DateTime.now().toString());
                                 // print(createShortUrlHistory);
 
                                 showDialog(
@@ -261,7 +260,7 @@ class _HomeBodyState extends State<HomeBody> {
                                   createGenerateQRHistory(
                                       originalLink: controller.text,
                                       newLink: controller.text,
-                                      date: now.toString());
+                                      date: DateTime.now().toString());
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ViewQR(
                                             originalLink: controller.text,

@@ -12,7 +12,6 @@ class Improvement extends StatefulWidget {
 
 class _ImprovementState extends State<Improvement> {
   final controller = TextEditingController();
-  DateTime now = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +79,8 @@ class _ImprovementState extends State<Improvement> {
                                               onPressed: () {
                                                 submitFeedback(
                                                     feedback: controller.text,
-                                                    date: now.toString());
+                                                    date: DateTime.now()
+                                                        .toString());
                                                 Navigator.pop(context);
                                                 Navigator.push(
                                                     context,
