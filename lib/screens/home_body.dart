@@ -123,18 +123,23 @@ class _HomeBodyState extends State<HomeBody> {
                                     newLink: shortenedUrl,
                                     date: DateTime.now().toString());
                                 // print(createShortUrlHistory);
-
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content:
+                                          Text('Successfully Shorten URL')),
+                                );
                                 showDialog(
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: const Text(
-                                            'Url Shortened Successfully'),
+                                        // title: const Text(
+                                        //     'Url Shortened Successfully'),
                                         content: SizedBox(
                                           height: 160,
                                           child: Column(
                                             children: [
-                                              Row(
+                                              Column(
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () async {
@@ -261,6 +266,12 @@ class _HomeBodyState extends State<HomeBody> {
                                       originalLink: controller.text,
                                       newLink: controller.text,
                                       date: DateTime.now().toString());
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        backgroundColor: Colors.green,
+                                        content:
+                                            Text('Successfully Generate QR')),
+                                  );
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ViewQR(
                                             originalLink: controller.text,
@@ -361,6 +372,16 @@ class _HomeBodyState extends State<HomeBody> {
 
   Future<String?> shortenUrl({required String url}) async {
     try {
+      if (url.startsWith('http://')) {
+        final splitted = url.split(':');
+        url = 'https:' + splitted[1];
+      } else {
+        if (url.startsWith('https://')) {
+        } else {
+          url = 'https://' + url;
+        }
+      }
+
       final result = await http.post(
           Uri.parse('https://cleanuri.com/api/v1/shorten'),
           body: {'url': url});
@@ -404,7 +425,7 @@ class _HomeBodyState extends State<HomeBody> {
       'originalLink': originalLink,
       'newLink': newLink,
       'date': date,
-      'type': "Shorten link URL",
+      'type': "Shorten URL",
       'userID': FirebaseAuth.instance.currentUser!.uid.toString()
     };
     await historyUser.set(json);

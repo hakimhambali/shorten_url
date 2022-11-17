@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 // import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
+import 'package:shorten_url/screens/result_scan_document.dart';
 import 'package:shorten_url/screens/result_scan_qr.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'register.dart';
@@ -100,7 +102,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               return ListView(
                 children: [
                   for (int x = 0; x < users.length; x++)
-                    users[x].type == "Shorten link URL"
+                    users[x].type == "Shorten URL"
                         ? buildShortURL(users[x])
                         : users[x].type == "Generate QR"
                             ? buildGeneratedQR(users[x])
@@ -118,8 +120,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget buildShortURL(History item) => ListTile(
       title: Text(item.type),
-      subtitle: Text(item.date),
+      subtitle: Text(DateFormat('dd/MM/yyyy')
+          .add_jm()
+          .format(DateTime.parse(item.date))
+          .toString()),
       tileColor: Colors.red[100],
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Colors.black, width: 0.3),
+      ),
       onLongPress: () => showDialog(
           context: context,
           builder: (context) {
@@ -289,8 +297,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget buildGeneratedQR(History item) => ListTile(
         title: Text(item.type),
-        subtitle: Text(item.date),
+        subtitle: Text(DateFormat('dd/MM/yyyy')
+            .add_jm()
+            .format(DateTime.parse(item.date))
+            .toString()),
         tileColor: Colors.blue[100],
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.black, width: 0.3),
+        ),
         onLongPress: () => showDialog(
             context: context,
             builder: (context) {
@@ -345,8 +359,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget buildScanQR(History item) => ListTile(
         title: Text(item.type),
-        subtitle: Text(item.date),
+        subtitle: Text(DateFormat('dd/MM/yyyy')
+            .add_jm()
+            .format(DateTime.parse(item.date))
+            .toString()),
         tileColor: Colors.green[100],
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.black, width: 0.3),
+        ),
         onLongPress: () => showDialog(
             context: context,
             builder: (context) {
@@ -400,8 +420,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget buildScanDocument(History item) => ListTile(
         title: Text(item.type),
-        subtitle: Text(item.date),
+        subtitle: Text(DateFormat('dd/MM/yyyy')
+            .add_jm()
+            .format(DateTime.parse(item.date))
+            .toString()),
         tileColor: Colors.yellow[100],
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.black, width: 0.3),
+        ),
         onLongPress: () => showDialog(
             context: context,
             builder: (context) {
@@ -448,7 +474,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             }),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
             // builder: (context) => ScanQR(link: item.originalLink))),
-            builder: (context) => ResultScanQR(
+            builder: (context) => ResultScanDocument(
                   result: item.originalLink,
                 ))),
       );

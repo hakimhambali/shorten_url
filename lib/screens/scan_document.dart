@@ -31,6 +31,11 @@ class CustomDocumentScannerFlutter {
       }
       createScanDocumentHistory(
           date: DateTime.now().toString(), newLink: path, originalLink: path);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //       backgroundColor: Colors.green,
+      //       content: Text('Successfully scan Document')),
+      // );
       // debugPrint("PATH: " + path);
       return File(path);
     }

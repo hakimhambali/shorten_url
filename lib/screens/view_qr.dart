@@ -41,6 +41,9 @@ class _ViewQRState extends State<ViewQR> {
                     qrData: widget.originalLink,
                   ),
                 ),
+                const SizedBox(
+                  height: 30,
+                ),
                 (widget.newLink != '')
                     ? Text(
                         widget.newLink,
