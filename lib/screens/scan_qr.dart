@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:scan/scan.dart';
 
@@ -135,14 +136,16 @@ class _ScanQRState extends State<ScanQR> {
             ),
             IconButton(
               icon: const Icon(Icons.image),
-              onPressed: () async {
-                String? test = await Scan.parse('gallery');
-                // await controller?.flipCamera();
-                setState(() {});
-              },
+              // onPressed: () async {
+              //   debugPrint('john');
+              //   // String? test = await Scan.parse('gallery');
+              //   // await controller?.flipCamera();
+              //   setState(() {});
+              // },
               // onPressed: () async => pickImage(),
               // icon: Icon(Icons.image),
               // // label: Text("Choose an Image from gallery"),
+              onPressed: openFile,
             ),
           ],
         ),
@@ -177,5 +180,16 @@ class _ScanQRState extends State<ScanQR> {
       'userID': FirebaseAuth.instance.currentUser!.uid.toString()
     };
     await historyUser.set(json);
+  }
+
+  Future<void> openFile() async {
+    // debugPrint(result.code);
+    const filePath = '/storage/emulated/0/Pictures/1668674414462.jpg';
+    await OpenFilex.open(filePath);
+    // await OpenFilex.open(filePath);
+    setState(() {});
+    // setState(() {
+    //   // _openResult = "type=${result.type}  message=${result.message}";
+    // });
   }
 }

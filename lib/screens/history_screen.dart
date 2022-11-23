@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
 // import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
-import 'package:shorten_url/screens/result_scan_document.dart';
 import 'package:shorten_url/screens/result_scan_qr.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'register.dart';
@@ -472,11 +472,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               );
             }),
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            // builder: (context) => ScanQR(link: item.originalLink))),
-            builder: (context) => ResultScanDocument(
-                  result: item.originalLink,
-                ))),
+        onTap: () => openFile(result: item.originalLink),
       );
 
   Stream<List<History>> readUsers() => FirebaseFirestore.instance
@@ -495,5 +491,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
       print('Could not launch $url');
       return false;
     }
+  }
+
+  Future<void> openFile({required String result}) async {
+    await OpenFilex.open(result);
+    setState(() {});
   }
 }
