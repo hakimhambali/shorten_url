@@ -98,9 +98,6 @@ class _ViewQRState extends State<ViewQR> {
   }
 
   Future<bool> launchURL(url) async {
-    print(widget.newLink);
-    print(widget.originalLink);
-    print('widget.originalLinkjohnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
       return true;

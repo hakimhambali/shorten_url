@@ -26,6 +26,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         title: const Text('History'),
         actions: <Widget>[
+          // IconButton(
+          //   icon: const Icon(Icons.sort),
+          //   onPressed: () {
+          //     setState(() {
+          //       users = users.reversed.toList();
+          //     });
+          //   },
+          // ),
           IconButton(
               icon: const Icon(Icons.info),
               onPressed: () {
@@ -98,7 +106,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<History> users = snapshot.data!;
-
+              // users.sort();
               return ListView(
                 children: [
                   for (int x = 0; x < users.length; x++)
@@ -477,6 +485,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Stream<List<History>> readUsers() => FirebaseFirestore.instance
       .collection('history')
+      // .orderBy('date', descending: false)
       .where('userID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
       .snapshots()
       .map((snapshot) =>
