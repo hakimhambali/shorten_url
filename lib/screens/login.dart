@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shorten_url/screens/forgot_password.dart';
-import 'package:shorten_url/screens/register.dart';
 import 'package:shorten_url/screens/signingoogle.dart';
 import 'package:shorten_url/screens/signinphonenumber.dart';
 

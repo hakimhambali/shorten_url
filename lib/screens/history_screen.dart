@@ -20,20 +20,21 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  bool reverseSort = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('History'),
         actions: <Widget>[
-          // IconButton(
-          //   icon: const Icon(Icons.sort),
-          //   onPressed: () {
-          //     setState(() {
-          //       users = users.reversed.toList();
-          //     });
-          //   },
-          // ),
+          IconButton(
+            icon: const Icon(Icons.sort),
+            onPressed: () {
+              setState(() {
+                reverseSort = !reverseSort;
+              });
+            },
+          ),
           IconButton(
               icon: const Icon(Icons.info),
               onPressed: () {
@@ -106,7 +107,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<History> users = snapshot.data!;
-              // users.sort();
+              users.sort((a, b) {
+                DateTime adate = DateTime.parse(a.date.toString());
+                DateTime bdate = DateTime.parse(b.date.toString());
+                return reverseSort
+                    ? -bdate.compareTo(adate)
+                    : -adate.compareTo(bdate);
+              });
               return ListView(
                 children: [
                   for (int x = 0; x < users.length; x++)
@@ -126,361 +133,411 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  Widget buildShortURL(History item) => ListTile(
-      title: Text(item.type),
-      subtitle: Text(DateFormat('dd/MM/yyyy')
-          .add_jm()
-          .format(DateTime.parse(item.date))
-          .toString()),
-      tileColor: Colors.red[100],
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: Colors.black, width: 0.3),
-      ),
-      onLongPress: () => showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Are you sure want to delete this ?',
-                  textAlign: TextAlign.center),
-              content: SizedBox(
-                height: 80,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.close),
-                              label: const Text('No')),
-                          ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                final deleteUser = FirebaseFirestore.instance
-                                    .collection('history')
-                                    .doc(item.docID);
-                                deleteUser.delete().then((_) => ScaffoldMessenger
-                                        .of(context)
-                                    .showSnackBar(const SnackBar(
-                                        backgroundColor: Colors.green,
-                                        content: Text(
-                                            'Successfully delete history'))));
-                              },
-                              icon: const Icon(Icons.check),
-                              label: const Text('Yes'))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
-      onTap: () => showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: SizedBox(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Column(
-                      children: [
-                        const Text('Before shorten: '),
-                        GestureDetector(
-                          onTap: () async {},
-                          child: Container(
-                            color: Colors.grey.withOpacity(.2),
-                            child: Text(item.originalLink),
+  Widget buildShortURL(History item) => Padding(
+        padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+        child: Material(
+          elevation: 2,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.red[100], borderRadius: BorderRadius.circular(8)),
+            child: ListTile(
+                title: Text(item.type),
+                subtitle: Text(DateFormat('dd/MM/yyyy')
+                    .add_jm()
+                    .format(DateTime.parse(item.date))
+                    .toString()),
+                onLongPress: () => showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Are you sure want to delete this ?',
+                            textAlign: TextAlign.center),
+                        content: SizedBox(
+                          height: 80,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 25.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    ElevatedButton.icon(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(Icons.close),
+                                        label: const Text('No')),
+                                    ElevatedButton.icon(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          final deleteUser = FirebaseFirestore
+                                              .instance
+                                              .collection('history')
+                                              .doc(item.docID);
+                                          deleteUser.delete().then((_) =>
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      content: Text(
+                                                          'Successfully delete history'))));
+                                        },
+                                        icon: const Icon(Icons.check),
+                                        label: const Text('Yes'))
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Clipboard.setData(
-                                      ClipboardData(text: item.originalLink))
-                                  .then((_) => ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                          content: Text(
-                                              'Urls is copied to the clipboard'))));
-                            },
-                            icon: const Icon(Icons.copy)),
-                        IconButton(
-                            icon: const Icon(Icons.search),
-                            onPressed: () {
-                              var url = Uri.parse(item.originalLink);
-                              launchURL(url);
-                            }),
-                        IconButton(
-                            icon: const Icon(Icons.share),
-                            onPressed: () {
-                              Share.share(item.originalLink);
-                            }),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        Text('Copy'),
-                        Text('Visit'),
-                        Text('Share'),
-                      ],
-                    ),
-                    const Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 15.0, vertical: 20)),
-                    Column(
-                      children: [
-                        const Text('After shorten: '),
-                        GestureDetector(
-                          onTap: () async {},
-                          child: Container(
-                            color: Colors.grey.withOpacity(.2),
-                            child: Text(item.newLink),
+                      );
+                    }),
+                onTap: () => showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: SizedBox(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Column(
+                                children: [
+                                  const Text('Before shorten: '),
+                                  GestureDetector(
+                                    onTap: () async {},
+                                    child: Container(
+                                      color: Colors.grey.withOpacity(.2),
+                                      child: Text(item.originalLink),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        Clipboard.setData(ClipboardData(
+                                                text: item.originalLink))
+                                            .then((_) => ScaffoldMessenger.of(
+                                                    context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text(
+                                                        'Urls is copied to the clipboard'))));
+                                      },
+                                      icon: const Icon(Icons.copy)),
+                                  IconButton(
+                                      icon: const Icon(Icons.search),
+                                      onPressed: () {
+                                        var url = Uri.parse(item.originalLink);
+                                        launchURL(url);
+                                      }),
+                                  IconButton(
+                                      icon: const Icon(Icons.share),
+                                      onPressed: () {
+                                        Share.share(item.originalLink);
+                                      }),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  Text('Copy'),
+                                  Text('Visit'),
+                                  Text('Share'),
+                                ],
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15.0, vertical: 20)),
+                              Column(
+                                children: [
+                                  const Text('After shorten: '),
+                                  GestureDetector(
+                                    onTap: () async {},
+                                    child: Container(
+                                      color: Colors.grey.withOpacity(.2),
+                                      child: Text(item.newLink),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        Clipboard.setData(ClipboardData(
+                                                text: item.newLink))
+                                            .then((_) => ScaffoldMessenger.of(
+                                                    context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text(
+                                                        'Urls is copied to the clipboard'))));
+                                      },
+                                      icon: const Icon(Icons.copy)),
+                                  IconButton(
+                                      icon: const Icon(Icons.search),
+                                      onPressed: () {
+                                        var url = Uri.parse(item.newLink);
+                                        launchURL(url);
+                                      }),
+                                  IconButton(
+                                      icon: const Icon(Icons.share),
+                                      onPressed: () {
+                                        Share.share(item.newLink);
+                                      }),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  Text('Copy'),
+                                  Text('Visit'),
+                                  Text('Share'),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 25.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    ElevatedButton.icon(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(Icons.close),
+                                        label: const Text('Close'))
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Clipboard.setData(
-                                      ClipboardData(text: item.newLink))
-                                  .then((_) => ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                          content: Text(
-                                              'Urls is copied to the clipboard'))));
-                            },
-                            icon: const Icon(Icons.copy)),
-                        IconButton(
-                            icon: const Icon(Icons.search),
-                            onPressed: () {
-                              var url = Uri.parse(item.newLink);
-                              launchURL(url);
-                            }),
-                        IconButton(
-                            icon: const Icon(Icons.share),
-                            onPressed: () {
-                              Share.share(item.newLink);
-                            }),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        Text('Copy'),
-                        Text('Visit'),
-                        Text('Share'),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.close),
-                              label: const Text('Close'))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }));
-
-  Widget buildGeneratedQR(History item) => ListTile(
-        title: Text(item.type),
-        subtitle: Text(DateFormat('dd/MM/yyyy')
-            .add_jm()
-            .format(DateTime.parse(item.date))
-            .toString()),
-        tileColor: Colors.blue[100],
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.black, width: 0.3),
+                      );
+                    })),
+          ),
         ),
-        onLongPress: () => showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Are you sure want to delete this ?',
-                    textAlign: TextAlign.center),
-                content: SizedBox(
-                  height: 80,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.close),
-                                label: const Text('No')),
-                            ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  final deleteUser = FirebaseFirestore.instance
-                                      .collection('history')
-                                      .doc(item.docID);
-                                  deleteUser.delete().then((_) => ScaffoldMessenger
-                                          .of(context)
-                                      .showSnackBar(const SnackBar(
-                                          backgroundColor: Colors.green,
-                                          content: Text(
-                                              'Successfully delete history'))));
-                                },
-                                icon: const Icon(Icons.check),
-                                label: const Text('Yes'))
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ViewQR(
-                  originalLink: item.originalLink,
-                  newLink: item.originalLink,
-                ))),
-        // builder: (context) => ViewQR(item.originalLink, item.newLink))),
       );
 
-  Widget buildScanQR(History item) => ListTile(
-        title: Text(item.type),
-        subtitle: Text(DateFormat('dd/MM/yyyy')
-            .add_jm()
-            .format(DateTime.parse(item.date))
-            .toString()),
-        tileColor: Colors.green[100],
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.black, width: 0.3),
-        ),
-        onLongPress: () => showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Are you sure want to delete this ?',
-                    textAlign: TextAlign.center),
-                content: SizedBox(
-                  height: 80,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget buildGeneratedQR(History item) => Padding(
+        padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+        child: Material(
+          elevation: 2,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.blue[100],
+                borderRadius: BorderRadius.circular(8)),
+            child: ListTile(
+              title: Text(item.type),
+              subtitle: Text(DateFormat('dd/MM/yyyy')
+                  .add_jm()
+                  .format(DateTime.parse(item.date))
+                  .toString()),
+              onLongPress: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Are you sure want to delete this ?',
+                          textAlign: TextAlign.center),
+                      content: SizedBox(
+                        height: 80,
+                        child: Column(
                           children: [
-                            ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.close),
-                                label: const Text('No')),
-                            ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  final deleteUser = FirebaseFirestore.instance
-                                      .collection('history')
-                                      .doc(item.docID);
-                                  deleteUser.delete().then((_) => ScaffoldMessenger
-                                          .of(context)
-                                      .showSnackBar(const SnackBar(
-                                          backgroundColor: Colors.green,
-                                          content: Text(
-                                              'Successfully delete history'))));
-                                },
-                                icon: const Icon(Icons.check),
-                                label: const Text('Yes'))
+                            Padding(
+                              padding: const EdgeInsets.only(top: 25.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.close),
+                                      label: const Text('No')),
+                                  ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        final deleteUser = FirebaseFirestore
+                                            .instance
+                                            .collection('history')
+                                            .doc(item.docID);
+                                        deleteUser.delete().then((_) =>
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                    content: Text(
+                                                        'Successfully delete history'))));
+                                      },
+                                      icon: const Icon(Icons.check),
+                                      label: const Text('Yes'))
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            // builder: (context) => ScanQR(link: item.originalLink))),
-            builder: (context) => ResultScanQR(
-                  result: item.originalLink,
-                ))),
+                    );
+                  }),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ViewQR(
+                        originalLink: item.originalLink,
+                        newLink: item.originalLink,
+                      ))),
+              // builder: (context) => ViewQR(item.originalLink, item.newLink))),
+            ),
+          ),
+        ),
       );
 
-  Widget buildScanDocument(History item) => ListTile(
-        title: Text(item.type),
-        subtitle: Text(DateFormat('dd/MM/yyyy')
-            .add_jm()
-            .format(DateTime.parse(item.date))
-            .toString()),
-        tileColor: Colors.yellow[100],
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.black, width: 0.3),
-        ),
-        onLongPress: () => showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Are you sure want to delete this ?',
-                    textAlign: TextAlign.center),
-                content: SizedBox(
-                  height: 80,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget buildScanQR(History item) => Padding(
+        padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+        child: Material(
+          elevation: 2,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.green[100],
+                borderRadius: BorderRadius.circular(8)),
+            child: ListTile(
+              title: Text(item.type),
+              subtitle: Text(DateFormat('dd/MM/yyyy')
+                  .add_jm()
+                  .format(DateTime.parse(item.date))
+                  .toString()),
+              onLongPress: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Are you sure want to delete this ?',
+                          textAlign: TextAlign.center),
+                      content: SizedBox(
+                        height: 80,
+                        child: Column(
                           children: [
-                            ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.close),
-                                label: const Text('No')),
-                            ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  final deleteUser = FirebaseFirestore.instance
-                                      .collection('history')
-                                      .doc(item.docID);
-                                  deleteUser.delete().then((_) => ScaffoldMessenger
-                                          .of(context)
-                                      .showSnackBar(const SnackBar(
-                                          backgroundColor: Colors.green,
-                                          content: Text(
-                                              'Successfully delete history'))));
-                                },
-                                icon: const Icon(Icons.check),
-                                label: const Text('Yes'))
+                            Padding(
+                              padding: const EdgeInsets.only(top: 25.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.close),
+                                      label: const Text('No')),
+                                  ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        final deleteUser = FirebaseFirestore
+                                            .instance
+                                            .collection('history')
+                                            .doc(item.docID);
+                                        deleteUser.delete().then((_) =>
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                    content: Text(
+                                                        'Successfully delete history'))));
+                                      },
+                                      icon: const Icon(Icons.check),
+                                      label: const Text('Yes'))
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-        onTap: () => openFile(result: item.originalLink),
+                    );
+                  }),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  // builder: (context) => ScanQR(link: item.originalLink))),
+                  builder: (context) => ResultScanQR(
+                        result: item.originalLink,
+                      ))),
+            ),
+          ),
+        ),
+      );
+
+  Widget buildScanDocument(History item) => Padding(
+        padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+        child: Material(
+          elevation: 2,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.yellow[100],
+                borderRadius: BorderRadius.circular(8)),
+            child: ListTile(
+              title: Text(item.type),
+              subtitle: Text(DateFormat('dd/MM/yyyy')
+                  .add_jm()
+                  .format(DateTime.parse(item.date))
+                  .toString()),
+              onLongPress: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Are you sure want to delete this ?',
+                          textAlign: TextAlign.center),
+                      content: SizedBox(
+                        height: 80,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 25.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(Icons.close),
+                                      label: const Text('No')),
+                                  ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        final deleteUser = FirebaseFirestore
+                                            .instance
+                                            .collection('history')
+                                            .doc(item.docID);
+                                        deleteUser.delete().then((_) =>
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                    content: Text(
+                                                        'Successfully delete history'))));
+                                      },
+                                      icon: const Icon(Icons.check),
+                                      label: const Text('Yes'))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+              onTap: () => openFile(result: item.originalLink),
+            ),
+          ),
+        ),
       );
 
   Stream<List<History>> readUsers() => FirebaseFirestore.instance

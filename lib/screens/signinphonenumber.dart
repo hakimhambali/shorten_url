@@ -89,10 +89,9 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                     backgroundColor:
                         MaterialStateProperty.all(Colors.green.shade900)),
                 onPressed: () async {
-                  try {
-                    validate = validateNumber(phoneController.text);
-                    setState(() {});
-                    // CODE HERE: Sign in with phone credential / Sign out from firebase
+                  validate = validateNumber(phoneController.text);
+                  setState(() {});
+                  // CODE HERE: Sign in with phone credential / Sign out from firebase
 
                     if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                       if (validate == true) {
@@ -114,21 +113,21 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                         verificationId: verificationId,
                                         smsCode: smsCode);
                                 try {
+                                  await FirebaseAuth.instance.currentUser!
+                                      .linkWithCredential(credential)
+                                      .then((user) {
+                                    // Navigator.pop(context);
+                                    // Navigator.pop(context);
+                                    return user;
+                                  });
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         backgroundColor: Colors.green,
                                         content: Text(
                                             'Successfully login using phone number')),
                                   );
-                                  FirebaseAuth.instance.currentUser!
-                                      .linkWithCredential(credential)
-                                      .then((user) {
-                                    return user;
-                                  });
                                   // FirebaseAuth.instance
                                   //     .signInWithCredential(credential);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
                                 } on FirebaseAuthException catch (e) {
                                   log(e.message.toString());
                                 }
@@ -140,20 +139,8 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                       FirebaseAuth.instance.signOut();
                       await FirebaseAuth.instance.signInAnonymously();
                     }
-                  } on FirebaseAuthException catch (e) {
-                    debugPrint(
-                        "testtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
-                    print(e);
-                    print(e.code);
-                    log(e.message.toString());
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('Invalid Login')),
-                    );
-                  }
                 },
+
                 // CODE HERE: Change button text based on current user
                 child: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.userChanges(),

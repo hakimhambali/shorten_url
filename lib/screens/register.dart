@@ -133,13 +133,13 @@ class _RegisterState extends State<Register> {
                         checkPassword =
                             validatePassword(passwordController.text);
                         setState(() {});
+
                         try {
                           if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                             var credential = EmailAuthProvider.credential(
                                 email: emailController.text,
                                 password: passwordController.text);
-
-                            FirebaseAuth.instance.currentUser!
+                            await FirebaseAuth.instance.currentUser!
                                 .linkWithCredential(credential)
                                 .then((user) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -164,9 +164,14 @@ class _RegisterState extends State<Register> {
                         } on FirebaseAuthException catch (e) {
                           showNotification(context, e.message.toString());
                         } catch (e) {
-                          debugPrint("2X BERJAYA LINK ACCOUNT");
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('Invalid Register')),
+                          );
                         }
                       },
+
                       // CODE HERE: Change button text based on current user
                       child: StreamBuilder<User?>(
                           stream: FirebaseAuth.instance.userChanges(),
