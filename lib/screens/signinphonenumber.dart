@@ -93,52 +93,70 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                   setState(() {});
                   // CODE HERE: Sign in with phone credential / Sign out from firebase
 
-                    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                      if (validate == true) {
-                        await FirebaseAuth.instance.verifyPhoneNumber(
-                            phoneNumber: '+${phoneController.text}',
-                            verificationCompleted: (credential) async {
-                              await FirebaseAuth.instance
-                                  .signInWithCredential(credential);
-                            },
-                            verificationFailed: (exception) {
-                              showNotification(
-                                  context, exception.message.toString());
-                            },
-                            codeSent: ((verificationId, resendCode) async {
-                              String? smsCode = await askingSMSCode(context);
-                              if (smsCode != null) {
-                                PhoneAuthCredential credential =
-                                    PhoneAuthProvider.credential(
-                                        verificationId: verificationId,
-                                        smsCode: smsCode);
-                                try {
-                                  await FirebaseAuth.instance.currentUser!
-                                      .linkWithCredential(credential)
-                                      .then((user) {
-                                    // Navigator.pop(context);
-                                    // Navigator.pop(context);
-                                    return user;
-                                  });
+                  if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                    if (validate == true) {
+                      await FirebaseAuth.instance.verifyPhoneNumber(
+                          phoneNumber: '+${phoneController.text}',
+                          verificationCompleted: (credential) async {
+                            await FirebaseAuth.instance
+                                .signInWithCredential(credential);
+                          },
+                          verificationFailed: (exception) {
+                            showNotification(
+                                context, exception.message.toString());
+                          },
+                          codeSent: ((verificationId, resendCode) async {
+                            String? smsCode = await askingSMSCode(context);
+                            if (smsCode != null) {
+                              PhoneAuthCredential credential =
+                                  PhoneAuthProvider.credential(
+                                      verificationId: verificationId,
+                                      smsCode: smsCode);
+                              try {
+                                await FirebaseAuth.instance.currentUser!
+                                    .linkWithCredential(credential)
+                                    .then((user) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  return user;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text(
+                                          'Successfully login using phone number')),
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                debugPrint(e.code);
+                                if (e.code == "invalid-verification-code") {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        backgroundColor: Colors.red,
+                                        content:
+                                            Text('Wrong SMS code entered')),
+                                  );
+                                } else {
+                                  await FirebaseAuth.instance
+                                      .signInWithCredential(credential);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         backgroundColor: Colors.green,
                                         content: Text(
                                             'Successfully login using phone number')),
                                   );
-                                  // FirebaseAuth.instance
-                                  //     .signInWithCredential(credential);
-                                } on FirebaseAuthException catch (e) {
                                   log(e.message.toString());
                                 }
                               }
-                            }),
-                            codeAutoRetrievalTimeout: (verificationId) {});
-                      }
-                    } else {
-                      FirebaseAuth.instance.signOut();
-                      await FirebaseAuth.instance.signInAnonymously();
+                            }
+                          }),
+                          codeAutoRetrievalTimeout: (verificationId) {});
                     }
+                  } else {
+                    FirebaseAuth.instance.signOut();
+                    await FirebaseAuth.instance.signInAnonymously();
+                  }
                 },
 
                 // CODE HERE: Change button text based on current user
