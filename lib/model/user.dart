@@ -2,7 +2,6 @@ class History {
   final String docID;
   String originalLink;
   String newLink;
-  // String link;
   final String date;
   final String type;
   final String userID;
@@ -11,7 +10,6 @@ class History {
     required this.docID,
     this.originalLink = '',
     this.newLink = '',
-    // this.link = '',
     required this.date,
     required this.type,
     required this.userID,
@@ -21,7 +19,6 @@ class History {
         'docID': docID,
         'originalLink': originalLink,
         'newLink': newLink,
-        // 'link': link,
         'date': date,
         'type': type,
         'userID': userID,
@@ -31,7 +28,6 @@ class History {
         docID: json['docID'],
         originalLink: json['originalLink'],
         newLink: json['newLink'],
-        // link: json['link'],
         date: json['date'],
         type: json['type'],
         userID: json['userID'],

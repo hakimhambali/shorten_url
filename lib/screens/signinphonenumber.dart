@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
 class SignInPhoneNumber extends StatefulWidget {
   const SignInPhoneNumber({Key? key}) : super(key: key);
@@ -154,8 +155,23 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                           codeAutoRetrievalTimeout: (verificationId) {});
                     }
                   } else {
-                    FirebaseAuth.instance.signOut();
-                    await FirebaseAuth.instance.signInAnonymously();
+                    PanaraConfirmDialog.show(
+                      context,
+                      title: "Logout ?",
+                      message: 'Are you sure want to logout ?',
+                      confirmButtonText: "Yes",
+                      cancelButtonText: "No",
+                      onTapCancel: () {
+                        Navigator.pop(context);
+                      },
+                      onTapConfirm: () {
+                        Navigator.pop(context);
+                        FirebaseAuth.instance.signOut();
+                        FirebaseAuth.instance.signInAnonymously();
+                      },
+                      panaraDialogType: PanaraDialogType.error,
+                      barrierDismissible: false,
+                    );
                   }
                 },
 

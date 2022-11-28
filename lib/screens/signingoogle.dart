@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
 class SignInGoogle extends StatelessWidget {
   const SignInGoogle({Key? key}) : super(key: key);
@@ -124,52 +125,63 @@ class SignInGoogle extends StatelessWidget {
                         );
                       }
                     } else {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Are you sure want to logout ?',
-                                  textAlign: TextAlign.center),
-                              content: SizedBox(
-                                height: 80,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 25.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              // icon: const Icon(Icons.close),
-                                              child: const Text('No')),
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                FirebaseAuth.instance.signOut();
-                                                // GoogleSignIn().signOut();
-                                                FirebaseAuth.instance
-                                                    .signInAnonymously();
-                                              },
-                                              // icon: const Icon(Icons.check),
-                                              child: const Text('Yes'))
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                            // GoogleSignIn().signOut();
-                            // await FirebaseAuth.instance.signInAnonymously();
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => const Register()));
-                          });
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (context) {
+                      //       return AlertDialog(
+                      //         title: const Text('Are you sure want to logout ?',
+                      //             textAlign: TextAlign.center),
+                      //         content: SizedBox(
+                      //           height: 80,
+                      //           child: Column(
+                      //             children: [
+                      //               Padding(
+                      //                 padding: const EdgeInsets.only(top: 25.0),
+                      //                 child: Row(
+                      //                   mainAxisAlignment:
+                      //                       MainAxisAlignment.spaceEvenly,
+                      //                   children: [
+                      //                     ElevatedButton(
+                      //                         onPressed: () {
+                      //                           Navigator.pop(context);
+                      //                         },
+                      //                         // icon: const Icon(Icons.close),
+                      //                         child: const Text('No')),
+                      //                     ElevatedButton(
+                      //                         onPressed: () {
+                      //                           Navigator.pop(context);
+                      //                           FirebaseAuth.instance.signOut();
+                      //                           // GoogleSignIn().signOut();
+                      //                           FirebaseAuth.instance
+                      //                               .signInAnonymously();
+                      //                         },
+                      //                         // icon: const Icon(Icons.check),
+                      //                         child: const Text('Yes'))
+                      //                   ],
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       );
+                      //     });
+                      PanaraConfirmDialog.show(
+                        context,
+                        title: "Logout ?",
+                        message: 'Are you sure want to logout ?',
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "No",
+                        onTapCancel: () {
+                          Navigator.pop(context);
+                        },
+                        onTapConfirm: () {
+                          Navigator.pop(context);
+                          FirebaseAuth.instance.signOut();
+                          FirebaseAuth.instance.signInAnonymously();
+                        },
+                        panaraDialogType: PanaraDialogType.error,
+                        barrierDismissible: false,
+                      );
                     }
                   },
                   // CODE HERE: Change button text based on current user
