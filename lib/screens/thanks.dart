@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
 class Thanks extends StatefulWidget {
@@ -8,16 +9,29 @@ class Thanks extends StatefulWidget {
 }
 
 class _ThanksState extends State<Thanks> {
+  bool isPlaying = false;
+  final controller = ConfettiController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller.play();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple.shade50,
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Thank you'),
+        backgroundColor: Colors.black,
       ),
       body: Container(
         padding: const EdgeInsets.all(80.100),
         child: Column(
-          children: const [
+          children: [
             Text(
               'Thank you for your feedback, we will improve according to your feedback from time to time. May your day be filled with good thoughts, kind people and happy moments',
               textAlign: TextAlign.center,
@@ -25,6 +39,15 @@ class _ThanksState extends State<Thanks> {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20)),
+            ConfettiWidget(
+              confettiController: controller,
+              shouldLoop: true,
+              blastDirectionality: BlastDirectionality.explosive,
+              emissionFrequency: 0.05,
+              numberOfParticles: 7,
+              minBlastForce: 1,
+              maxBlastForce: 100,
+            ),
           ],
         ),
       ),

@@ -22,13 +22,14 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange.shade50,
+      backgroundColor: Colors.purple.shade50,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset('assets/logoSplashScreen.png', scale: 3.5),
             Text(
-              'QR & URL Master',
+              'MasterZ',
               style:
                   GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -53,7 +54,7 @@ class _RegisterState extends State<Register> {
                   BoxDecoration(borderRadius: BorderRadius.circular(15)),
               child: TextFormField(
                 controller: emailController,
-                cursorColor: Colors.orange,
+                cursorColor: Colors.purple,
                 onChanged: (value) {
                   setState(() {
                     checkEmail = validateEmail(value);
@@ -79,7 +80,7 @@ class _RegisterState extends State<Register> {
                   BoxDecoration(borderRadius: BorderRadius.circular(15)),
               child: TextFormField(
                 controller: passwordController,
-                cursorColor: Colors.orange,
+                cursorColor: Colors.purple,
                 onChanged: (value) {
                   setState(() {
                     checkPassword = validatePassword(value);
@@ -106,7 +107,7 @@ class _RegisterState extends State<Register> {
                 child: Text(
                   'Forgot password?',
                   style: TextStyle(
-                      color: Colors.orange.shade900,
+                      color: Colors.purple.shade900,
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () async {
@@ -128,7 +129,7 @@ class _RegisterState extends State<Register> {
                   child: ElevatedButton(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              Colors.orange.shade900)),
+                              Colors.purple.shade900)),
                       onPressed: () async {
                         checkEmail = validateEmail(emailController.text);
                         checkPassword =
@@ -226,7 +227,7 @@ class _RegisterState extends State<Register> {
                         child: Text(
                           'Login',
                           style: TextStyle(
-                              color: Colors.orange.shade900,
+                              color: Colors.purple.shade900,
                               fontWeight: FontWeight.bold),
                         ),
                         onTap: () async {
@@ -280,8 +281,7 @@ class _RegisterState extends State<Register> {
 
   void showNotification(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.orange.shade900,
-        content: Text(message.toString())));
+        backgroundColor: Colors.red, content: Text(message.toString())));
   }
 
   bool validateEmail(String email) {

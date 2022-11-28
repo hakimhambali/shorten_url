@@ -18,7 +18,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade50,
+      backgroundColor: Colors.purple.shade50,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +59,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
               child: TextField(
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
-                cursorColor: Colors.green,
+                cursorColor: Colors.purple,
                 onChanged: (value) {
                   setState(() {
                     validate = validateNumber(value);
@@ -88,7 +88,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
               child: ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.green.shade900)),
+                        MaterialStateProperty.all(Colors.purple.shade900)),
                 onPressed: () async {
                   validate = validateNumber(phoneController.text);
                   setState(() {});
@@ -123,7 +123,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                 });
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                      backgroundColor: Colors.green,
+                                      backgroundColor: Colors.purple,
                                       content: Text(
                                           'Successfully login using phone number')),
                                 );
@@ -143,7 +143,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                   Navigator.pop(context);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        backgroundColor: Colors.green,
+                                        backgroundColor: Colors.purple,
                                         content: Text(
                                             'Successfully login using phone number')),
                                   );
@@ -225,7 +225,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                   child: TextField(
                     controller: controller,
                     keyboardType: TextInputType.number,
-                    cursorColor: Colors.green,
+                    cursorColor: Colors.purple,
                     decoration: const InputDecoration(
                         border: InputBorder.none, hintText: 'SMS Code'),
                   ),
@@ -235,7 +235,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                       Navigator.pop(context, controller.text);
                     },
                     child: Text('Confirm',
-                        style: TextStyle(color: Colors.green.shade900)))
+                        style: TextStyle(color: Colors.purple.shade900)))
               ]);
         });
   }

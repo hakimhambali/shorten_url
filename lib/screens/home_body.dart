@@ -52,10 +52,11 @@ class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple.shade50,
       appBar: AppBar(
-        title: const Text('QR & Link'),
-        // centerTitle: true,
-        // backgroundColor: Colors.black,
+        centerTitle: true,
+        title: const Text('MasterZ'),
+        backgroundColor: Colors.black,
       ),
       body: Container(
         padding: const EdgeInsets.all(15.0),
@@ -95,6 +96,13 @@ class _HomeBodyState extends State<HomeBody> {
                         width: 132.0,
                         height: 40.0,
                         child: ElevatedButton(
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0))),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.purple.shade900)),
                           onPressed: () async {
                             validate = validateURL(controller.text);
                             setState(() {});
@@ -323,6 +331,13 @@ class _HomeBodyState extends State<HomeBody> {
                         width: 132.0,
                         height: 40.0,
                         child: ElevatedButton(
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0))),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.purple.shade900)),
                           onPressed: () async {
                             validate = validateURL(controller.text);
                             setState(() {});
@@ -407,6 +422,13 @@ class _HomeBodyState extends State<HomeBody> {
                     width: 132.0,
                     height: 40.0,
                     child: ElevatedButton(
+                      style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0))),
+                          backgroundColor: MaterialStateProperty.all(
+                              Colors.purple.shade900)),
                       onPressed: () async {
                         Navigator.push(
                             context,
@@ -422,6 +444,13 @@ class _HomeBodyState extends State<HomeBody> {
                     width: 132.0,
                     height: 40.0,
                     child: ElevatedButton(
+                      style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0))),
+                          backgroundColor: MaterialStateProperty.all(
+                              Colors.purple.shade900)),
                       onPressed: () async {
                         try {
                           File? scannedDoc =

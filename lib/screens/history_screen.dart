@@ -26,8 +26,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple.shade50,
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('History'),
+        backgroundColor: Colors.black,
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.sort),
@@ -189,7 +192,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ],
               );
             } else {
-              return const Center(child: CircularProgressIndicator());
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'You may not have any history data yet',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 17),
+                  ),
+                  const Center(child: CircularProgressIndicator()),
+                ],
+              );
+              // return Text(
+              //   'You have no history data',
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20),
+              // );
             }
           }),
     );

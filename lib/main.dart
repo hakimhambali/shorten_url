@@ -37,8 +37,9 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splash: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/logoSplashScreen.png'),
+          Image.asset('assets/logoSplashScreen.png', scale: 2),
           const Text(
             'MasterZ',
             style: TextStyle(
