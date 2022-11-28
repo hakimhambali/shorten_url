@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document_scanner_flutter/configs/configs.dart';
 import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/screens/scan_document.dart';
 import 'package:shorten_url/screens/scan_qr.dart';
@@ -129,106 +131,180 @@ class _HomeBodyState extends State<HomeBody> {
                                       content:
                                           Text('Successfully Shorten URL')),
                                 );
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        // title: const Text(
-                                        //     'Url Shortened Successfully'),
-                                        content: SizedBox(
-                                          height: 160,
-                                          child: Column(
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () async {
-                                                      // if (await canLaunch(
-                                                      //     shortenedUrl)) {
-                                                      //   await launch(shortenedUrl);
-                                                      // }
-                                                    },
-                                                    child: Container(
-                                                      color: Colors.grey
-                                                          .withOpacity(.2),
-                                                      child: Text(shortenedUrl),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        Clipboard.setData(
-                                                                ClipboardData(
-                                                                    text:
-                                                                        shortenedUrl))
-                                                            .then((_) => ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                                    const SnackBar(
-                                                                        content:
-                                                                            Text('Urls is copied to the clipboard'))));
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.copy)),
-                                                  IconButton(
-                                                      icon: const Icon(
-                                                          Icons.search),
-                                                      onPressed: () {
-                                                        var url = Uri.parse(
-                                                            shortenedUrl);
-                                                        launchURL(url);
-                                                      }),
-                                                  IconButton(
-                                                      icon: const Icon(
-                                                          Icons.share),
-                                                      onPressed: () {
-                                                        Share.share(
-                                                            shortenedUrl);
-                                                      }),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: const [
-                                                  Text('Copy'),
-                                                  Text('Visit'),
-                                                  Text('Share'),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 25.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    ElevatedButton.icon(
-                                                        onPressed: () {
-                                                          controller.clear();
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons.close),
-                                                        label:
-                                                            const Text('Close'))
-                                                  ],
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (context) {
+                                //       return AlertDialog(
+                                //         // title: const Text(
+                                //         //     'Url Shortened Successfully'),
+                                //         content: SizedBox(
+                                //           height: 160,
+                                //           child: Column(
+                                //             children: [
+                                //               Column(
+                                //                 children: [
+                                //                   GestureDetector(
+                                //                     onTap: () async {
+                                //                       // if (await canLaunch(
+                                //                       //     shortenedUrl)) {
+                                //                       //   await launch(shortenedUrl);
+                                //                       // }
+                                //                     },
+                                //                     child: Container(
+                                //                       color: Colors.grey
+                                //                           .withOpacity(.2),
+                                //                       child: Text(shortenedUrl),
+                                //                     ),
+                                //                   ),
+                                //                 ],
+                                //               ),
+                                //               Row(
+                                //                 mainAxisAlignment:
+                                //                     MainAxisAlignment
+                                //                         .spaceEvenly,
+                                //                 children: [
+                                //                   IconButton(
+                                //                       onPressed: () {
+                                //                         Clipboard.setData(
+                                //                                 ClipboardData(
+                                //                                     text:
+                                //                                         shortenedUrl))
+                                //                             .then((_) => ScaffoldMessenger
+                                //                                     .of(context)
+                                //                                 .showSnackBar(
+                                //                                     const SnackBar(
+                                //                                         content:
+                                //                                             Text('Urls is copied to the clipboard'))));
+                                //                       },
+                                //                       icon: const Icon(
+                                //                           Icons.copy)),
+                                //                   IconButton(
+                                //                       icon: const Icon(
+                                //                           Icons.search),
+                                //                       onPressed: () {
+                                //                         var url = Uri.parse(
+                                //                             shortenedUrl);
+                                //                         launchURL(url);
+                                //                       }),
+                                //                   IconButton(
+                                //                       icon: const Icon(
+                                //                           Icons.share),
+                                //                       onPressed: () {
+                                //                         Share.share(
+                                //                             shortenedUrl);
+                                //                       }),
+                                //                 ],
+                                //               ),
+                                //               Row(
+                                //                 mainAxisAlignment:
+                                //                     MainAxisAlignment
+                                //                         .spaceEvenly,
+                                //                 children: const [
+                                //                   Text('Copy'),
+                                //                   Text('Visit'),
+                                //                   Text('Share'),
+                                //                 ],
+                                //               ),
+                                //               Padding(
+                                //                 padding: const EdgeInsets.only(
+                                //                     top: 25.0),
+                                //                 child: Row(
+                                //                   mainAxisAlignment:
+                                //                       MainAxisAlignment
+                                //                           .spaceEvenly,
+                                //                   children: [
+                                //                     ElevatedButton.icon(
+                                //                         onPressed: () {
+                                //                           controller.clear();
+                                //                           Navigator.pop(
+                                //                               context);
+                                //                         },
+                                //                         icon: const Icon(
+                                //                             Icons.close),
+                                //                         label:
+                                //                             const Text('Close'))
+                                //                   ],
+                                //                 ),
+                                //               ),
+                                //             ],
+                                //           ),
+                                //         ),
+                                //       );
+                                //     });
+                                AwesomeDialog(
+                                  context: context,
+                                  animType: AnimType.scale,
+                                  dialogType: DialogType.success,
+                                  body: SizedBox(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {},
+                                              child: Container(
+                                                color:
+                                                    Colors.grey.withOpacity(.2),
+                                                child: Text(
+                                                  shortenedUrl,
+                                                  style:
+                                                      TextStyle(fontSize: 19),
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      );
-                                    });
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  Clipboard.setData(
+                                                          ClipboardData(
+                                                              text:
+                                                                  shortenedUrl))
+                                                      .then((_) => ScaffoldMessenger
+                                                              .of(context)
+                                                          .showSnackBar(
+                                                              const SnackBar(
+                                                                  content: Text(
+                                                                      'Urls is copied to the clipboard'))));
+                                                },
+                                                icon: const Icon(Icons.copy)),
+                                            IconButton(
+                                                icon: const Icon(Icons.search),
+                                                onPressed: () {
+                                                  var url =
+                                                      Uri.parse(shortenedUrl);
+                                                  launchURL(url);
+                                                }),
+                                            IconButton(
+                                                icon: const Icon(Icons.share),
+                                                onPressed: () {
+                                                  Share.share(shortenedUrl);
+                                                }),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: const [
+                                            Text('Copy'),
+                                            Text('Visit'),
+                                            Text('Share'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  title: 'This is Ignored',
+                                  desc: 'This is also Ignored',
+                                  btnOkOnPress: () {
+                                    controller.clear();
+                                  },
+                                )..show();
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

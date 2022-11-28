@@ -58,6 +58,7 @@ dependencies:
   google_ml_kit: ^0.13.0
   image_picker: ^0.8.6
   panara_dialogs: ^0.1.2
+  awesome_dialog: ^3.0.2
   # image_picker: ^0.8.6
 auto_reload: ^1.0.1
   # flutter_easyloading: ^3.0.5

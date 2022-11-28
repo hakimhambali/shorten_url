@@ -129,7 +129,7 @@ class _ImprovementState extends State<Improvement> {
                           },
                           panaraDialogType: PanaraDialogType.normal,
                           // barrierDismissible:
-                          //     false, // optional parameter (default is true)
+                          //     false,
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(

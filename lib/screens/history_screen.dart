@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
           FirebaseAuth.instance.currentUser!.isAnonymous
               ? IconButton(
-                  icon: const Icon(Icons.question_mark_outlined),
+                  icon: const Icon(Icons.question_mark),
                   onPressed: () {
                     // showDialog(
                     //     context: context,
@@ -125,8 +126,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         });
                       },
                       panaraDialogType: PanaraDialogType.normal,
-                      // barrierDismissible:
-                      //     false, // optional parameter (default is true)
+                      barrierDismissible: false,
                     );
                     // });
                   })
@@ -158,8 +158,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         });
                       },
                       panaraDialogType: PanaraDialogType.normal,
-                      barrierDismissible:
-                          false, // optional parameter (default is true)
+                      barrierDismissible: false,
                     );
                     // });
                   })
@@ -279,147 +278,253 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 panaraDialogType: PanaraDialogType.error,
                 barrierDismissible: false,
               ),
-              onTap: () => showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: SizedBox(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Column(
-                              children: [
-                                const Text('Before shorten: '),
-                                GestureDetector(
-                                  onTap: () async {},
-                                  child: Container(
-                                    color: Colors.grey.withOpacity(.2),
-                                    child: Text(item.originalLink),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      Clipboard.setData(ClipboardData(
-                                              text: item.originalLink))
-                                          .then((_) => ScaffoldMessenger.of(
-                                                  context)
-                                              .showSnackBar(const SnackBar(
-                                                  content: Text(
-                                                      'Urls is copied to the clipboard'))));
-                                    },
-                                    icon: const Icon(Icons.copy)),
-                                IconButton(
-                                    icon: const Icon(Icons.search),
-                                    onPressed: () {
-                                      var url = Uri.parse(item.originalLink);
-                                      launchURL(url);
-                                    }),
-                                IconButton(
-                                    icon: const Icon(Icons.share),
-                                    onPressed: () {
-                                      Share.share(item.originalLink);
-                                    }),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
-                              children: const [
-                                Text('Copy'),
-                                Text('Visit'),
-                                Text('Share'),
-                              ],
-                            ),
-                            const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15.0, vertical: 20)),
-                            Column(
-                              children: [
-                                const Text('After shorten: '),
-                                GestureDetector(
-                                  onTap: () async {},
-                                  child: Container(
-                                    color: Colors.grey.withOpacity(.2),
-                                    child: Text(item.newLink),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      Clipboard.setData(ClipboardData(
-                                              text: item.newLink))
-                                          .then((_) => ScaffoldMessenger.of(
-                                                  context)
-                                              .showSnackBar(const SnackBar(
-                                                  content: Text(
-                                                      'Urls is copied to the clipboard'))));
-                                    },
-                                    icon: const Icon(Icons.copy)),
-                                IconButton(
-                                    icon: const Icon(Icons.search),
-                                    onPressed: () {
-                                      var url = Uri.parse(item.newLink);
-                                      launchURL(url);
-                                    }),
-                                IconButton(
-                                    icon: const Icon(Icons.share),
-                                    onPressed: () {
-                                      Share.share(item.newLink);
-                                    }),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
-                              children: const [
-                                Text('Copy'),
-                                Text('Visit'),
-                                Text('Share'),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  ElevatedButton.icon(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: const Icon(Icons.close),
-                                      label: const Text('Close'))
-                                ],
+              // onTap: () => showDialog(
+              //     context: context,
+              //     builder: (context) {
+              //       return AlertDialog(
+              //         content: SizedBox(
+              //           child: Column(
+              //             mainAxisSize: MainAxisSize.min,
+              //             children: [
+              //               Column(
+              //                 children: [
+              //                   const Text('Before shorten: '),
+              //                   GestureDetector(
+              //                     onTap: () async {},
+              //                     child: Container(
+              //                       color: Colors.grey.withOpacity(.2),
+              //                       child: Text(item.originalLink),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //               Row(
+              //                 mainAxisAlignment:
+              //                     MainAxisAlignment.spaceEvenly,
+              //                 children: [
+              //                   IconButton(
+              //                       onPressed: () {
+              //                         Clipboard.setData(ClipboardData(
+              //                                 text: item.originalLink))
+              //                             .then((_) => ScaffoldMessenger.of(
+              //                                     context)
+              //                                 .showSnackBar(const SnackBar(
+              //                                     content: Text(
+              //                                         'Urls is copied to the clipboard'))));
+              //                       },
+              //                       icon: const Icon(Icons.copy)),
+              //                   IconButton(
+              //                       icon: const Icon(Icons.search),
+              //                       onPressed: () {
+              //                         var url = Uri.parse(item.originalLink);
+              //                         launchURL(url);
+              //                       }),
+              //                   IconButton(
+              //                       icon: const Icon(Icons.share),
+              //                       onPressed: () {
+              //                         Share.share(item.originalLink);
+              //                       }),
+              //                 ],
+              //               ),
+              //               Row(
+              //                 mainAxisAlignment:
+              //                     MainAxisAlignment.spaceEvenly,
+              //                 children: const [
+              //                   Text('Copy'),
+              //                   Text('Visit'),
+              //                   Text('Share'),
+              //                 ],
+              //               ),
+              //               const Padding(
+              //                   padding: EdgeInsets.symmetric(
+              //                       horizontal: 15.0, vertical: 20)),
+              //               Column(
+              //                 children: [
+              //                   const Text('After shorten: '),
+              //                   GestureDetector(
+              //                     onTap: () async {},
+              //                     child: Container(
+              //                       color: Colors.grey.withOpacity(.2),
+              //                       child: Text(item.newLink),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //               Row(
+              //                 mainAxisAlignment:
+              //                     MainAxisAlignment.spaceEvenly,
+              //                 children: [
+              //                   IconButton(
+              //                       onPressed: () {
+              //                         Clipboard.setData(ClipboardData(
+              //                                 text: item.newLink))
+              //                             .then((_) => ScaffoldMessenger.of(
+              //                                     context)
+              //                                 .showSnackBar(const SnackBar(
+              //                                     content: Text(
+              //                                         'Urls is copied to the clipboard'))));
+              //                       },
+              //                       icon: const Icon(Icons.copy)),
+              //                   IconButton(
+              //                       icon: const Icon(Icons.search),
+              //                       onPressed: () {
+              //                         var url = Uri.parse(item.newLink);
+              //                         launchURL(url);
+              //                       }),
+              //                   IconButton(
+              //                       icon: const Icon(Icons.share),
+              //                       onPressed: () {
+              //                         Share.share(item.newLink);
+              //                       }),
+              //                 ],
+              //               ),
+              //               Row(
+              //                 mainAxisAlignment:
+              //                     MainAxisAlignment.spaceEvenly,
+              //                 children: const [
+              //                   Text('Copy'),
+              //                   Text('Visit'),
+              //                   Text('Share'),
+              //                 ],
+              //               ),
+              //               Padding(
+              //                 padding: const EdgeInsets.only(top: 25.0),
+              //                 child: Row(
+              //                   mainAxisAlignment:
+              //                       MainAxisAlignment.spaceEvenly,
+              //                   children: [
+              //                     ElevatedButton.icon(
+              //                         onPressed: () {
+              //                           Navigator.pop(context);
+              //                         },
+              //                         icon: const Icon(Icons.close),
+              //                         label: const Text('Close'))
+              //                   ],
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       );
+              //     })
+              onTap: () => AwesomeDialog(
+                context: context,
+                animType: AnimType.scale,
+                dialogType: DialogType.noHeader,
+                body: SizedBox(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Column(
+                        children: [
+                          const Text('Before shorten: ',
+                              style: TextStyle(fontSize: 16)),
+                          GestureDetector(
+                            onTap: () async {},
+                            child: Container(
+                              color: Colors.grey.withOpacity(.2),
+                              child: Text(
+                                item.originalLink,
+                                style: TextStyle(fontSize: 16),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    );
-                  })
-              // onTap: () => PanaraInfoDialog.show(
-              //   context,
-              //   title: "Hello",
-              //   message: "This is the PanaraInfoDialog",
-              //   buttonText: "Okay",
-              //   onTapDismiss: () {
-              //     Navigator.pop(context);
-              //   },
-              //   panaraDialogType: PanaraDialogType.normal,
-              //   barrierDismissible:
-              //       false, // optional parameter (default is true)
-              // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Clipboard.setData(
+                                        ClipboardData(text: item.originalLink))
+                                    .then((_) => ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                            content: Text(
+                                                'Urls is copied to the clipboard'))));
+                              },
+                              icon: const Icon(Icons.copy)),
+                          IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () {
+                                var url = Uri.parse(item.originalLink);
+                                launchURL(url);
+                              }),
+                          IconButton(
+                              icon: const Icon(Icons.share),
+                              onPressed: () {
+                                Share.share(item.originalLink);
+                              }),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          Text('Copy'),
+                          Text('Visit'),
+                          Text('Share'),
+                        ],
+                      ),
+                      const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 20)),
+                      Column(
+                        children: [
+                          const Text('After shorten: ',
+                              style: TextStyle(fontSize: 16)),
+                          GestureDetector(
+                            onTap: () async {},
+                            child: Container(
+                              color: Colors.grey.withOpacity(.2),
+                              child: Text(
+                                item.newLink,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Clipboard.setData(
+                                        ClipboardData(text: item.newLink))
+                                    .then((_) => ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                            content: Text(
+                                                'Urls is copied to the clipboard'))));
+                              },
+                              icon: const Icon(Icons.copy)),
+                          IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () {
+                                var url = Uri.parse(item.newLink);
+                                launchURL(url);
+                              }),
+                          IconButton(
+                              icon: const Icon(Icons.share),
+                              onPressed: () {
+                                Share.share(item.newLink);
+                              }),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          Text('Copy'),
+                          Text('Visit'),
+                          Text('Share'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                title: 'This is Ignored',
+                desc: 'This is also Ignored',
+                btnOkOnPress: () {},
+              )..show(),
             ),
           ),
         ),
