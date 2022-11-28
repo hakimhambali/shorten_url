@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:scan/scan.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart' as eos;
 
 import 'result_scan_qr.dart';
 
@@ -18,8 +19,15 @@ class ScanQR extends StatefulWidget {
 
 class _ScanQRState extends State<ScanQR> {
   final qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
-  Barcode? result;
+  eos.QRViewController? controller;
+  eos.Barcode? result;
+
+  // TEST UPLOAD IMAGE FROM GALLERY START
+  bool textScanning = false;
+  XFile? imageFile;
+  String scannedText = "";
+  // TEST UPLOAD IMAGE FROM GALLERY END
+
   @override
   void dispose() {
     controller?.dispose();
@@ -46,18 +54,25 @@ class _ScanQRState extends State<ScanQR> {
           body: Stack(
             alignment: Alignment.center,
             children: <Widget>[
-              buildQRView(context),
+              // TEST UPLOAD IMAGE FROM GALLERY START
+              if (textScanning) const CircularProgressIndicator(),
+              if (!textScanning && imageFile == null) buildQRView(context),
+              if (imageFile != null)
+                buildImageView(Image.file(File(imageFile!.path))),
+              // if (imageFile != null) Image.file(File(imageFile!.path)),
               // Positioned(bottom: 10, child: buildResult()),
+              // TEST UPLOAD IMAGE FROM GALLERY END
+
               Positioned(top: 10, child: buildControlButtons()),
             ],
           ),
         ),
       );
 
-  Widget buildQRView(BuildContext context) => QRView(
+  Widget buildQRView(BuildContext context) => eos.QRView(
         key: qrKey,
         onQRViewCreated: onQRGenerated,
-        overlay: QrScannerOverlayShape(
+        overlay: eos.QrScannerOverlayShape(
           borderColor: Theme.of(context).colorScheme.secondary,
           borderRadius: 10,
           borderLength: 20,
@@ -66,6 +81,20 @@ class _ScanQRState extends State<ScanQR> {
         ),
       );
 
+  // TEST UPLOAD IMAGE FROM GALLERY START
+  Widget buildImageView(image) => eos.QRView(
+        key: qrKey,
+        onQRViewCreated: onQRGenerated,
+        overlay: eos.QrScannerOverlayShape(
+          borderColor: Theme.of(image).colorScheme.secondary,
+          borderRadius: 10,
+          borderLength: 20,
+          borderWidth: 10,
+          cutOutSize: MediaQuery.of(image).size.width * 0.8,
+        ),
+      );
+  // TEST UPLOAD IMAGE FROM GALLERY END
+
   // void onQRViewCreated(QRViewController controller) {
   //   setState(() => this.controller = controller);
 
@@ -73,7 +102,7 @@ class _ScanQRState extends State<ScanQR> {
   //       .listen((barcode) => setState(() => this.barcode = barcode));
   // }
 
-  void onQRGenerated(QRViewController controller) {
+  void onQRGenerated(eos.QRViewController controller) {
     this.controller = controller;
     controller.resumeCamera();
     controller.scannedDataStream.listen((event) {
@@ -145,7 +174,9 @@ class _ScanQRState extends State<ScanQR> {
               // onPressed: () async => pickImage(),
               // icon: Icon(Icons.image),
               // // label: Text("Choose an Image from gallery"),
-              onPressed: openFile,
+              onPressed: () {
+                getImage();
+              },
             ),
           ],
         ),
@@ -182,14 +213,49 @@ class _ScanQRState extends State<ScanQR> {
     await historyUser.set(json);
   }
 
-  Future<void> openFile() async {
-    // debugPrint(result.code);
-    const filePath = '/storage/emulated/0/Pictures/1668674414462.jpg';
-    await OpenFilex.open(filePath);
-    // await OpenFilex.open(filePath);
-    setState(() {});
-    // setState(() {
-    //   // _openResult = "type=${result.type}  message=${result.message}";
-    // });
+  // Future<void> openFile() async {
+  //   // debugPrint(result.code);
+  //   const filePath = '/storage/emulated/0/Pictures/1668674414462.jpg';
+  //   await OpenFilex.open(filePath);
+  //   // await OpenFilex.open(filePath);
+  //   setState(() {});
+  //   // setState(() {
+  //   //   // _openResult = "type=${result.type}  message=${result.message}";
+  //   // });
+  // }
+
+  // TEST UPLOAD IMAGE FROM GALLERY START
+  void getImage() async {
+    try {
+      final pickedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        textScanning = true;
+        imageFile = pickedImage;
+        setState(() {});
+        // getRecognisedText(pickedImage);
+      }
+    } catch (e) {
+      textScanning = false;
+      imageFile = null;
+      setState(() {});
+      scannedText = "Error occured while scanning";
+    }
   }
+
+  // void getRecognisedText(XFile image) async {
+  //   final inputImage = InputImage.fromFilePath(image.path);
+  //   final textDetector = GoogleMlKit.vision.textRecognizer();
+  //   RecognizedText recognisedText = await textDetector.processImage(inputImage);
+  //   await textDetector.close();
+  //   scannedText = "";
+  //   for (TextBlock block in recognisedText.blocks) {
+  //     for (TextLine line in block.lines) {
+  //       scannedText = scannedText + line.text + "\n";
+  //     }
+  //   }
+  //   textScanning = false;
+  //   setState(() {});
+  // }
+  // TEST UPLOAD IMAGE FROM GALLERY END
 }
