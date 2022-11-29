@@ -15,74 +15,77 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange.shade50,
+      backgroundColor: Colors.purple.shade50,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'QR & URL Master',
-              style:
-                  GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              "Please check your email after clicking 'Reset Password'. We will send you the link to reset your password",
-              textAlign: TextAlign.center,
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(30, 25, 30, 10),
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
-              // color: Colors.white, borderRadius: BorderRadius.circular(15)),
-              child: TextFormField(
-                controller: emailController,
-                cursorColor: Colors.orange,
-                onChanged: (value) {
-                  setState(() {
-                    validate = validateEmail(value);
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Enter your email here',
-                  hintText: 'ahmadalbab99@gmail.com',
-                  errorText: validate ? null : "Please insert valid email",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'QR & URL Master',
+                style:
+                    GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.orange.shade900)),
-                    onPressed: () async {
-                      validate = validateEmail(emailController.text);
-                      setState(() {});
-                      try {
-                        await FirebaseAuth.instance.sendPasswordResetEmail(
-                            email: emailController.text);
-                        Navigator.pop(context);
-                      } on FirebaseAuthException catch (e) {
-                        if (validate == true) {
-                          showNotification(context, e.message.toString());
-                        }
-                      }
-                    },
-                    child: const Text("Reset Password"),
+              const SizedBox(height: 10),
+              const Text(
+                "Please check your email after clicking 'Reset Password'. We will send you the link to reset your password",
+                textAlign: TextAlign.center,
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(30, 25, 30, 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                // color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                child: TextFormField(
+                  controller: emailController,
+                  cursorColor: Colors.purple,
+                  onChanged: (value) {
+                    setState(() {
+                      validate = validateEmail(value);
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Enter your email here',
+                    hintText: 'ahmadalbab99@gmail.com',
+                    errorText: validate ? null : "Please insert valid email",
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 300,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Colors.purple.shade900)),
+                      onPressed: () async {
+                        validate = validateEmail(emailController.text);
+                        setState(() {});
+                        try {
+                          await FirebaseAuth.instance.sendPasswordResetEmail(
+                              email: emailController.text);
+                          Navigator.pop(context);
+                        } on FirebaseAuthException catch (e) {
+                          if (validate == true) {
+                            showNotification(context, e.message.toString());
+                          }
+                        }
+                      },
+                      child: const Text("Reset Password"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -100,7 +103,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   void showNotification(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.orange.shade900,
+        backgroundColor: Colors.purple.shade900,
         content: Text(message.toString())));
   }
 }

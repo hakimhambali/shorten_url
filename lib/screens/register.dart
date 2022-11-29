@@ -24,256 +24,262 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       backgroundColor: Colors.purple.shade50,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/logoSplashScreen.png', scale: 3.5),
-            Text(
-              'MasterZ',
-              style:
-                  GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.userChanges(),
-                builder: (context, snapshot) {
-                  if (FirebaseAuth.instance.currentUser == null) {
-                    return const Text("You haven't signed in yet");
-                  } else {
-                    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/logoSplashScreen.png', scale: 3.5),
+              Text(
+                'MasterZ',
+                style:
+                    GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              StreamBuilder<User?>(
+                  stream: FirebaseAuth.instance.userChanges(),
+                  builder: (context, snapshot) {
+                    if (FirebaseAuth.instance.currentUser == null) {
                       return const Text("You haven't signed in yet");
                     } else {
-                      return Text('SIGNED IN ${snapshot.data?.email}');
+                      if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+                        return const Text("You haven't signed in yet");
+                      } else {
+                        return Text('SIGNED IN ${snapshot.data?.email}');
+                      }
                     }
-                  }
-                }),
-            Container(
-              margin: const EdgeInsets.fromLTRB(30, 25, 30, 10),
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
-              child: TextFormField(
-                controller: emailController,
-                cursorColor: Colors.purple,
-                onChanged: (value) {
-                  setState(() {
-                    checkEmail = validateEmail(value);
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Enter your email here',
-                  hintText: 'ahmadalbab99@gmail.com',
-                  errorText: checkEmail ? null : "Please insert valid email",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                  }),
+              Container(
+                margin: const EdgeInsets.fromLTRB(30, 25, 30, 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                child: TextFormField(
+                  controller: emailController,
+                  cursorColor: Colors.purple,
+                  onChanged: (value) {
+                    setState(() {
+                      checkEmail = validateEmail(value);
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Enter your email here',
+                    hintText: 'ahmadalbab99@gmail.com',
+                    errorText: checkEmail ? null : "Please insert valid email",
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(30, 10, 30, 15),
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-              // decoration: BoxDecoration(
-              //     color: Colors.white, borderRadius: BorderRadius.circular(15)),
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
-              child: TextFormField(
-                controller: passwordController,
-                cursorColor: Colors.purple,
-                onChanged: (value) {
-                  setState(() {
-                    checkPassword = validatePassword(value);
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Enter your password here',
-                  hintText: '*********',
-                  errorText: checkPassword
-                      ? null
-                      // : "Password should contain at least one upper case, one lower case, one digit, one Special character and at least 8 characters in length",
-                      : "Please insert valid password",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)),
+              Container(
+                margin: const EdgeInsets.fromLTRB(30, 10, 30, 15),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                // decoration: BoxDecoration(
+                //     color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                child: TextFormField(
+                  controller: passwordController,
+                  cursorColor: Colors.purple,
+                  onChanged: (value) {
+                    setState(() {
+                      checkPassword = validatePassword(value);
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Enter your password here',
+                    hintText: '*********',
+                    errorText: checkPassword
+                        ? null
+                        // : "Password should contain at least one upper case, one lower case, one digit, one Special character and at least 8 characters in length",
+                        : "Please insert valid password",
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 10, right: 20),
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                child: Text(
-                  'Forgot password?',
-                  style: TextStyle(
-                      color: Colors.purple.shade900,
-                      fontWeight: FontWeight.bold),
+              Container(
+                margin: const EdgeInsets.only(top: 10, right: 20),
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  child: Text(
+                    'Forgot password?',
+                    style: TextStyle(
+                        color: Colors.purple.shade900,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ForgotPassword()));
+                  },
                 ),
-                onTap: () async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ForgotPassword()));
-                },
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Colors.purple.shade900)),
-                      onPressed: () async {
-                        checkEmail = validateEmail(emailController.text);
-                        checkPassword =
-                            validatePassword(passwordController.text);
-                        setState(() {});
+              const SizedBox(
+                height: 30,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 300,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Colors.purple.shade900)),
+                        onPressed: () async {
+                          checkEmail = validateEmail(emailController.text);
+                          checkPassword =
+                              validatePassword(passwordController.text);
+                          setState(() {});
 
-                        try {
-                          if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-                            var credential = EmailAuthProvider.credential(
-                                email: emailController.text,
-                                password: passwordController.text);
-                            await FirebaseAuth.instance.currentUser!
-                                .linkWithCredential(credential)
-                                .then((user) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    backgroundColor: Colors.green,
-                                    content: Text(
-                                        'Successfully register using email')),
+                          try {
+                            if (FirebaseAuth
+                                .instance.currentUser!.isAnonymous) {
+                              var credential = EmailAuthProvider.credential(
+                                  email: emailController.text,
+                                  password: passwordController.text);
+                              await FirebaseAuth.instance.currentUser!
+                                  .linkWithCredential(credential)
+                                  .then((user) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text(
+                                          'Successfully register using email')),
+                                );
+                                Navigator.pop(context);
+                                return user;
+                              });
+                            } else {
+                              // FirebaseAuth.instance.signOut();
+                              // await FirebaseAuth.instance
+                              //     .signOut()
+                              //     .then((value) async {
+                              //   await FirebaseAuth.instance.signInAnonymously();
+                              // });
+                              PanaraConfirmDialog.show(
+                                context,
+                                title: "Logout ?",
+                                message: 'Are you sure want to logout ?',
+                                confirmButtonText: "Yes",
+                                cancelButtonText: "No",
+                                onTapCancel: () {
+                                  Navigator.pop(context);
+                                },
+                                onTapConfirm: () {
+                                  Navigator.pop(context);
+                                  FirebaseAuth.instance.signOut();
+                                  FirebaseAuth.instance.signInAnonymously();
+                                },
+                                panaraDialogType: PanaraDialogType.error,
+                                barrierDismissible: false,
                               );
-                              Navigator.pop(context);
-                              return user;
-                            });
-                          } else {
-                            // FirebaseAuth.instance.signOut();
-                            // await FirebaseAuth.instance
-                            //     .signOut()
-                            //     .then((value) async {
-                            //   await FirebaseAuth.instance.signInAnonymously();
-                            // });
-                            PanaraConfirmDialog.show(
-                              context,
-                              title: "Logout ?",
-                              message: 'Are you sure want to logout ?',
-                              confirmButtonText: "Yes",
-                              cancelButtonText: "No",
-                              onTapCancel: () {
-                                Navigator.pop(context);
-                              },
-                              onTapConfirm: () {
-                                Navigator.pop(context);
-                                FirebaseAuth.instance.signOut();
-                                FirebaseAuth.instance.signInAnonymously();
-                              },
-                              panaraDialogType: PanaraDialogType.error,
-                              barrierDismissible: false,
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            showNotification(context, e.message.toString());
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('Invalid Register')),
                             );
                           }
-                        } on FirebaseAuthException catch (e) {
-                          showNotification(context, e.message.toString());
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text('Invalid Register')),
-                          );
-                        }
-                      },
+                        },
 
-                      // CODE HERE: Change button text based on current user
-                      child: StreamBuilder<User?>(
-                          stream: FirebaseAuth.instance.userChanges(),
-                          builder: (context, snapshot) {
-                            if (FirebaseAuth.instance.currentUser == null) {
-                              return const SizedBox(
-                                height: 16,
-                                width: 16,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              );
-                            } else {
-                              if (FirebaseAuth
-                                  .instance.currentUser!.isAnonymous) {
-                                return const Text("Register");
+                        // CODE HERE: Change button text based on current user
+                        child: StreamBuilder<User?>(
+                            stream: FirebaseAuth.instance.userChanges(),
+                            builder: (context, snapshot) {
+                              if (FirebaseAuth.instance.currentUser == null) {
+                                return const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                );
                               } else {
-                                return const Text("Logout");
+                                if (FirebaseAuth
+                                    .instance.currentUser!.isAnonymous) {
+                                  return const Text("Register");
+                                } else {
+                                  return const Text("Logout");
+                                }
                               }
-                            }
-                          })),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
+                            })),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
+                          margin: const EdgeInsets.only(top: 10, bottom: 20),
+                          // alignment: Alignment.center,
+                          child: const Text("Already have an account ?  ")),
+                      Container(
                         // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
                         margin: const EdgeInsets.only(top: 10, bottom: 20),
                         // alignment: Alignment.center,
-                        child: const Text("Already have an account ?  ")),
-                    Container(
-                      // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
-                      margin: const EdgeInsets.only(top: 10, bottom: 20),
-                      // alignment: Alignment.center,
-                      child: GestureDetector(
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                              color: Colors.purple.shade900,
-                              fontWeight: FontWeight.bold),
+                        child: GestureDetector(
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                                color: Colors.purple.shade900,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onTap: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Login()));
+                          },
                         ),
-                        onTap: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Login()));
-                        },
                       ),
+                    ],
+                  ),
+                  const Text("OR"),
+                  SizedBox(
+                    width: 300,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black)),
+                      onPressed: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignInGoogle()));
+                      },
+                      child: const Text('Sign In With Google Account'),
                     ),
-                  ],
-                ),
-                const Text("OR"),
-                SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.black)),
-                    onPressed: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInGoogle()));
-                    },
-                    child: const Text('Sign In With Google Account'),
                   ),
-                ),
-                SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.black)),
-                    onPressed: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInPhoneNumber()));
-                    },
-                    child: const Text('Sign In With Phone Number'),
+                  SizedBox(
+                    width: 300,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black)),
+                      onPressed: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const SignInPhoneNumber()));
+                      },
+                      child: const Text('Sign In With Phone Number'),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -295,7 +301,7 @@ class _RegisterState extends State<Register> {
   }
 
   bool validatePassword(String password) {
-    if (RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+    if (RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$')
         .hasMatch(password)) {
       return true;
     } else {

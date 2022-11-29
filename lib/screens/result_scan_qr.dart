@@ -18,8 +18,11 @@ class _ResultScanQRState extends State<ResultScanQR> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple.shade50,
       appBar: AppBar(
-        title: const Text('Link Scanned QR code'),
+        centerTitle: true,
+        title: const Text('Link QR Scanner'),
+        backgroundColor: Colors.black,
       ),
       body: Center(
         child: Column(

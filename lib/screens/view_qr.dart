@@ -25,8 +25,11 @@ class _ViewQRState extends State<ViewQR> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple.shade50,
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('View QR link'),
+        backgroundColor: Colors.black,
       ),
       body: Center(
         child: Column(

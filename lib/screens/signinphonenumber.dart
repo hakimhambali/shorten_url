@@ -52,11 +52,11 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
 
             //* PHONE TEXTFIELD
             Container(
-              margin: const EdgeInsets.fromLTRB(30, 0, 30, 15),
+              margin: const EdgeInsets.fromLTRB(30, 10, 30, 10),
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(15)),
-              child: TextField(
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
+              child: TextFormField(
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
                 cursorColor: Colors.purple,
@@ -67,8 +67,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Enter your phone number here',
-                  // hintText: 'ahmadalbab99@gmail.com',
-                  hintText: 'Enter with country code',
+                  hintText: '60123456789',
                   errorText:
                       validate ? null : "Please insert valid phone number",
                   filled: true,
@@ -76,9 +75,6 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
-                // decoration: const InputDecoration(
-                //     border: InputBorder.none,
-                //     hintText: 'Enter with country code (eg:60123456789)'),
               ),
             ),
 
@@ -123,7 +119,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                 });
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                      backgroundColor: Colors.purple,
+                                      backgroundColor: Colors.green,
                                       content: Text(
                                           'Successfully login using phone number')),
                                 );
