@@ -23,9 +23,9 @@ class _ScanQRState extends State<ScanQR> {
   eos.Barcode? result;
 
   // TEST UPLOAD IMAGE FROM GALLERY START
-  bool textScanning = false;
+  bool imageLabelChecking = false;
   XFile? imageFile;
-  String scannedText = "";
+  String imageLabel = "";
   // TEST UPLOAD IMAGE FROM GALLERY END
 
   @override
@@ -54,12 +54,22 @@ class _ScanQRState extends State<ScanQR> {
           body: Stack(
             alignment: Alignment.center,
             children: <Widget>[
+              buildQRView(context),
               // TEST UPLOAD IMAGE FROM GALLERY START
-              if (textScanning) const CircularProgressIndicator(),
-              if (!textScanning && imageFile == null) buildQRView(context),
+              // if (textScanning) const CircularProgressIndicator(),
+              // if (!textScanning && imageFile == null) buildQRView(context),
+              // if (imageFile != null)
+              //   buildImageView(Image.file(File(imageFile!.path))),
               if (imageFile != null)
-                buildImageView(Image.file(File(imageFile!.path))),
-              // if (imageFile != null) Image.file(File(imageFile!.path)),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).padding.vertical,
+                  child: Image.file(
+                    File(imageFile!.path),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               // Positioned(bottom: 10, child: buildResult()),
               // TEST UPLOAD IMAGE FROM GALLERY END
 
@@ -230,32 +240,55 @@ class _ScanQRState extends State<ScanQR> {
       final pickedImage =
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
-        textScanning = true;
+        imageLabelChecking = true;
         imageFile = pickedImage;
         setState(() {});
-        // getRecognisedText(pickedImage);
+        getRecognisedText(pickedImage);
       }
     } catch (e) {
-      textScanning = false;
+      imageLabelChecking = false;
       imageFile = null;
       setState(() {});
-      scannedText = "Error occured while scanning";
+      // scannedText = "Error occured while scanning";
     }
   }
 
   // void getRecognisedText(XFile image) async {
   //   final inputImage = InputImage.fromFilePath(image.path);
-  //   final textDetector = GoogleMlKit.vision.textRecognizer();
-  //   RecognizedText recognisedText = await textDetector.processImage(inputImage);
+  //   debugPrint(inputImage.toString());
+  //   final textDetector = GoogleMlKit.vision.barcodeScanner();
+  //   List<Barcode> recognisedText = await textDetector.processImage(inputImage);
   //   await textDetector.close();
-  //   scannedText = "";
-  //   for (TextBlock block in recognisedText.blocks) {
-  //     for (TextLine line in block.lines) {
-  //       scannedText = scannedText + line.text + "\n";
-  //     }
-  //   }
+  //   scannedText = recognisedText.toString();
+  //   // for (TextBlock block in recognisedText.blocks) {
+  //   //   for (TextLine line in block.lines) {
+  //   //     scannedText = scannedText + line.text + "\n";
+  //   //   }
+  //   // }
   //   textScanning = false;
+  //   print('scannedText: ' + scannedText);
   //   setState(() {});
   // }
+
+  void getRecognisedText(XFile image) async {
+    final inputImage = InputImage.fromFilePath(image.path);
+    ImageLabeler imageLabeler =
+        ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.75));
+    List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
+    StringBuffer sb = StringBuffer();
+    for (ImageLabel imgLabel in labels) {
+      String lblText = imgLabel.label;
+      double confidence = imgLabel.confidence;
+      sb.write(lblText);
+      sb.write(" : ");
+      sb.write((confidence * 100).toStringAsFixed(2));
+      sb.write("%\n");
+    }
+    imageLabeler.close();
+    imageLabel = sb.toString();
+    imageLabelChecking = false;
+    print('scannedText: ' + imageLabel);
+    setState(() {});
+  }
   // TEST UPLOAD IMAGE FROM GALLERY END
 }
