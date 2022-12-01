@@ -100,7 +100,8 @@ class _HomeBodyState extends State<HomeBody> {
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0))),
+                                      borderRadius:
+                                          BorderRadius.circular(18.0))),
                               backgroundColor: MaterialStateProperty.all(
                                   Colors.purple.shade900)),
                           onPressed: () async {
@@ -335,7 +336,8 @@ class _HomeBodyState extends State<HomeBody> {
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0))),
+                                      borderRadius:
+                                          BorderRadius.circular(18.0))),
                               backgroundColor: MaterialStateProperty.all(
                                   Colors.purple.shade900)),
                           onPressed: () async {
@@ -426,7 +428,8 @@ class _HomeBodyState extends State<HomeBody> {
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0))),
+                                      borderRadius:
+                                          BorderRadius.circular(18.0))),
                           backgroundColor: MaterialStateProperty.all(
                               Colors.purple.shade900)),
                       onPressed: () async {
@@ -448,7 +451,8 @@ class _HomeBodyState extends State<HomeBody> {
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0))),
+                                      borderRadius:
+                                          BorderRadius.circular(18.0))),
                           backgroundColor: MaterialStateProperty.all(
                               Colors.purple.shade900)),
                       onPressed: () async {

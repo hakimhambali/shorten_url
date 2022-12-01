@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart' as eos;
 
 import 'result_scan_qr.dart';
@@ -60,16 +62,16 @@ class _ScanQRState extends State<ScanQR> {
               // if (!textScanning && imageFile == null) buildQRView(context),
               // if (imageFile != null)
               //   buildImageView(Image.file(File(imageFile!.path))),
-              if (imageFile != null)
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).padding.vertical,
-                  child: Image.file(
-                    File(imageFile!.path),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              // if (imageFile != null)
+              //   Container(
+              //     width: MediaQuery.of(context).size.width,
+              //     height: MediaQuery.of(context).size.height -
+              //         MediaQuery.of(context).padding.vertical,
+              //     child: Image.file(
+              //       File(imageFile!.path),
+              //       fit: BoxFit.cover,
+              //     ),
+              //   ),
               // Positioned(bottom: 10, child: buildResult()),
               // TEST UPLOAD IMAGE FROM GALLERY END
 
@@ -270,25 +272,64 @@ class _ScanQRState extends State<ScanQR> {
   //   setState(() {});
   // }
 
+  // void getRecognisedText(XFile image) async {
+  //   final inputImage = InputImage.fromFilePath(image.path);
+  //   ImageLabeler imageLabeler =
+  //       ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.75));
+  //   List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
+  //   StringBuffer sb = StringBuffer();
+  //   for (ImageLabel imgLabel in labels) {
+  //     String lblText = imgLabel.label;
+  //     double confidence = imgLabel.confidence;
+  //     sb.write(lblText);
+  //     sb.write(" : ");
+  //     sb.write((confidence * 100).toStringAsFixed(2));
+  //     sb.write("%\n");
+  //   }
+  //   imageLabeler.close();
+  //   imageLabel = sb.toString();
+  //   imageLabelChecking = false;
+  //   print('scannedText: ' + imageLabel);
+  //   setState(() {});
+  // }
+
   void getRecognisedText(XFile image) async {
     final inputImage = InputImage.fromFilePath(image.path);
-    ImageLabeler imageLabeler =
-        ImageLabeler(options: ImageLabelerOptions(confidenceThreshold: 0.75));
-    List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
-    StringBuffer sb = StringBuffer();
-    for (ImageLabel imgLabel in labels) {
-      String lblText = imgLabel.label;
-      double confidence = imgLabel.confidence;
-      sb.write(lblText);
-      sb.write(" : ");
-      sb.write((confidence * 100).toStringAsFixed(2));
-      sb.write("%\n");
+    final List<BarcodeFormat> formats = [BarcodeFormat.all];
+    final barcodeScanner = BarcodeScanner(formats: formats);
+    final List<Barcode> barcodes =
+        await barcodeScanner.processImage(inputImage);
+
+    if (barcodes.length >= 1) {
+      for (Barcode barcode in barcodes) {
+        setState(() async {
+          createScanQRHistory(
+              originalLink: barcode.displayValue.toString(),
+              newLink: barcode.displayValue.toString(),
+              date: DateTime.now().toString());
+          await controller!.pauseCamera();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ResultScanQR(
+                        result: barcode.displayValue.toString(),
+                      )));
+        });
+      }
+    } else {
+      PanaraInfoDialog.show(
+        context,
+        title: "Unable to detect QR code",
+        message:
+            'Are you sure upload the correct QR code file ? or please try again',
+        buttonText: "Close",
+        onTapDismiss: () {
+          Navigator.pop(context);
+        },
+        panaraDialogType: PanaraDialogType.error,
+        barrierDismissible: false,
+      );
     }
-    imageLabeler.close();
-    imageLabel = sb.toString();
-    imageLabelChecking = false;
-    print('scannedText: ' + imageLabel);
-    setState(() {});
   }
   // TEST UPLOAD IMAGE FROM GALLERY END
 }
