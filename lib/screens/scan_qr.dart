@@ -37,9 +37,12 @@ class _ScanQRState extends State<ScanQR> {
   }
 
   @override
-  void reassemble() async {
-    super.reassemble();
+  void initState() {
+    super.initState();
+    assembleCamera();
+  }
 
+  assembleCamera() async {
     if (Platform.isAndroid) {
       await controller!
           .pauseCamera()
@@ -127,11 +130,15 @@ class _ScanQRState extends State<ScanQR> {
         if (result != null) {
           await controller.pauseCamera();
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ResultScanQR(
-                        result: '${result!.code}',
-                      )));
+            context,
+            MaterialPageRoute(
+                builder: (context) => ResultScanQR(
+                    result: '${result!.code}',
+                    onPop: (resume) {
+                      debugPrint('RESUME');
+                      assembleCamera();
+                    })),
+          );
         }
       });
     });
@@ -312,8 +319,11 @@ class _ScanQRState extends State<ScanQR> {
               context,
               MaterialPageRoute(
                   builder: (context) => ResultScanQR(
-                        result: barcode.displayValue.toString(),
-                      )));
+                      result: barcode.displayValue.toString(),
+                      onPop: (resume) {
+                        debugPrint('RESUME');
+                        assembleCamera();
+                      })));
         });
       }
     } else {

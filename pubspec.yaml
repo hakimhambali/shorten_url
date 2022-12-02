@@ -61,6 +61,7 @@ dependencies:
   awesome_dialog: ^3.0.2
   google_mlkit_barcode_scanning: ^0.5.0
   camera: ^0.10.0+4
+  change_app_package_name: ^1.1.0
   # image_picker: ^0.8.6
 auto_reload: ^1.0.1
   # flutter_easyloading: ^3.0.5

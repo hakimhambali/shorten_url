@@ -1,4 +1,4 @@
-package com.codingorbit.shorten_url
+package com.codexcess.masterz
 
 import io.flutter.embedding.android.FlutterActivity
 

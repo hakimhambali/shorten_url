@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.codingorbit.shorten_url">
+    package="com.codexcess.masterz">
 
     <queries>
     <!-- If your app opens https URLs -->

@@ -635,9 +635,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   // builder: (context) => ScanQR(link: item.originalLink))),
-                  builder: (context) => ResultScanQR(
-                        result: item.originalLink,
-                      ))),
+                  builder: (context) =>
+                      ResultScanQR(result: item.originalLink, onPop: (_) {}))),
             ),
           ),
         ),
