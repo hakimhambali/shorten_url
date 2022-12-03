@@ -139,7 +139,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                   Navigator.pop(context);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        backgroundColor: Colors.purple,
+                                        backgroundColor: Colors.green,
                                         content: Text(
                                             'Successfully login using phone number')),
                                   );

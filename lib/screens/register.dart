@@ -19,6 +19,7 @@ class _RegisterState extends State<Register> {
   TextEditingController passwordController = TextEditingController();
   bool checkEmail = true;
   bool checkPassword = true;
+  bool _passwordVisible = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +84,7 @@ class _RegisterState extends State<Register> {
                     BoxDecoration(borderRadius: BorderRadius.circular(15)),
                 child: TextFormField(
                   controller: passwordController,
+                  obscureText: !_passwordVisible,
                   cursorColor: Colors.purple,
                   onChanged: (value) {
                     setState(() {
@@ -92,6 +94,21 @@ class _RegisterState extends State<Register> {
                   decoration: InputDecoration(
                     labelText: 'Enter your password here',
                     hintText: '*********',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: () {
+                        // Update the state i.e. toogle the state of passwordVisible variable
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
                     errorText: checkPassword
                         ? null
                         // : "Password should contain at least one upper case, one lower case, one digit, one Special character and at least 8 characters in length",
