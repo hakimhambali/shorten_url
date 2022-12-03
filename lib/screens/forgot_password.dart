@@ -22,7 +22,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'QR & URL Master',
+                'MasterZ',
                 style:
                     GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -37,7 +37,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                // color: Colors.white, borderRadius: BorderRadius.circular(15)),
                 child: TextFormField(
                   controller: emailController,
                   cursorColor: Colors.purple,
@@ -72,6 +71,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         try {
                           await FirebaseAuth.instance.sendPasswordResetEmail(
                               email: emailController.text);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                backgroundColor: Colors.green,
+                                content: Text(
+                                    'Successfully request to reset password')),
+                          );
                           Navigator.pop(context);
                         } on FirebaseAuthException catch (e) {
                           if (validate == true) {

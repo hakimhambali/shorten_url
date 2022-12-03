@@ -8,8 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:open_filex/open_filex.dart';
 
-/// Dcoument Scanner Class
 class CustomDocumentScannerFlutter {
   static MethodChannel get _channel =>
       const MethodChannel('document_scanner_flutter');
@@ -31,12 +31,18 @@ class CustomDocumentScannerFlutter {
       }
       createScanDocumentHistory(
           date: DateTime.now().toString(), newLink: path, originalLink: path);
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(
-      //       backgroundColor: Colors.green,
-      //       content: Text('Successfully scan Document')),
-      // );
-      // debugPrint("PATH: " + path);
+      OpenFilex.open(path);
+
+      // Widget build(BuildContext context) => SafeArea(
+      //       child: Scaffold(
+      //         body: Stack(
+      //           alignment: Alignment.center,
+      //           children: <Widget>[showNotification(context)],
+      //         ),
+      //       ),
+      //     );
+
+      debugPrint("PATH: " + path);
       return File(path);
     }
   }
@@ -67,11 +73,17 @@ class CustomDocumentScannerFlutter {
       {ScannerFileSource? source,
       Map<dynamic, String> labelsConfig = const {}}) {
     if (source != null) {
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      //     backgroundColor: Colors.green,
+      //     content: Text('Successfully scan document')));
       return _scanDocument(source, labelsConfig);
     }
     return showModalBottomSheet<File>(
         context: context,
         builder: (BuildContext bc) {
+          // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //     backgroundColor: Colors.green,
+          //     content: Text('Successfully scan document')));
           return Wrap(
             children: <Widget>[
               ListTile(
@@ -80,10 +92,16 @@ class CustomDocumentScannerFlutter {
                       labelsConfig[ScannerLabelsConfig.PICKER_CAMERA_LABEL] ??
                           'Camera'),
                   onTap: () async {
+                    // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    //     backgroundColor: Colors.green,
+                    //     content: Text('Successfully scan document')));
                     Navigator.pop(
                         context,
                         await _scanDocument(
                             ScannerFileSource.CAMERA, labelsConfig));
+                    // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    //     backgroundColor: Colors.green,
+                    //     content: Text('Successfully scan document')));
                   }),
               ListTile(
                 leading: const Icon(Icons.image_search),
@@ -91,10 +109,16 @@ class CustomDocumentScannerFlutter {
                     labelsConfig[ScannerLabelsConfig.PICKER_GALLERY_LABEL] ??
                         'Photo Library'),
                 onTap: () async {
+                  // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  //     backgroundColor: Colors.green,
+                  //     content: Text('Successfully scan document')));
                   Navigator.pop(
                       context,
                       await _scanDocument(
                           ScannerFileSource.GALLERY, labelsConfig));
+                  // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  //     backgroundColor: Colors.green,
+                  //     content: Text('Successfully scan document')));
                 },
               ),
             ],
@@ -115,4 +139,10 @@ class CustomDocumentScannerFlutter {
     };
     await historyUser.set(json);
   }
+
+  // static showNotification(BuildContext context) {
+  //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //       backgroundColor: Colors.green,
+  //       content: Text('Successfully scan document')));
+  // }
 }

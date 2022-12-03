@@ -37,9 +37,6 @@ class _ImprovementState extends State<Improvement> {
               SizedBox(
                 width: 300,
                 child: TextFormField(
-                  // validator: (String? input){
-
-                  // },
                   controller: controller,
                   decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
@@ -72,52 +69,6 @@ class _ImprovementState extends State<Improvement> {
                               Colors.purple.shade900)),
                       onPressed: () async {
                         if (controller.text.isNotEmpty) {
-                          // showDialog(
-                          //     context: context,
-                          //     builder: (context) {
-                          //       return AlertDialog(
-                          //         title: const Text(
-                          //             'Are you sure want to submit your feedback ?',
-                          //             textAlign: TextAlign.center),
-                          //         content: SizedBox(
-                          //           height: 80,
-                          //           child: Column(
-                          //             children: [
-                          //               Padding(
-                          //                 padding: const EdgeInsets.only(top: 25.0),
-                          //                 child: Row(
-                          //                   mainAxisAlignment:
-                          //                       MainAxisAlignment.spaceEvenly,
-                          //                   children: [
-                          //                     ElevatedButton.icon(
-                          //                         onPressed: () {
-                          //                           Navigator.pop(context);
-                          //                         },
-                          //                         icon: const Icon(Icons.close),
-                          //                         label: const Text('No')),
-                          //                     ElevatedButton.icon(
-                          //                         onPressed: () {
-                          //                           submitFeedback(
-                          //                               feedback: controller.text,
-                          //                               date: DateTime.now()
-                          //                                   .toString());
-                          //                           Navigator.pop(context);
-                          //                           Navigator.push(
-                          //                               context,
-                          //                               MaterialPageRoute(
-                          //                                   builder: (context) =>
-                          //                                       const Thanks()));
-                          //                         },
-                          //                         icon: const Icon(Icons.check),
-                          //                         label: const Text('Yes'))
-                          //                   ],
-                          //                 ),
-                          //               ),
-                          //             ],
-                          //           ),
-                          //         ),
-                          //       );
-                          //     });
                           return PanaraConfirmDialog.show(
                             context,
                             title: "Submit Feedback ?",
@@ -145,8 +96,6 @@ class _ImprovementState extends State<Improvement> {
                                       builder: (context) => const Thanks()));
                             },
                             panaraDialogType: PanaraDialogType.normal,
-                            // barrierDismissible:
-                            //     false,
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

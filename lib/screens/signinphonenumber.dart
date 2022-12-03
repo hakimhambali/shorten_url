@@ -23,18 +23,13 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //* TITLE
             Text(
               'SIGN IN WITH PHONE',
               style:
                   GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-
             const Text("Enter with country code (eg:60123456789)"),
-
-            // //* SIGN IN STATUS
-            // // CODE HERE: Change status based on current user
             StreamBuilder<User?>(
                 stream: FirebaseAuth.instance.userChanges(),
                 builder: (context, snapshot) {
@@ -49,8 +44,6 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                   }
                 }),
             const SizedBox(height: 15),
-
-            //* PHONE TEXTFIELD
             Container(
               margin: const EdgeInsets.fromLTRB(30, 10, 30, 10),
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
@@ -77,8 +70,6 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                 ),
               ),
             ),
-
-            //* SIGN IN BUTTON
             SizedBox(
               width: 150,
               child: ElevatedButton(
@@ -88,7 +79,6 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                 onPressed: () async {
                   validate = validateNumber(phoneController.text);
                   setState(() {});
-                  // CODE HERE: Sign in with phone credential / Sign out from firebase
 
                   if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                     if (validate == true) {
@@ -170,8 +160,6 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                     );
                   }
                 },
-
-                // CODE HERE: Change button text based on current user
                 child: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.userChanges(),
                     builder: (context, snapshot) {

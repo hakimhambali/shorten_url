@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
-// import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
 import 'package:shorten_url/screens/result_scan_qr.dart';
@@ -44,66 +43,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ? IconButton(
                   icon: const Icon(Icons.question_mark),
                   onPressed: () {
-                    // showDialog(
-                    //     context: context,
-                    //     builder: (context) {
-                    // return AlertDialog(
-                    //   title: FirebaseAuth.instance.currentUser!.isAnonymous
-                    //       ? const Text(
-                    //           'You have not register yet. Register now to prevent any loss of your history data if you wish to uninstall this app or change devices. You can also login to your account if you have registered before.',
-                    //           textAlign: TextAlign.center)
-                    //       : const Text(
-                    //           'Your history data are bind with your account. You have to logout in order to login to a different account or register a new account. Logout now ?',
-                    //           textAlign: TextAlign.center),
-                    //   content: SizedBox(
-                    //     height: 80,
-                    //     child: Column(
-                    //       children: [
-                    //         Padding(
-                    //           padding: const EdgeInsets.only(top: 25.0),
-                    //           child: Row(
-                    //             mainAxisAlignment:
-                    //                 MainAxisAlignment.spaceEvenly,
-                    //             children: [
-                    //               ElevatedButton(
-                    //                   onPressed: () {
-                    //                     Navigator.pop(context);
-                    //                   },
-                    //                   // icon: const Icon(Icons.close),
-                    //                   child: FirebaseAuth.instance
-                    //                           .currentUser!.isAnonymous
-                    //                       ? const Text('Later')
-                    //                       : const Text('No')),
-                    //               ElevatedButton(
-                    //                   onPressed: () {
-                    //                     if (!FirebaseAuth.instance
-                    //                         .currentUser!.isAnonymous) {
-                    //                       FirebaseAuth.instance.signOut();
-                    //                       FirebaseAuth.instance
-                    //                           .signInAnonymously();
-                    //                     }
-                    //                     Navigator.pop(context);
-                    //                     Navigator.push(
-                    //                             context,
-                    //                             MaterialPageRoute(
-                    //                                 builder: (context) =>
-                    //                                     const Register()))
-                    //                         .then((value) {
-                    //                       setState(() {});
-                    //                     });
-                    //                   },
-                    //                   // icon: const Icon(Icons.check),
-                    //                   child: FirebaseAuth.instance
-                    //                           .currentUser!.isAnonymous
-                    //                       ? const Text('Register Now')
-                    //                       : const Text('Yes')),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // );
                     return PanaraConfirmDialog.show(
                       context,
                       title: "Register Now ?",
@@ -131,7 +70,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       panaraDialogType: PanaraDialogType.normal,
                       barrierDismissible: false,
                     );
-                    // });
                   })
               : IconButton(
                   icon: const Icon(Icons.info),
@@ -163,7 +101,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       panaraDialogType: PanaraDialogType.normal,
                       barrierDismissible: false,
                     );
-                    // });
                   })
         ],
       ),
@@ -203,11 +140,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   const Center(child: CircularProgressIndicator()),
                 ],
               );
-              // return Text(
-              //   'You have no history data',
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20),
-              // );
             }
           }),
     );
@@ -227,53 +159,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   .add_jm()
                   .format(DateTime.parse(item.date))
                   .toString()),
-              // onLongPress: () => showDialog(
-              //     context: context,
-              //     builder: (context) {
-              //       return AlertDialog(
-              //         title: const Text('Are you sure want to delete this ?',
-              //             textAlign: TextAlign.center),
-              //         content: SizedBox(
-              //           height: 80,
-              //           child: Column(
-              //             children: [
-              //               Padding(
-              //                 padding: const EdgeInsets.only(top: 25.0),
-              //                 child: Row(
-              //                   mainAxisAlignment:
-              //                       MainAxisAlignment.spaceEvenly,
-              //                   children: [
-              //                     ElevatedButton.icon(
-              //                         onPressed: () {
-              //                           Navigator.pop(context);
-              //                         },
-              //                         icon: const Icon(Icons.close),
-              //                         label: const Text('No')),
-              //                     ElevatedButton.icon(
-              //                         onPressed: () {
-              //                           Navigator.pop(context);
-              //                           final deleteUser = FirebaseFirestore
-              //                               .instance
-              //                               .collection('history')
-              //                               .doc(item.docID);
-              //                           deleteUser.delete().then((_) =>
-              //                               ScaffoldMessenger.of(context)
-              //                                   .showSnackBar(const SnackBar(
-              //                                       backgroundColor:
-              //                                           Colors.green,
-              //                                       content: Text(
-              //                                           'Successfully delete history'))));
-              //                         },
-              //                         icon: const Icon(Icons.check),
-              //                         label: const Text('Yes'))
-              //                   ],
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       );
-              //     }),
               onLongPress: () => PanaraConfirmDialog.show(
                 context,
                 title: "Delete this ?",
@@ -296,135 +181,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 panaraDialogType: PanaraDialogType.error,
                 barrierDismissible: false,
               ),
-              // onTap: () => showDialog(
-              //     context: context,
-              //     builder: (context) {
-              //       return AlertDialog(
-              //         content: SizedBox(
-              //           child: Column(
-              //             mainAxisSize: MainAxisSize.min,
-              //             children: [
-              //               Column(
-              //                 children: [
-              //                   const Text('Before shorten: '),
-              //                   GestureDetector(
-              //                     onTap: () async {},
-              //                     child: Container(
-              //                       color: Colors.grey.withOpacity(.2),
-              //                       child: Text(item.originalLink),
-              //                     ),
-              //                   ),
-              //                 ],
-              //               ),
-              //               Row(
-              //                 mainAxisAlignment:
-              //                     MainAxisAlignment.spaceEvenly,
-              //                 children: [
-              //                   IconButton(
-              //                       onPressed: () {
-              //                         Clipboard.setData(ClipboardData(
-              //                                 text: item.originalLink))
-              //                             .then((_) => ScaffoldMessenger.of(
-              //                                     context)
-              //                                 .showSnackBar(const SnackBar(
-              //                                     content: Text(
-              //                                         'Urls is copied to the clipboard'))));
-              //                       },
-              //                       icon: const Icon(Icons.copy)),
-              //                   IconButton(
-              //                       icon: const Icon(Icons.search),
-              //                       onPressed: () {
-              //                         var url = Uri.parse(item.originalLink);
-              //                         launchURL(url);
-              //                       }),
-              //                   IconButton(
-              //                       icon: const Icon(Icons.share),
-              //                       onPressed: () {
-              //                         Share.share(item.originalLink);
-              //                       }),
-              //                 ],
-              //               ),
-              //               Row(
-              //                 mainAxisAlignment:
-              //                     MainAxisAlignment.spaceEvenly,
-              //                 children: const [
-              //                   Text('Copy'),
-              //                   Text('Visit'),
-              //                   Text('Share'),
-              //                 ],
-              //               ),
-              //               const Padding(
-              //                   padding: EdgeInsets.symmetric(
-              //                       horizontal: 15.0, vertical: 20)),
-              //               Column(
-              //                 children: [
-              //                   const Text('After shorten: '),
-              //                   GestureDetector(
-              //                     onTap: () async {},
-              //                     child: Container(
-              //                       color: Colors.grey.withOpacity(.2),
-              //                       child: Text(item.newLink),
-              //                     ),
-              //                   ),
-              //                 ],
-              //               ),
-              //               Row(
-              //                 mainAxisAlignment:
-              //                     MainAxisAlignment.spaceEvenly,
-              //                 children: [
-              //                   IconButton(
-              //                       onPressed: () {
-              //                         Clipboard.setData(ClipboardData(
-              //                                 text: item.newLink))
-              //                             .then((_) => ScaffoldMessenger.of(
-              //                                     context)
-              //                                 .showSnackBar(const SnackBar(
-              //                                     content: Text(
-              //                                         'Urls is copied to the clipboard'))));
-              //                       },
-              //                       icon: const Icon(Icons.copy)),
-              //                   IconButton(
-              //                       icon: const Icon(Icons.search),
-              //                       onPressed: () {
-              //                         var url = Uri.parse(item.newLink);
-              //                         launchURL(url);
-              //                       }),
-              //                   IconButton(
-              //                       icon: const Icon(Icons.share),
-              //                       onPressed: () {
-              //                         Share.share(item.newLink);
-              //                       }),
-              //                 ],
-              //               ),
-              //               Row(
-              //                 mainAxisAlignment:
-              //                     MainAxisAlignment.spaceEvenly,
-              //                 children: const [
-              //                   Text('Copy'),
-              //                   Text('Visit'),
-              //                   Text('Share'),
-              //                 ],
-              //               ),
-              //               Padding(
-              //                 padding: const EdgeInsets.only(top: 25.0),
-              //                 child: Row(
-              //                   mainAxisAlignment:
-              //                       MainAxisAlignment.spaceEvenly,
-              //                   children: [
-              //                     ElevatedButton.icon(
-              //                         onPressed: () {
-              //                           Navigator.pop(context);
-              //                         },
-              //                         icon: const Icon(Icons.close),
-              //                         label: const Text('Close'))
-              //                   ],
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       );
-              //     })
               onTap: () => AwesomeDialog(
                 context: context,
                 animType: AnimType.scale,
@@ -590,7 +346,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         originalLink: item.originalLink,
                         newLink: item.originalLink,
                       ))),
-              // builder: (context) => ViewQR(item.originalLink, item.newLink))),
             ),
           ),
         ),
@@ -634,7 +389,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 barrierDismissible: false,
               ),
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  // builder: (context) => ScanQR(link: item.originalLink))),
                   builder: (context) =>
                       ResultScanQR(result: item.originalLink, onPop: (_) {}))),
             ),
@@ -687,7 +441,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Stream<List<History>> readUsers() => FirebaseFirestore.instance
       .collection('history')
-      // .orderBy('date', descending: false)
       .where('userID', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
       .snapshots()
       .map((snapshot) =>

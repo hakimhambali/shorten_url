@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:shorten_url/screens/forgot_password.dart';
-import 'package:shorten_url/screens/login.dart';
 import 'package:shorten_url/screens/signingoogle.dart';
 import 'package:shorten_url/screens/signinphonenumber.dart';
 
@@ -78,8 +77,6 @@ class _LoginState extends State<Login> {
                 margin: const EdgeInsets.fromLTRB(30, 10, 30, 15),
                 padding:
                     const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                // decoration: BoxDecoration(
-                //     color: Colors.white, borderRadius: BorderRadius.circular(15)),
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(15)),
                 child: TextFormField(
@@ -96,23 +93,19 @@ class _LoginState extends State<Login> {
                     hintText: '*********',
                     suffixIcon: IconButton(
                       icon: Icon(
-                        // Based on passwordVisible state choose the icon
                         _passwordVisible
                             ? Icons.visibility
                             : Icons.visibility_off,
                         color: Theme.of(context).primaryColorDark,
                       ),
                       onPressed: () {
-                        // Update the state i.e. toogle the state of passwordVisible variable
                         setState(() {
                           _passwordVisible = !_passwordVisible;
                         });
                       },
                     ),
-                    errorText: checkPassword
-                        ? null
-                        // : "Password should contain at least one upper case, one lower case, one digit, one Special character and at least 8 characters in length",
-                        : "Please insert valid password",
+                    errorText:
+                        checkPassword ? null : "Please insert valid password",
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -200,8 +193,6 @@ class _LoginState extends State<Login> {
                             );
                           }
                         },
-
-                        // CODE HERE: Change button text based on current user
                         child: StreamBuilder<User?>(
                             stream: FirebaseAuth.instance.userChanges(),
                             builder: (context, snapshot) {
@@ -227,14 +218,10 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
                           margin: const EdgeInsets.only(top: 10, bottom: 20),
-                          // alignment: Alignment.center,
                           child: const Text("Don't have an account ?  ")),
                       Container(
-                        // margin: const EdgeInsets.fromLTRB(0, 10, 0, 40),
                         margin: const EdgeInsets.only(top: 10, bottom: 20),
-                        // alignment: Alignment.center,
                         child: GestureDetector(
                           child: Text(
                             'Register',

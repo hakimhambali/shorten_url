@@ -13,10 +13,6 @@ class ViewQR extends StatefulWidget {
     required this.newLink,
   }) : super(key: key);
 
-  // String url;
-  // late String newLink;
-  // ViewQR(this.url, String newLink, {Key? key}) : super(key: key);
-
   @override
   State<ViewQR> createState() => _ViewQRState();
 }

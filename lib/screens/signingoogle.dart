@@ -17,16 +17,12 @@ class SignInGoogle extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //* TITLE
             Text(
               'SIGN IN WITH GOOGLE ACCOUNT',
               style:
                   GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-
-            //* SIGN IN STATUS
-            // CODE HERE: Change status based on current user
             StreamBuilder<User?>(
                 stream: FirebaseAuth.instance.userChanges(),
                 builder: (context, snapshot) {
@@ -44,8 +40,6 @@ class SignInGoogle extends StatelessWidget {
                   }
                 }),
             const SizedBox(height: 15),
-
-            //* SIGN IN BUTTON
             SizedBox(
               width: 150,
               child: ElevatedButton(
@@ -53,7 +47,6 @@ class SignInGoogle extends StatelessWidget {
                       backgroundColor:
                           MaterialStateProperty.all(Colors.purple.shade900)),
                   onPressed: () async {
-                    // CODE HERE: Sign in with Google Credential / Sign out from firebase & Google
                     if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                       try {
                         GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -125,46 +118,6 @@ class SignInGoogle extends StatelessWidget {
                         );
                       }
                     } else {
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (context) {
-                      //       return AlertDialog(
-                      //         title: const Text('Are you sure want to logout ?',
-                      //             textAlign: TextAlign.center),
-                      //         content: SizedBox(
-                      //           height: 80,
-                      //           child: Column(
-                      //             children: [
-                      //               Padding(
-                      //                 padding: const EdgeInsets.only(top: 25.0),
-                      //                 child: Row(
-                      //                   mainAxisAlignment:
-                      //                       MainAxisAlignment.spaceEvenly,
-                      //                   children: [
-                      //                     ElevatedButton(
-                      //                         onPressed: () {
-                      //                           Navigator.pop(context);
-                      //                         },
-                      //                         // icon: const Icon(Icons.close),
-                      //                         child: const Text('No')),
-                      //                     ElevatedButton(
-                      //                         onPressed: () {
-                      //                           Navigator.pop(context);
-                      //                           FirebaseAuth.instance.signOut();
-                      //                           // GoogleSignIn().signOut();
-                      //                           FirebaseAuth.instance
-                      //                               .signInAnonymously();
-                      //                         },
-                      //                         // icon: const Icon(Icons.check),
-                      //                         child: const Text('Yes'))
-                      //                   ],
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       );
-                      //     });
                       PanaraConfirmDialog.show(
                         context,
                         title: "Logout ?",
@@ -184,7 +137,6 @@ class SignInGoogle extends StatelessWidget {
                       );
                     }
                   },
-                  // CODE HERE: Change button text based on current user
                   child: StreamBuilder<User?>(
                       stream: FirebaseAuth.instance.userChanges(),
                       builder: (context, snapshot) {
