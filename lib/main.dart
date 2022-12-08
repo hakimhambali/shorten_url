@@ -26,6 +26,7 @@ void main() async {
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
   runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: const SplashScreen(),
   ));
 }

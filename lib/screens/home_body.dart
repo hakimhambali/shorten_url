@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/screens/scan_document.dart';
 import 'package:shorten_url/screens/scan_qr.dart';
-import 'package:shorten_url/screens/view_qr.dart';
+import 'package:shorten_url/screens/result_generate_qr.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -92,7 +92,7 @@ class _HomeBodyState extends State<HomeBody> {
                                   const SnackBar(
                                       backgroundColor: Colors.green,
                                       content:
-                                          Text('Successfully Shorten URL')),
+                                          Text('Successfully shorten URL')),
                                 );
                                 AwesomeDialog(
                                   context: context,

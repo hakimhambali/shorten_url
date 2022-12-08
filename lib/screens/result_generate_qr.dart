@@ -24,7 +24,7 @@ class _ViewQRState extends State<ViewQR> {
       backgroundColor: Colors.purple.shade50,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('View QR link'),
+        title: const Text('Link QR Generator'),
         backgroundColor: Colors.black,
       ),
       body: Center(

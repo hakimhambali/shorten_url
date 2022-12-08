@@ -11,7 +11,7 @@ import 'package:shorten_url/model/user.dart';
 import 'package:shorten_url/screens/result_scan_qr.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'register.dart';
-import 'view_qr.dart';
+import 'result_generate_qr.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});

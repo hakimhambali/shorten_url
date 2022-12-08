@@ -109,6 +109,11 @@ class _ScanQRState extends State<ScanQR> {
                       assembleCamera();
                     })),
           );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                backgroundColor: Colors.green,
+                content: Text('Successfully Scan QR')),
+          );
         }
       });
     });
