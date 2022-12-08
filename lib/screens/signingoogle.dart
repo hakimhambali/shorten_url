@@ -79,7 +79,6 @@ class SignInGoogle extends StatelessWidget {
                           });
                         }
                       } on FirebaseAuthException catch (e) {
-                        // if (e.code == "credential-already-in-use") {
                         if (account != null) {
                           GoogleSignInAuthentication auth =
                               await account.authentication;
@@ -101,7 +100,6 @@ class SignInGoogle extends StatelessWidget {
                             return user;
                           });
                         }
-                        // }
                         else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

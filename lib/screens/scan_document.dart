@@ -32,25 +32,10 @@ class CustomDocumentScannerFlutter {
       createScanDocumentHistory(
           date: DateTime.now().toString(), newLink: path, originalLink: path);
       OpenFilex.open(path);
-
-      // Widget build(BuildContext context) => SafeArea(
-      //       child: Scaffold(
-      //         body: Stack(
-      //           alignment: Alignment.center,
-      //           children: <Widget>[showNotification(context)],
-      //         ),
-      //       ),
-      //     );
-
-      debugPrint("PATH: " + path);
       return File(path);
     }
   }
 
-  /// Scanner to generate PDF file from scanned images
-  ///
-  /// `context` : BuildContext to attach PDF generation widgets
-  /// `androidConfigs` : Android scanner labels configuration
   static Future<File?> launchForPdf(BuildContext context,
       {ScannerFileSource? source,
       Map<dynamic, String> labelsConfig = const {}}) async {
@@ -64,26 +49,15 @@ class CustomDocumentScannerFlutter {
             builder: (_) => PdfGeneratotGallery(launchWrapper, labelsConfig)));
   }
 
-  /// Scanner to get single scanned image
-  ///
-  /// `context` : BuildContext to attach source selection
-  /// `source` : Either ScannerFileSource.CAMERA or ScannerFileSource.GALLERY
-  /// `androidConfigs` : Android scanner labels configuration
   static Future<File?>? launch(BuildContext context,
       {ScannerFileSource? source,
       Map<dynamic, String> labelsConfig = const {}}) {
     if (source != null) {
-      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //     backgroundColor: Colors.green,
-      //     content: Text('Successfully scan document')));
       return _scanDocument(source, labelsConfig);
     }
     return showModalBottomSheet<File>(
         context: context,
         builder: (BuildContext bc) {
-          // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //     backgroundColor: Colors.green,
-          //     content: Text('Successfully scan document')));
           return Wrap(
             children: <Widget>[
               ListTile(
@@ -92,16 +66,10 @@ class CustomDocumentScannerFlutter {
                       labelsConfig[ScannerLabelsConfig.PICKER_CAMERA_LABEL] ??
                           'Camera'),
                   onTap: () async {
-                    // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    //     backgroundColor: Colors.green,
-                    //     content: Text('Successfully scan document')));
                     Navigator.pop(
                         context,
                         await _scanDocument(
                             ScannerFileSource.CAMERA, labelsConfig));
-                    // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    //     backgroundColor: Colors.green,
-                    //     content: Text('Successfully scan document')));
                   }),
               ListTile(
                 leading: const Icon(Icons.image_search),
@@ -109,16 +77,10 @@ class CustomDocumentScannerFlutter {
                     labelsConfig[ScannerLabelsConfig.PICKER_GALLERY_LABEL] ??
                         'Photo Library'),
                 onTap: () async {
-                  // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  //     backgroundColor: Colors.green,
-                  //     content: Text('Successfully scan document')));
                   Navigator.pop(
                       context,
                       await _scanDocument(
                           ScannerFileSource.GALLERY, labelsConfig));
-                  // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  //     backgroundColor: Colors.green,
-                  //     content: Text('Successfully scan document')));
                 },
               ),
             ],
@@ -139,10 +101,4 @@ class CustomDocumentScannerFlutter {
     };
     await historyUser.set(json);
   }
-
-  // static showNotification(BuildContext context) {
-  //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //       backgroundColor: Colors.green,
-  //       content: Text('Successfully scan document')));
-  // }
 }

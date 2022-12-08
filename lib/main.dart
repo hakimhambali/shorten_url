@@ -8,19 +8,6 @@ import 'screens/history_screen.dart';
 import 'screens/feedback.dart';
 import 'package:page_transition/page_transition.dart';
 
-// START SIGN IN
-// import 'screens/signinanonymous.dart';
-// import 'screens/signinemail.dart';
-// import 'screens/signingoogle.dart';
-// import 'screens/signinphonenumber.dart';
-// END SIGN IN
-
-// void main() {
-//   runApp(const MaterialApp(
-//     home: Home(),
-//   ));
-// }
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -72,10 +59,6 @@ class _HomeState extends State<Home> {
     const HomeBody(),
     const HistoryScreen(),
     const Improvement(),
-    // const SignInAnonymous(),
-    // const SignInEmail(),
-    // const SignInGoogle(),
-    // const SignInPhoneNumber(),
   ];
 
   @override
@@ -95,10 +78,6 @@ class _HomeState extends State<Home> {
               onTabChange: (index) {
                 setState(() {
                   myIndex = index;
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: ((context) => widgetList[myIndex])));
                 });
               },
               padding: const EdgeInsets.all(16),
@@ -115,22 +94,6 @@ class _HomeState extends State<Home> {
                   icon: Icons.feedback,
                   text: 'Feedback',
                 ),
-                // GButton(
-                //   icon: Icons.feedback,
-                //   text: 'Anon',
-                // ),
-                // GButton(
-                //   icon: Icons.feedback,
-                //   text: 'Email',
-                // ),
-                // GButton(
-                //   icon: Icons.feedback,
-                //   text: 'Google',
-                // ),
-                // GButton(
-                //   icon: Icons.feedback,
-                //   text: 'Phone',
-                // ),
               ]),
         ),
       ),

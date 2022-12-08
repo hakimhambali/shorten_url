@@ -220,7 +220,6 @@ class _HomeBodyState extends State<HomeBody> {
                                             newLink: '',
                                           )));
                                 }
-                                // controller.clear(); //PUNCA
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -291,10 +290,8 @@ class _HomeBodyState extends State<HomeBody> {
                           File? scannedDoc =
                               await CustomDocumentScannerFlutter.launch(context,
                                   source: ScannerFileSource
-                                      .CAMERA); // Or ScannerFileSource.GALLERY
-                          // `scannedDoc` will be the image file scanned from scanner
+                                      .CAMERA);
                         } on PlatformException {
-                          // 'Failed to get document path or operation cancelled!';
                         }
                       },
                       child: const Text('Scan Document'),
@@ -302,7 +299,7 @@ class _HomeBodyState extends State<HomeBody> {
                   ),
                 ],
               ),
-              // ),
+
             ),
           ],
         ),
