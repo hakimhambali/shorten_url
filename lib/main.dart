@@ -11,7 +11,9 @@ import 'package:page_transition/page_transition.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAuth.instance.signInAnonymously();
+  if (FirebaseAuth.instance.currentUser == null) { 
+    await FirebaseAuth.instance.signInAnonymously();
+  }
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
     home: const SplashScreen(),
