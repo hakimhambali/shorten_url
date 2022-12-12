@@ -71,6 +71,19 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
        }
    }
 
+   flavorDimensions "default"
+   productFlavors {
+    production {
+        dimension "default"
+        resValue "string", "MasterZ", "Flavors Example"
+        applicationIdSuffix ""
+    }
+    development {
+        dimension "default"
+        resValue "string", "MasterZ", "Dev Flavors Example"
+        applicationIdSuffix ".dev"
+    }
+   }
 }
 
 flutter {
