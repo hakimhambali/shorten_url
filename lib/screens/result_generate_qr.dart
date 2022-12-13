@@ -1,5 +1,10 @@
 import 'package:clipboard/clipboard.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/qr_code_widget.dart';
@@ -18,14 +23,25 @@ class ViewQR extends StatefulWidget {
 }
 
 class _ViewQRState extends State<ViewQR> {
+  final controller = ScreenshotController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple.shade50,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Link QR Generator'),
         backgroundColor: Colors.black,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () async {
+              final image = await controller.capture();
+              if (image == null) return;
+              await saveImage(image);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -34,10 +50,18 @@ class _ViewQRState extends State<ViewQR> {
             Center(
                 child: Column(
               children: [
-                Center(
-                  child: QRCode(
-                    qrSize: 320,
-                    qrData: widget.originalLink,
+                Screenshot(
+                  controller: controller,
+                  child: Center(
+                    child: Container(
+                      width: 340,
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(10.0),
+                      child: QRCode(
+                        qrSize: 320,
+                        qrData: widget.originalLink,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -103,5 +127,23 @@ class _ViewQRState extends State<ViewQR> {
     } else {
       return false;
     }
+  }
+
+  Future<String> saveImage(Uint8List bytes) async {
+    await [Permission.storage].request();
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '-')
+        .replaceAll(':', '-');
+    final name = 'screenshot_$time';
+    final result = await ImageGallerySaver.saveImage(bytes, name: name);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('QR code has been downloaded succesfully')),
+    );
+    final path = result['filePath'].split('file://')[1];
+    OpenFilex.open(path);
+    return result['filePath'];
   }
 }

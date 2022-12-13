@@ -41,7 +41,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
           FirebaseAuth.instance.currentUser!.isAnonymous
               ? IconButton(
-                  icon: const Icon(Icons.question_mark),
+                  icon: const Icon(Icons.info),
                   onPressed: () {
                     return PanaraConfirmDialog.show(
                       context,
