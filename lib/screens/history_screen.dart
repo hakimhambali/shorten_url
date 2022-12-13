@@ -458,7 +458,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<void> openFile({required String result}) async {
-    await OpenFilex.open(result);
+    final result2 = await OpenFilex.open(result);
+    if (result2.type.toString() == "ResultType.fileNotFound") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Image maybe was deleted in your phone')),
+      );
+    }
     setState(() {});
   }
 }

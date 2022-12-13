@@ -135,7 +135,7 @@ class _ViewQRState extends State<ViewQR> {
         .toIso8601String()
         .replaceAll('.', '-')
         .replaceAll(':', '-');
-    final name = 'screenshot_$time';
+    final name = 'generate_qr_$time';
     final result = await ImageGallerySaver.saveImage(bytes, name: name);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

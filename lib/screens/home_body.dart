@@ -31,6 +31,56 @@ class _HomeBodyState extends State<HomeBody> {
         centerTitle: true,
         title: const Text('MasterZ'),
         backgroundColor: Colors.black,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.info),
+            onPressed: () async {
+              AwesomeDialog(
+                context: context,
+                animType: AnimType.scale,
+                dialogType: DialogType.noHeader,
+                body: SizedBox(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            const Text('4 features of MasterZ are: \n\n',
+                                style: TextStyle(fontSize: 20)),
+                            new Align(
+                                alignment: Alignment.centerLeft,
+                                child: new Text('1. Shorten URL: Shorten links\n',
+                                    style: TextStyle(fontSize: 16))),
+                            new Align(
+                                alignment: Alignment.centerLeft,
+                                child: new Text(
+                                    '2. Generate QR: Generate QR code from links\n',
+                                    style: TextStyle(fontSize: 16))),
+                            new Align(
+                                alignment: Alignment.centerLeft,
+                                child: new Text(
+                                    '3. Scan QR: Scan QR code to links\n',
+                                    style: TextStyle(fontSize: 16))),
+                            new Align(
+                                alignment: Alignment.centerLeft,
+                                child: new Text(
+                                    '4. Scan Document: Scan document using camera\n',
+                                    style: TextStyle(fontSize: 16))),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                title: 'This is Ignored',
+                desc: 'This is also Ignored',
+                btnOkOnPress: () {},
+              )..show();
+            },
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(15.0),
@@ -289,17 +339,14 @@ class _HomeBodyState extends State<HomeBody> {
                         try {
                           File? scannedDoc =
                               await CustomDocumentScannerFlutter.launch(context,
-                                  source: ScannerFileSource
-                                      .CAMERA);
-                        } on PlatformException {
-                        }
+                                  source: ScannerFileSource.CAMERA);
+                        } on PlatformException {}
                       },
                       child: const Text('Scan Document'),
                     ),
                   ),
                 ],
               ),
-
             ),
           ],
         ),
