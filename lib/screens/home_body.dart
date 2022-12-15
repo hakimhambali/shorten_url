@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shorten_url/main.dart';
+import 'package:shorten_url/screens/loading_screen.dart';
 import 'package:shorten_url/screens/scan_document.dart';
 import 'package:shorten_url/screens/scan_qr.dart';
 import 'package:shorten_url/screens/result_generate_qr.dart';
@@ -51,7 +53,8 @@ class _HomeBodyState extends State<HomeBody> {
                                 style: TextStyle(fontSize: 20)),
                             new Align(
                                 alignment: Alignment.centerLeft,
-                                child: new Text('1. Shorten URL: Shorten links\n',
+                                child: new Text(
+                                    '1. Shorten URL: Shorten links\n',
                                     style: TextStyle(fontSize: 16))),
                             new Align(
                                 alignment: Alignment.centerLeft,
@@ -131,101 +134,109 @@ class _HomeBodyState extends State<HomeBody> {
                             validate = validateURL(controller.text);
                             setState(() {});
                             if (validate && controller.text.isNotEmpty) {
-                              final shortenedUrl =
-                                  await shortenUrl(url: controller.text);
-                              if (shortenedUrl != null) {
-                                createShortUrlHistory(
-                                    originalLink: controller.text,
-                                    newLink: shortenedUrl,
-                                    date: DateTime.now().toString());
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      backgroundColor: Colors.green,
-                                      content:
-                                          Text('Successfully shorten URL')),
-                                );
-                                AwesomeDialog(
-                                  context: context,
-                                  animType: AnimType.scale,
-                                  dialogType: DialogType.success,
-                                  body: SizedBox(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () async {},
-                                              child: Container(
-                                                color:
-                                                    Colors.grey.withOpacity(.2),
-                                                child: Text(
-                                                  shortenedUrl,
-                                                  style:
-                                                      TextStyle(fontSize: 19),
+                              Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LoadingScreen(Home())))
+                                  .whenComplete(() async {
+                                final shortenedUrl =
+                                    await shortenUrl(url: controller.text);
+                                if (shortenedUrl != null) {
+                                  createShortUrlHistory(
+                                      originalLink: controller.text,
+                                      newLink: shortenedUrl,
+                                      date: DateTime.now().toString());
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        backgroundColor: Colors.green,
+                                        content:
+                                            Text('Successfully shorten URL')),
+                                  );
+                                  AwesomeDialog(
+                                    context: context,
+                                    animType: AnimType.scale,
+                                    dialogType: DialogType.success,
+                                    body: SizedBox(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {},
+                                                child: Container(
+                                                  color: Colors.grey
+                                                      .withOpacity(.2),
+                                                  child: Text(
+                                                    shortenedUrl,
+                                                    style:
+                                                        TextStyle(fontSize: 19),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            IconButton(
-                                                onPressed: () {
-                                                  Clipboard.setData(
-                                                          ClipboardData(
-                                                              text:
-                                                                  shortenedUrl))
-                                                      .then((_) => ScaffoldMessenger
-                                                              .of(context)
-                                                          .showSnackBar(
-                                                              const SnackBar(
-                                                                  content: Text(
-                                                                      'Urls is copied to the clipboard'))));
-                                                },
-                                                icon: const Icon(Icons.copy)),
-                                            IconButton(
-                                                icon: const Icon(Icons.search),
-                                                onPressed: () {
-                                                  var url =
-                                                      Uri.parse(shortenedUrl);
-                                                  launchURL(url);
-                                                }),
-                                            IconButton(
-                                                icon: const Icon(Icons.share),
-                                                onPressed: () {
-                                                  Share.share(shortenedUrl);
-                                                }),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: const [
-                                            Text('Copy'),
-                                            Text('Visit'),
-                                            Text('Share'),
-                                          ],
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {
+                                                    Clipboard.setData(
+                                                            ClipboardData(
+                                                                text:
+                                                                    shortenedUrl))
+                                                        .then((_) => ScaffoldMessenger
+                                                                .of(context)
+                                                            .showSnackBar(
+                                                                const SnackBar(
+                                                                    content: Text(
+                                                                        'Urls is copied to the clipboard'))));
+                                                  },
+                                                  icon: const Icon(Icons.copy)),
+                                              IconButton(
+                                                  icon:
+                                                      const Icon(Icons.search),
+                                                  onPressed: () {
+                                                    var url =
+                                                        Uri.parse(shortenedUrl);
+                                                    launchURL(url);
+                                                  }),
+                                              IconButton(
+                                                  icon: const Icon(Icons.share),
+                                                  onPressed: () {
+                                                    Share.share(shortenedUrl);
+                                                  }),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: const [
+                                              Text('Copy'),
+                                              Text('Visit'),
+                                              Text('Share'),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  title: 'This is Ignored',
-                                  desc: 'This is also Ignored',
-                                  btnOkOnPress: () {
-                                    controller.clear();
-                                  },
-                                )..show();
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      backgroundColor: Colors.red,
-                                      content: Text(
-                                          'URL does not exists or poor internet connection')),
-                                );
-                              }
+                                    title: 'This is Ignored',
+                                    desc: 'This is also Ignored',
+                                    btnOkOnPress: () {
+                                      controller.clear();
+                                    },
+                                  )..show();
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                            'URL does not exists or poor internet connection')),
+                                  );
+                                }
+                              });
                             }
                           },
                           child: const Text('Shorten url'),
@@ -248,36 +259,40 @@ class _HomeBodyState extends State<HomeBody> {
                             validate = validateURL(controller.text);
                             setState(() {});
                             if (validate && controller.text.isNotEmpty) {
-                              final shortenedUrl =
-                                  await shortenUrl(url: controller.text);
-                              if (shortenedUrl != null) {
-                                final generateQR =
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          LoadingScreen(ViewQR(
+                                            originalLink: controller.text,
+                                            newLink: '',
+                                          )))).whenComplete(() async {
+                                final shortenedUrl =
                                     await shortenUrl(url: controller.text);
-                                if (generateQR != null) {
-                                  createGenerateQRHistory(
-                                      originalLink: controller.text,
-                                      newLink: controller.text,
-                                      date: DateTime.now().toString());
+                                if (shortenedUrl != null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         backgroundColor: Colors.green,
                                         content:
                                             Text('Successfully Generate QR')),
                                   );
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ViewQR(
-                                            originalLink: controller.text,
-                                            newLink: '',
-                                          )));
+                                  final generateQR =
+                                      await shortenUrl(url: controller.text);
+                                  if (generateQR != null) {
+                                    await createGenerateQRHistory(
+                                        originalLink: controller.text,
+                                        newLink: controller.text,
+                                        date: DateTime.now().toString());
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                            'URL does not exists or poor internet connection')),
+                                  );
                                 }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      backgroundColor: Colors.red,
-                                      content: Text(
-                                          'URL does not exists or poor internet connection')),
-                                );
-                              }
+                              });
                             }
                           },
                           child: const Text('Generate QR'),
