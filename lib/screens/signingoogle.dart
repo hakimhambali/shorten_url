@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 
+import 'loading_screen.dart';
+
 class SignInGoogle extends StatelessWidget {
   const SignInGoogle({Key? key}) : super(key: key);
 
@@ -54,67 +56,73 @@ class SignInGoogle extends StatelessWidget {
                       } catch (e) {
                         print(e);
                       }
-
                       GoogleSignInAccount? account =
                           await GoogleSignIn().signIn();
-                      try {
-                        if (account != null) {
-                          GoogleSignInAuthentication auth =
-                              await account.authentication;
-                          var credential = GoogleAuthProvider.credential(
-                              accessToken: auth.accessToken,
-                              idToken: auth.idToken);
-                          await FirebaseAuth.instance.currentUser!
-                              .linkWithCredential(credential)
-                              .then((user) {
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      LoadingScreen(SignInGoogle())))
+                          .whenComplete(() async {
+                        Navigator.pop(context);
+                        try {
+                          if (account != null) {
+                            GoogleSignInAuthentication auth =
+                                await account.authentication;
+                            var credential = GoogleAuthProvider.credential(
+                                accessToken: auth.accessToken,
+                                idToken: auth.idToken);
+                            await FirebaseAuth.instance.currentUser!
+                                .linkWithCredential(credential)
+                                .then((user) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.green,
+                                    content: Text(
+                                        'Successfully login using google account')),
+                              );
+                              Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);
+                              return user;
+                            });
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          if (account != null) {
+                            GoogleSignInAuthentication auth =
+                                await account.authentication;
+                            OAuthCredential credential =
+                                GoogleAuthProvider.credential(
+                                    accessToken: auth.accessToken,
+                                    idToken: auth.idToken);
+                            await FirebaseAuth.instance
+                                .signInWithCredential(credential)
+                                .then((user) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    backgroundColor: Colors.green,
+                                    content: Text(
+                                        'Successfully login using google account')),
+                              );
+                              Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);
+                              return user;
+                            });
+                          } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  backgroundColor: Colors.green,
-                                  content: Text(
-                                      'Successfully login using google account')),
+                                  backgroundColor: Colors.red,
+                                  content: Text('Invalid Login')),
                             );
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            return user;
-                          });
-                        }
-                      } on FirebaseAuthException catch (e) {
-                        if (account != null) {
-                          GoogleSignInAuthentication auth =
-                              await account.authentication;
-                          OAuthCredential credential =
-                              GoogleAuthProvider.credential(
-                                  accessToken: auth.accessToken,
-                                  idToken: auth.idToken);
-                          await FirebaseAuth.instance
-                              .signInWithCredential(credential)
-                              .then((user) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  backgroundColor: Colors.green,
-                                  content: Text(
-                                      'Successfully login using google account')),
-                            );
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            return user;
-                          });
-                        }
-                        else {
+                            log(e.message.toString());
+                          }
+                        } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 backgroundColor: Colors.red,
                                 content: Text('Invalid Login')),
                           );
-                          log(e.message.toString());
                         }
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text('Invalid Login')),
-                        );
-                      }
+                      });
                     } else {
                       PanaraConfirmDialog.show(
                         context,

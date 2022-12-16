@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 
+import 'blank_screen.dart';
+import 'loading_screen.dart';
+
 class SignInPhoneNumber extends StatefulWidget {
   const SignInPhoneNumber({Key? key}) : super(key: key);
 
@@ -79,66 +82,84 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                 onPressed: () async {
                   validate = validateNumber(phoneController.text);
                   setState(() {});
-
                   if (FirebaseAuth.instance.currentUser!.isAnonymous) {
                     if (validate == true) {
-                      await FirebaseAuth.instance.verifyPhoneNumber(
-                          phoneNumber: '+${phoneController.text}',
-                          verificationCompleted: (credential) async {
-                            await FirebaseAuth.instance
-                                .signInWithCredential(credential);
-                          },
-                          verificationFailed: (exception) {
-                            showNotification(
-                                context, exception.message.toString());
-                          },
-                          codeSent: ((verificationId, resendCode) async {
-                            String? smsCode = await askingSMSCode(context);
-                            if (smsCode != null) {
-                              PhoneAuthCredential credential =
-                                  PhoneAuthProvider.credential(
-                                      verificationId: verificationId,
-                                      smsCode: smsCode);
-                              try {
-                                await FirebaseAuth.instance.currentUser!
-                                    .linkWithCredential(credential)
-                                    .then((user) {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  return user;
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      LoadingScreen(BlankScreen())))
+                          .whenComplete(() async {
+                        await FirebaseAuth.instance.verifyPhoneNumber(
+                            phoneNumber: '+${phoneController.text}',
+                            verificationCompleted: (credential) async {
+                              await FirebaseAuth.instance
+                                  .signInWithCredential(credential);
+                            },
+                            verificationFailed: (exception) {
+                              showNotification(
+                                  context, exception.message.toString());
+                              Navigator.pop(context);
+                            },
+                            codeSent: ((verificationId, resendCode) async {
+                              String? smsCode = await askingSMSCode(context);
+                              if (smsCode != null) {
+                                PhoneAuthCredential credential =
+                                    PhoneAuthProvider.credential(
+                                        verificationId: verificationId,
+                                        smsCode: smsCode);
+                                Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                LoadingScreen(BlankScreen())))
+                                    .whenComplete(() async {
+                                  try {
+                                    await FirebaseAuth.instance.currentUser!
+                                        .linkWithCredential(credential)
+                                        .then((user) {
+                                      Navigator.of(context)
+                                          .popUntil((route) => route.isFirst);
+                                      return user;
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          backgroundColor: Colors.green,
+                                          content: Text(
+                                              'Successfully login using phone number')),
+                                    );
+                                  } on FirebaseAuthException catch (e) {
+                                    debugPrint(e.code);
+                                    if (e.code == "invalid-verification-code") {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            backgroundColor: Colors.red,
+                                            content:
+                                                Text('Wrong SMS code entered')),
+                                      );
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    } else {
+                                      await FirebaseAuth.instance
+                                          .signInWithCredential(credential);
+                                      Navigator.of(context)
+                                          .popUntil((route) => route.isFirst);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            backgroundColor: Colors.green,
+                                            content: Text(
+                                                'Successfully login using phone number')),
+                                      );
+                                      log(e.message.toString());
+                                    }
+                                  }
                                 });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      backgroundColor: Colors.green,
-                                      content: Text(
-                                          'Successfully login using phone number')),
-                                );
-                              } on FirebaseAuthException catch (e) {
-                                debugPrint(e.code);
-                                if (e.code == "invalid-verification-code") {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        backgroundColor: Colors.red,
-                                        content:
-                                            Text('Wrong SMS code entered')),
-                                  );
-                                } else {
-                                  await FirebaseAuth.instance
-                                      .signInWithCredential(credential);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        backgroundColor: Colors.green,
-                                        content: Text(
-                                            'Successfully login using phone number')),
-                                  );
-                                  log(e.message.toString());
-                                }
                               }
-                            }
-                          }),
-                          codeAutoRetrievalTimeout: (verificationId) {});
+                            }),
+                            codeAutoRetrievalTimeout: (verificationId) {});
+                      });
                     }
                   } else {
                     PanaraConfirmDialog.show(

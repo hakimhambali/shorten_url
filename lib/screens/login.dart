@@ -162,8 +162,8 @@ class _LoginState extends State<Login> {
                                     content:
                                         Text('Successfully login using email')),
                               );
-                              Navigator.pop(context);
-                              Navigator.pop(context);
+                              Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);
                             } else {
                               PanaraConfirmDialog.show(
                                 context,
