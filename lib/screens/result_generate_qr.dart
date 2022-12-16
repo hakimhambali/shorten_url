@@ -144,6 +144,20 @@ class _ViewQRState extends State<ViewQR> {
     );
     final path = result['filePath'].split('file://')[1];
     OpenFilex.open(path);
+    // openFile(result: path);
     return result['filePath'];
   }
+
+  // Future<void> openFile({required String result}) async {
+  //   final result2 = await OpenFilex.open(result);
+  //   debugPrint(result);
+  //   // debugPrint(result2.type.toString());
+  //   if (result2.type.toString() == "ResultType.fileNotFound") {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //           backgroundColor: Colors.red,
+  //           content: Text('Image maybe was deleted in your phone')),
+  //     );
+  //   }
+  // }
 }
