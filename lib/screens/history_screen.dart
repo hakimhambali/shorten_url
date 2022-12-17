@@ -9,6 +9,7 @@ import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shorten_url/model/user.dart';
 import 'package:shorten_url/screens/result_scan_qr.dart';
+import 'package:shorten_url/screens/result_scan_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'register.dart';
 import 'result_generate_qr.dart';
@@ -125,7 +126,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ? buildGeneratedQR(users[x])
                             : users[x].type == "Scan QR"
                                 ? buildScanQR(users[x])
-                                : buildScanDocument(users[x])
+                                : users[x].type == "Scan Document"
+                                    ? buildScanDocument(users[x])
+                                    : buildScanText(users[x])
                 ],
               );
             } else {
@@ -434,6 +437,51 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 barrierDismissible: false,
               ),
               onTap: () => openFile(result: item.originalLink),
+            ),
+          ),
+        ),
+      );
+
+  Widget buildScanText(History item) => Padding(
+        padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+        child: Material(
+          elevation: 2,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.pink[100],
+                borderRadius: BorderRadius.circular(8)),
+            child: ListTile(
+              title: Text(item.type),
+              subtitle: Text(DateFormat('dd/MM/yyyy')
+                  .add_jm()
+                  .format(DateTime.parse(item.date))
+                  .toString()),
+              onLongPress: () => PanaraConfirmDialog.show(
+                context,
+                title: "Delete this ?",
+                message: 'Are you sure want to delete this ?',
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                onTapCancel: () {
+                  Navigator.pop(context);
+                },
+                onTapConfirm: () {
+                  Navigator.pop(context);
+                  final deleteUser = FirebaseFirestore.instance
+                      .collection('history')
+                      .doc(item.docID);
+                  deleteUser.delete().then((_) => ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Text('Successfully delete history data'))));
+                },
+                panaraDialogType: PanaraDialogType.error,
+                barrierDismissible: false,
+              ),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ResultScanText(
+                      result: item.originalLink, onPop: (_) {}))),
             ),
           ),
         ),
