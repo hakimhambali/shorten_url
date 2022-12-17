@@ -1,7 +1,5 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ResultScanText extends StatefulWidget {
   final String result;
@@ -21,7 +19,6 @@ class _ResultScanTextState extends State<ResultScanText> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        debugPrint('onWillPop triggered');
         Navigator.pop(context, true);
         widget.onPop(true);
         return true;
@@ -30,7 +27,7 @@ class _ResultScanTextState extends State<ResultScanText> {
         backgroundColor: Colors.purple.shade50,
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Link QR Scanner'),
+          title: const Text('Text Scanner'),
           backgroundColor: Colors.black,
         ),
         body: Center(
@@ -59,25 +56,12 @@ class _ResultScanTextState extends State<ResultScanText> {
                               content: Text('✓   Copied to Clipboard')),
                         );
                       }),
-                  IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        var url = Uri.parse(widget.result);
-                        launchURL(url);
-                      }),
-                  IconButton(
-                      icon: const Icon(Icons.share),
-                      onPressed: () {
-                        Share.share(widget.result);
-                      }),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
                   Text('Copy'),
-                  Text('Visit'),
-                  Text('Share'),
                 ],
               ),
             ],
@@ -85,14 +69,5 @@ class _ResultScanTextState extends State<ResultScanText> {
         ),
       ),
     );
-  }
-
-  Future<bool> launchURL(url) async {
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-      return true;
-    } else {
-      return false;
-    }
   }
 }

@@ -21,7 +21,6 @@ class _ResultScanQRState extends State<ResultScanQR> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        debugPrint('onWillPop triggered');
         Navigator.pop(context, true);
         widget.onPop(true);
         return true;
