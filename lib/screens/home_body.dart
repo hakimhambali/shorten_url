@@ -13,6 +13,7 @@ import 'package:shorten_url/screens/scan_document.dart';
 import 'package:shorten_url/screens/scan_qr.dart';
 import 'package:shorten_url/screens/result_generate_qr.dart';
 import 'package:http/http.dart' as http;
+import 'package:shorten_url/screens/scan_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeBody extends StatefulWidget {
@@ -335,51 +336,110 @@ class _HomeBodyState extends State<HomeBody> {
                       color: Colors.black,
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(20))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Column(
                   children: [
-                    SizedBox(
-                      width: 132.0,
-                      height: 40.0,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0))),
-                            backgroundColor: MaterialStateProperty.all(
-                                Colors.purple.shade900)),
-                        onPressed: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const ScanQR()));
-                        },
-                        child: const Text('Scan QR'),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            width: 132.0,
+                            height: 40.0,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0))),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.purple.shade900)),
+                              onPressed: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const ScanQR()));
+                              },
+                              child: const Text('Scan QR'),
+                            ),
+                          ),
+                          const Text("or"),
+                          SizedBox(
+                            width: 132.0,
+                            height: 40.0,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0))),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.purple.shade900)),
+                              onPressed: () async {
+                                try {
+                                  File? scannedDoc =
+                                      await CustomDocumentScannerFlutter.launch(
+                                          context,
+                                          source: ScannerFileSource.CAMERA);
+                                } on PlatformException {}
+                              },
+                              child: const Text('Scan Document'),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const Text("or"),
-                    SizedBox(
-                      width: 132.0,
-                      height: 40.0,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0))),
-                            backgroundColor: MaterialStateProperty.all(
-                                Colors.purple.shade900)),
-                        onPressed: () async {
-                          try {
-                            File? scannedDoc =
-                                await CustomDocumentScannerFlutter.launch(
-                                    context,
-                                    source: ScannerFileSource.CAMERA);
-                          } on PlatformException {}
-                        },
-                        child: const Text('Scan Document'),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: 132.0,
+                          height: 40.0,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0))),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.purple.shade900)),
+                            onPressed: () async {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const ScanText()));
+                            },
+                            child: const Text('Scan Text'),
+                          ),
+                        ),
+                        const Text("or"),
+                        SizedBox(
+                          width: 132.0,
+                          height: 40.0,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0))),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.purple.shade900)),
+                            onPressed: () async {
+                              try {
+                                File? scannedDoc =
+                                    await CustomDocumentScannerFlutter.launch(
+                                        context,
+                                        source: ScannerFileSource.CAMERA);
+                              } on PlatformException {}
+                            },
+                            child: const Text('Speed Test'),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
