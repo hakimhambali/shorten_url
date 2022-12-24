@@ -54,14 +54,14 @@ class _HomeBodyState extends State<HomeBody> {
           title: const Text('MasterZ'),
           backgroundColor: Colors.black,
           actions: <Widget>[
-            IconButton(
-              icon: Icon(nightMode ? iconNight : iconDay),
-              onPressed: () {
-                setState(() {
-                  nightMode = !nightMode;
-                });
-              },
-            ),
+            // IconButton(
+            //   icon: Icon(nightMode ? iconNight : iconDay),
+            //   onPressed: () {
+            //     setState(() {
+            //       nightMode = !nightMode;
+            //     });
+            //   },
+            // ),
             IconButton(
               icon: const Icon(Icons.info),
               onPressed: () async {
@@ -77,7 +77,7 @@ class _HomeBodyState extends State<HomeBody> {
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
                             children: [
-                              const Text('4 features of MasterZ are: \n\n',
+                              const Text('5 features of MasterZ are: \n\n',
                                   style: TextStyle(fontSize: 20)),
                               new Align(
                                   alignment: Alignment.centerLeft,
@@ -98,6 +98,11 @@ class _HomeBodyState extends State<HomeBody> {
                                   alignment: Alignment.centerLeft,
                                   child: new Text(
                                       '4. Scan Document: Scan document using camera\n',
+                                      style: TextStyle(fontSize: 16))),
+                              new Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: new Text(
+                                      '5. Scan Text: Scan text from image and make it easy for you to copy text\n',
                                       style: TextStyle(fontSize: 16))),
                             ],
                           ),
@@ -383,7 +388,7 @@ class _HomeBodyState extends State<HomeBody> {
                                 child: const Text('Scan QR'),
                               ),
                             ),
-                            const Text("or"),
+                            // const Text("or"),
                             SizedBox(
                               width: 132.0,
                               height: 40.0,
@@ -516,30 +521,6 @@ class _HomeBodyState extends State<HomeBody> {
                               child: const Text('Scan Text'),
                             ),
                           ),
-                          const Text("or"),
-                          SizedBox(
-                            width: 132.0,
-                            height: 40.0,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(18.0))),
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Colors.purple.shade900)),
-                              onPressed: () async {
-                                try {
-                                  File? scannedDoc =
-                                      await CustomDocumentScannerFlutter.launch(
-                                          context,
-                                          source: ScannerFileSource.CAMERA);
-                                } on PlatformException {}
-                              },
-                              child: const Text('Speed Test'),
-                            ),
-                          ),
                         ],
                       ),
                     ],
@@ -646,7 +627,7 @@ class _HomeBodyState extends State<HomeBody> {
 
   void getRecognisedText(XFile image) async {
     final inputImage = InputImage.fromFilePath(image.path);
-    debugPrint(inputImage.toString());
+    // debugPrint(inputImage.toString());
     final TextRecognizer textDetector = TextRecognizer();
     RecognizedText recognisedText = await textDetector.processImage(inputImage);
     await textDetector.close();
@@ -657,8 +638,8 @@ class _HomeBodyState extends State<HomeBody> {
       }
     }
     textScanning = false;
-    debugPrint('scannedText1: ' + recognisedText.toString());
-    debugPrint('scannedText2: ' + scannedText.characters.string);
+    // debugPrint('scannedText1: ' + recognisedText.toString());
+    // debugPrint('scannedText2: ' + scannedText.characters.string);
     setState(() {});
 
     if (scannedText != '') {
@@ -673,7 +654,7 @@ class _HomeBodyState extends State<HomeBody> {
                 builder: (context) => ResultScanText(
                     result: scannedText,
                     onPop: (resume) {
-                      debugPrint('RESUME');
+                      // debugPrint('RESUME');
                     })));
       });
     } else {

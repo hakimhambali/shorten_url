@@ -143,6 +143,7 @@ class _ViewQRState extends State<ViewQR> {
           content: Text('QR code has been downloaded succesfully')),
     );
     final path = result['filePath'].split('file://')[1];
+    // debugPrint(path);
     OpenFilex.open(path);
     // openFile(result: path);
     return result['filePath'];

@@ -104,7 +104,6 @@ class _ScanQRState extends State<ScanQR> {
                 builder: (context) => ResultScanQR(
                     result: '${result!.code}',
                     onPop: (resume) {
-                      debugPrint('RESUME');
                       assembleCamera();
                     })),
           );
@@ -205,7 +204,6 @@ class _ScanQRState extends State<ScanQR> {
                   builder: (context) => ResultScanQR(
                       result: barcode.displayValue.toString(),
                       onPop: (resume) {
-                        debugPrint('RESUME');
                         assembleCamera();
                       })));
         });

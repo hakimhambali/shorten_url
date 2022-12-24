@@ -506,6 +506,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<void> openFile({required String result}) async {
+    // debugPrint(result);
     final result2 = await OpenFilex.open(result);
     if (result2.type.toString() == "ResultType.fileNotFound") {
       ScaffoldMessenger.of(context).showSnackBar(

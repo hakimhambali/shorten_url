@@ -278,7 +278,6 @@ class _LoginState extends State<Login> {
   }
 
   void showNotification(BuildContext context, String message) {
-    debugPrint('trywoi');
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red, content: Text(message.toString())));
   }

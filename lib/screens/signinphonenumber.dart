@@ -129,7 +129,7 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                               'Successfully login using phone number')),
                                     );
                                   } on FirebaseAuthException catch (e) {
-                                    debugPrint(e.code);
+                                    // debugPrint(e.code);
                                     if (e.code == "invalid-verification-code") {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

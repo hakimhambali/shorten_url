@@ -7,6 +7,7 @@ import 'package:shorten_url/screens/home_body.dart';
 import 'screens/history_screen.dart';
 import 'screens/feedback.dart';
 import 'package:page_transition/page_transition.dart';
+// import 'provider/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,9 @@ void main() async {
   }
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
+    // themeMode: ThemeMode.system,
+    // theme: MyThemes.lightTheme,
+    // darkTheme: MyThemes.darkTheme,
     home: const SplashScreen(),
   ));
 }

@@ -31,6 +31,7 @@ class CustomDocumentScannerFlutter {
       }
       createScanDocumentHistory(
           date: DateTime.now().toString(), newLink: path, originalLink: path);
+      // debugPrint(path);
       OpenFilex.open(path);
       return File(path);
     }
