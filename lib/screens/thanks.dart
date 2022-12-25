@@ -33,7 +33,7 @@ class _ThanksState extends State<Thanks> {
         child: Column(
           children: [
             Text(
-              'Thank you for your feedback, we will improve according to your feedback from time to time. May your day be filled with good thoughts, kind people and happy moments',
+              'Thank you for your feedback, we will improve according to your feedback as fast as possible. May your day be filled with good thoughts, kind people and happy moments',
               textAlign: TextAlign.center,
               style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20),
             ),

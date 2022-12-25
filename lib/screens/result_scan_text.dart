@@ -31,40 +31,42 @@ class _ResultScanTextState extends State<ResultScanText> {
           backgroundColor: Colors.black,
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                  child: Text(
-                widget.result,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              )),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                      icon: const Icon(Icons.content_copy),
-                      onPressed: () async {
-                        await FlutterClipboard.copy(widget.result);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('✓   Copied to Clipboard')),
-                        );
-                      }),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  Text('Copy'),
-                ],
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                    child: Text(
+                  widget.result,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                )),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                        icon: const Icon(Icons.content_copy),
+                        onPressed: () async {
+                          await FlutterClipboard.copy(widget.result);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('✓   Copied to Clipboard')),
+                          );
+                        }),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    Text('Copy'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
