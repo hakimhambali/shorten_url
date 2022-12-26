@@ -159,7 +159,7 @@ class _RegisterState extends State<Register> {
                               await FirebaseAuth.instance.currentUser!
                                   .linkWithCredential(credential)
                                   .then((user) {
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                                   const SnackBar(
                                       backgroundColor: Colors.green,
                                       content: Text(
@@ -190,7 +190,7 @@ class _RegisterState extends State<Register> {
                           } on FirebaseAuthException catch (e) {
                             showNotification(context, e.message.toString());
                           } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                               const SnackBar(
                                   backgroundColor: Colors.red,
                                   content: Text('Invalid Register')),
@@ -285,7 +285,7 @@ class _RegisterState extends State<Register> {
   }
 
   void showNotification(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(
         backgroundColor: Colors.red, content: Text(message.toString())));
   }
 

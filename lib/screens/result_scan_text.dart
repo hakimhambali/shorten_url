@@ -52,7 +52,7 @@ class _ResultScanTextState extends State<ResultScanText> {
                         icon: const Icon(Icons.content_copy),
                         onPressed: () async {
                           await FlutterClipboard.copy(widget.result);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                             const SnackBar(
                                 content: Text('✓   Copied to Clipboard')),
                           );

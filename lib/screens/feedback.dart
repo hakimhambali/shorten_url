@@ -84,7 +84,7 @@ class _ImprovementState extends State<Improvement> {
                                   feedback: controller.text,
                                   date: DateTime.now().toString());
                               Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                                 const SnackBar(
                                     backgroundColor: Colors.green,
                                     content: Text(
@@ -98,7 +98,7 @@ class _ImprovementState extends State<Improvement> {
                             panaraDialogType: PanaraDialogType.normal,
                           );
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                             const SnackBar(
                                 backgroundColor: Colors.red,
                                 content: Text(

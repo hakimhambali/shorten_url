@@ -185,7 +185,7 @@ class _HomeBodyState extends State<HomeBody> {
                                           newLink: shortenedUrl,
                                           date: DateTime.now().toString());
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                          ..removeCurrentSnackBar()..showSnackBar(
                                         const SnackBar(
                                             backgroundColor: Colors.green,
                                             content: Text(
@@ -228,7 +228,7 @@ class _HomeBodyState extends State<HomeBody> {
                                                                         shortenedUrl))
                                                             .then((_) => ScaffoldMessenger
                                                                     .of(context)
-                                                                .showSnackBar(
+                                                                ..removeCurrentSnackBar()..showSnackBar(
                                                                     const SnackBar(
                                                                         content:
                                                                             Text('Urls is copied to the clipboard'))));
@@ -273,7 +273,7 @@ class _HomeBodyState extends State<HomeBody> {
                                       )..show();
                                     } else {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                          ..removeCurrentSnackBar()..showSnackBar(
                                         const SnackBar(
                                             backgroundColor: Colors.red,
                                             content: Text(
@@ -315,7 +315,7 @@ class _HomeBodyState extends State<HomeBody> {
                                         await shortenUrl(url: controller.text);
                                     if (shortenedUrl != null) {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                          ..removeCurrentSnackBar()..showSnackBar(
                                         const SnackBar(
                                             backgroundColor: Colors.green,
                                             content: Text(
@@ -331,7 +331,7 @@ class _HomeBodyState extends State<HomeBody> {
                                       }
                                     } else {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                          ..removeCurrentSnackBar()..showSnackBar(
                                         const SnackBar(
                                             backgroundColor: Colors.red,
                                             content: Text(

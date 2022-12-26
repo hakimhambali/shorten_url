@@ -177,7 +177,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       .collection('history')
                       .doc(item.docID);
                   deleteUser.delete().then((_) => ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(
+                      ..removeCurrentSnackBar()..showSnackBar(const SnackBar(
                           backgroundColor: Colors.green,
                           content: Text('Successfully delete history data'))));
                 },
@@ -216,7 +216,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 Clipboard.setData(
                                         ClipboardData(text: item.originalLink))
                                     .then((_) => ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
+                                        ..removeCurrentSnackBar()..showSnackBar(const SnackBar(
                                             content: Text(
                                                 'Urls is copied to the clipboard'))));
                               },
@@ -269,7 +269,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 Clipboard.setData(
                                         ClipboardData(text: item.newLink))
                                     .then((_) => ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
+                                        ..removeCurrentSnackBar()..showSnackBar(const SnackBar(
                                             content: Text(
                                                 'Urls is copied to the clipboard'))));
                               },
@@ -337,7 +337,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       .collection('history')
                       .doc(item.docID);
                   deleteUser.delete().then((_) => ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(
+                      ..removeCurrentSnackBar()..showSnackBar(const SnackBar(
                           backgroundColor: Colors.green,
                           content: Text('Successfully delete history data'))));
                 },
@@ -384,7 +384,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       .collection('history')
                       .doc(item.docID);
                   deleteUser.delete().then((_) => ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(
+                      ..removeCurrentSnackBar()..showSnackBar(const SnackBar(
                           backgroundColor: Colors.green,
                           content: Text('Successfully delete history data'))));
                 },
@@ -429,7 +429,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       .collection('history')
                       .doc(item.docID);
                   deleteUser.delete().then((_) => ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(
+                      ..removeCurrentSnackBar()..showSnackBar(const SnackBar(
                           backgroundColor: Colors.green,
                           content: Text('Successfully delete history data'))));
                 },
@@ -472,7 +472,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       .collection('history')
                       .doc(item.docID);
                   deleteUser.delete().then((_) => ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(
+                      ..removeCurrentSnackBar()..showSnackBar(const SnackBar(
                           backgroundColor: Colors.green,
                           content: Text('Successfully delete history data'))));
                 },
@@ -509,7 +509,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     // debugPrint(result);
     final result2 = await OpenFilex.open(result);
     if (result2.type.toString() == "ResultType.fileNotFound") {
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
         const SnackBar(
             backgroundColor: Colors.red,
             content: Text('Image maybe was deleted in your phone')),

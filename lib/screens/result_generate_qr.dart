@@ -85,7 +85,7 @@ class _ViewQRState extends State<ViewQR> {
                           icon: const Icon(Icons.content_copy),
                           onPressed: () async {
                             await FlutterClipboard.copy(widget.newLink);
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                               const SnackBar(
                                   content: Text('✓   Copied to Clipboard')),
                             );
@@ -137,7 +137,7 @@ class _ViewQRState extends State<ViewQR> {
         .replaceAll(':', '-');
     final name = 'generate_qr_$time';
     final result = await ImageGallerySaver.saveImage(bytes, name: name);
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
       const SnackBar(
           backgroundColor: Colors.green,
           content: Text('QR code has been downloaded succesfully')),
@@ -154,7 +154,7 @@ class _ViewQRState extends State<ViewQR> {
   //   debugPrint(result);
   //   // debugPrint(result2.type.toString());
   //   if (result2.type.toString() == "ResultType.fileNotFound") {
-  //     ScaffoldMessenger.of(context).showSnackBar(
+  //     ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
   //       const SnackBar(
   //           backgroundColor: Colors.red,
   //           content: Text('Image maybe was deleted in your phone')),

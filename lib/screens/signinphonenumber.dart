@@ -122,22 +122,25 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                           .popUntil((route) => route.isFirst);
                                       return user;
                                     });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          backgroundColor: Colors.green,
-                                          content: Text(
-                                              'Successfully login using phone number')),
-                                    );
+                                    ScaffoldMessenger.of(context)
+                                      ..removeCurrentSnackBar()
+                                      ..showSnackBar(
+                                        const SnackBar(
+                                            backgroundColor: Colors.green,
+                                            content: Text(
+                                                'Successfully login using phone number')),
+                                      );
                                   } on FirebaseAuthException catch (e) {
                                     // debugPrint(e.code);
                                     if (e.code == "invalid-verification-code") {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            backgroundColor: Colors.red,
-                                            content:
-                                                Text('Wrong SMS code entered')),
-                                      );
+                                        ..removeCurrentSnackBar()
+                                        ..showSnackBar(
+                                          const SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                  'Wrong SMS code entered')),
+                                        );
                                       Navigator.pop(context);
                                       Navigator.pop(context);
                                     } else {
@@ -146,12 +149,13 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
                                       Navigator.of(context)
                                           .popUntil((route) => route.isFirst);
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            backgroundColor: Colors.green,
-                                            content: Text(
-                                                'Successfully login using phone number')),
-                                      );
+                                        ..removeCurrentSnackBar()
+                                        ..showSnackBar(
+                                          const SnackBar(
+                                              backgroundColor: Colors.green,
+                                              content: Text(
+                                                  'Successfully login using phone number')),
+                                        );
                                       log(e.message.toString());
                                     }
                                   }
@@ -209,8 +213,10 @@ class _SignInPhoneNumberState extends State<SignInPhoneNumber> {
   }
 
   void showNotification(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red, content: Text(message.toString())));
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+          backgroundColor: Colors.red, content: Text(message.toString())));
   }
 
   Future<String?> askingSMSCode(BuildContext context) async {

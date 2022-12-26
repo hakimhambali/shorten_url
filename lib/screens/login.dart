@@ -156,7 +156,7 @@ class _LoginState extends State<Login> {
                                   .signInWithEmailAndPassword(
                                       email: emailController.text,
                                       password: passwordController.text);
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                                 const SnackBar(
                                     backgroundColor: Colors.green,
                                     content:
@@ -186,7 +186,7 @@ class _LoginState extends State<Login> {
                           } on FirebaseAuthException catch (e) {
                             showNotification(context, e.message.toString());
                           } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                               const SnackBar(
                                   backgroundColor: Colors.red,
                                   content: Text('Invalid Login')),
@@ -278,7 +278,7 @@ class _LoginState extends State<Login> {
   }
 
   void showNotification(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(
         backgroundColor: Colors.red, content: Text(message.toString())));
   }
 

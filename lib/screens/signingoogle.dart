@@ -75,7 +75,7 @@ class SignInGoogle extends StatelessWidget {
                             await FirebaseAuth.instance.currentUser!
                                 .linkWithCredential(credential)
                                 .then((user) {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                                 const SnackBar(
                                     backgroundColor: Colors.green,
                                     content: Text(
@@ -97,7 +97,7 @@ class SignInGoogle extends StatelessWidget {
                             await FirebaseAuth.instance
                                 .signInWithCredential(credential)
                                 .then((user) {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                                 const SnackBar(
                                     backgroundColor: Colors.green,
                                     content: Text(
@@ -108,7 +108,7 @@ class SignInGoogle extends StatelessWidget {
                               return user;
                             });
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                               const SnackBar(
                                   backgroundColor: Colors.red,
                                   content: Text('Invalid Login')),
@@ -116,7 +116,7 @@ class SignInGoogle extends StatelessWidget {
                             log(e.message.toString());
                           }
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                             const SnackBar(
                                 backgroundColor: Colors.red,
                                 content: Text('Invalid Login')),

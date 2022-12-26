@@ -71,7 +71,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         try {
                           await FirebaseAuth.instance.sendPasswordResetEmail(
                               email: emailController.text);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                             const SnackBar(
                                 backgroundColor: Colors.green,
                                 content: Text(
@@ -107,7 +107,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   void showNotification(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(
         backgroundColor: Colors.purple.shade900,
         content: Text(message.toString())));
   }
