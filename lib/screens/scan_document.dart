@@ -33,6 +33,11 @@ class CustomDocumentScannerFlutter {
           date: DateTime.now().toString(), newLink: path, originalLink: path);
       // debugPrint(path);
       OpenFilex.open(path);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //       backgroundColor: Colors.green,
+      //       content: Text('Successfully scan document')),
+      // );
       return File(path);
     }
   }

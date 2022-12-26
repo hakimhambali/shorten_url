@@ -48,6 +48,7 @@ class _HomeBodyState extends State<HomeBody> {
     return MaterialApp(
       // theme: nightMode ? nightTheme : dayTheme,
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.purple.shade50,
         appBar: AppBar(
           centerTitle: true,
