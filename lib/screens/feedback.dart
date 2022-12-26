@@ -23,7 +23,7 @@ class _ImprovementState extends State<Improvement> {
         backgroundColor: Colors.black,
       ),
       body: Container(
-        padding: const EdgeInsets.all(24.30),
+        padding: const EdgeInsets.all(45.30),
         child: SingleChildScrollView(
           child: Column(
             children: [
